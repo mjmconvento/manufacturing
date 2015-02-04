@@ -1,0 +1,5 @@
+menu_items:
+    - id: cat_service_so_index
+      acl: cat_service_so.menu
+      label: Service Order
+      parent: menu_sales

@@ -1,0 +1,12 @@
+#parameters:
+#    catalyst_inventory.example.class: Catalyst\InventoryBundle\Example
+
+services:
+    catalyst_inventory:
+        class: Catalyst\InventoryBundle\Model\InventoryManager
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+
+#    catalyst_inventory.example:
+#        class: %catalyst_inventory.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

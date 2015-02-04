@@ -1,0 +1,178 @@
+cat_sales_cust_index:
+    pattern: /customers
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:index }
+
+cat_sales_cust_add_form:
+    pattern: /customer
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:addForm }
+
+cat_sales_cust_add_submit:
+    pattern: /customer
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:Customer:addSubmit }
+
+cat_sales_cust_edit_form:
+    pattern: /customer/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:editForm }
+
+cat_sales_cust_edit_submit:
+    pattern: /customer/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:Customer:editSubmit }
+
+cat_sales_cust_delete:
+    pattern: /customer/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:delete }
+
+cat_sales_cust_grid:
+    pattern: /customers/grid
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:grid }
+
+cat_sales_cust_ajax_get:
+    pattern: /ajax/customer/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:ajaxGet }
+
+cat_sales_cust_ajax_get_all:
+    pattern: /ajax/customer
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:ajaxGetAll }
+
+cat_sales_cust_ajax_add:
+    pattern: /ajax/customer/add
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:Customer:ajaxAdd }
+
+cat_sales_cust_export:
+    pattern: /customer/list/csv
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:exportCSV }
+
+cat_sales_cust_history_grid:
+    pattern: /customer/{id}/history/grid
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:historyGrid }
+
+cat_sales_cust_history_grid2:
+    pattern: /customer/{id}/{date_from}/{date_to}/history/grid
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:historyGrid2 }    
+
+
+
+
+
+cat_sales_cust_filter:
+    pattern: /customer/history/filtered/{id}/{date_from}/{date_to}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:Customer:filter }
+
+cat_sales_so_index:
+    pattern: /sos
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:index }
+
+cat_sales_so_add_form:
+    pattern: /so
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:addForm }
+
+cat_sales_so_add_submit:
+    pattern: /so
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:addSubmit }
+
+cat_sales_so_edit_form:
+    pattern: /so/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:editForm }
+
+cat_sales_so_edit_submit:
+    pattern: /so/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:editSubmit }
+
+cat_sales_so_delete:
+    pattern: /so/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:delete }
+
+cat_sales_so_grid:
+    pattern: /sos/grid
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:grid }
+
+cat_sales_so_ajax_get:
+    pattern: /ajax/so/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:ajaxGet }
+
+# cat_sales_so_status_cancel:
+#     pattern: /so/{id}/status/cancel
+#     methods: [GET]
+#     defaults: { _controller: CatalystSalesBundle:SalesOrder:statusCancel }
+
+# cat_sales_so_status_approve:
+#     pattern: /so/{id}/status/approve
+#     methods: [GET]
+#     defaults: { _controller: CatalystSalesBundle:SalesOrder:statusApprove }
+
+cat_sales_so_status:
+    pattern: /so/{id}/status/{status_id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:statusChange }
+
+cat_sales_so_export:
+    pattern: /so/list/csv
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:exportCSV }
+
+cat_sales_so_print:
+    pattern: /so/{id}/print
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:SalesOrder:printJobOrder }    
+
+
+
+
+
+cat_sales_pm_index:
+    pattern: /payments
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:index }
+
+cat_sales_pm_add_form:
+    pattern: /payment
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:addForm }
+
+cat_sales_pm_add_submit:
+    pattern: /payment
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:addSubmit }
+
+cat_sales_pm_edit_form:
+    pattern: /payment/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:editForm }
+
+cat_sales_pm_edit_submit:
+    pattern: /payment/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:editSubmit }
+
+cat_sales_pm_delete:
+    pattern: /payment/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:delete }
+
+cat_sales_pm_grid:
+    pattern: /payments/grid
+    methods: [GET]
+    defaults: { _controller: CatalystSalesBundle:PaymentMethod:grid }
+

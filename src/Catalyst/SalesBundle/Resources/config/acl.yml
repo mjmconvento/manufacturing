@@ -1,0 +1,53 @@
+acl:
+    - category: Sales
+      entries:
+        - id: cat_sales.menu
+          label: Menu
+    - category: Customer
+      entries:
+        - id: cat_sales_cust.menu
+          label: Menu
+        - id: cat_sales_cust.view
+          label: View
+        - id: cat_sales_cust.add
+          label: Add
+        - id: cat_sales_cust.edit
+          label: Edit
+        - id: cat_sales_cust.delete
+          label: Delete
+    - category: Quotation
+      entries:
+        - id: cat_sales_quote.menu
+          label: Menu
+        - id: cat_sales_quote.view
+          label: View
+        - id: cat_sales_quote.add
+          label: Add
+        - id: cat_sales_quote.edit
+          label: Edit
+        - id: cat_sales_quote.delete
+          label: Delete
+    - category: Sales Order
+      entries:
+        - id: cat_sales_so.menu
+          label: Menu
+        - id: cat_sales_so.view
+          label: View
+        - id: cat_sales_so.add
+          label: Add
+        - id: cat_sales_so.edit
+          label: Edit
+        - id: cat_sales_so.delete
+          label: Delete
+    - category: Payment Method
+      entries:
+        - id: cat_sales_pm.menu
+          label: Menu
+        - id: cat_sales_pm.view
+          label: View
+        - id: cat_sales_pm.add
+          label: Add
+        - id: cat_sales_pm.edit
+          label: Edit
+        - id: cat_sales_pm.delete
+          label: Delete

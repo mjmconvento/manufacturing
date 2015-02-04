@@ -1,0 +1,8 @@
+config:
+    - category: "Inventory"
+      entries:
+        - id: catalyst_customer_warehouse_default
+          label: "Default Customer Warehouse"
+          type: select
+          options_service: catalyst_inventory
+          options_method: getWarehouseOptions

@@ -1,0 +1,86 @@
+cat_service_so_index:
+    pattern: /sos
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:index }
+
+cat_service_so_add_form:
+    pattern: /so
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:addForm }
+
+cat_service_so_add_submit:
+    pattern: /so
+    methods: [POST]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:addSubmit }
+
+cat_service_so_edit_form:
+    pattern: /so/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:editForm }
+
+cat_service_so_edit_submit:
+    pattern: /so/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:editSubmit }
+
+cat_service_so_delete:
+    pattern: /so/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:delete }
+
+
+cat_service_so_grid:
+    pattern: /sos/grid
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:grid }
+
+cat_service_so_grid2:
+    pattern: /sos/grid/{date_from}/{date_to}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:grid2 }
+
+cat_service_so_ajax_get:
+    pattern: /ajax/so/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:ajaxGet }
+
+cat_service_so_status_approve:
+    pattern: /so/{id}/status/approve
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusApprove }
+
+cat_service_so_status_send:
+    pattern: /so/{id}/status/send
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusSend }
+
+cat_service_so_status_cancel:
+    pattern: /so/{id}/status/cancel
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusCancel }
+
+cat_service_so_status_fulfill:
+    pattern: /so/{id}/status/fulfill
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusFulfill }
+
+cat_service_so_status:
+    pattern: /so/{id}/status/{status_id}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusChange }
+
+cat_service_so_status:
+    pattern: /so/{id}/status/{status_id}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:statusChange }    
+
+cat_service_so_export:
+    pattern: /serviceorder/list/csv
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:exportCSV }    
+
+cat_service_so_filter:
+    pattern: /serviceorder/filter/{date_from}/{date_to}
+    methods: [GET]
+    defaults: { _controller: CatalystServiceBundle:ServiceOrder:filter }    
+

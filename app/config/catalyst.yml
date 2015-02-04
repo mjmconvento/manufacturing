@@ -1,0 +1,38 @@
+catalyst_menu:
+    bundle_menu:
+        - CatalystDashboardBundle
+        - CatalystAdminBundle
+        - CatalystConfigurationBundle
+        - CatalystUserBundle
+        - CatalystInventoryBundle
+        - CatalystManufacturingBundle
+        - CatalystPurchasingBundle
+        - CatalystSalesBundle
+        - CatalystServiceBundle
+
+catalyst_user:
+    acl_entries:
+        - id: CatalystDashboardBundle
+          label: Dashboard
+        - id: CatalystAdminBundle
+          label: Administration
+        - id: CatalystConfigurationBundle
+          label: Settings
+        - id: CatalystUserBundle
+          label: User
+        - id: CatalystInventoryBundle
+          label: Inventory
+        - id: CatalystManufacturingBundle
+          label: Manufacturing
+        - id: CatalystPurchasingBundle
+          label: Purchasing
+        - id: CatalystSalesBundle
+          label: Sales
+        - id: CatalystServiceBundle
+          label: Service
+
+catalyst_configuration:
+    bundles:
+        - CatalystPurchasingBundle
+        - CatalystSalesBundle
+        - CatalystServiceBundle

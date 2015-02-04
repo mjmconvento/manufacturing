@@ -1,0 +1,53 @@
+<div id="en_form" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Service Order Entry</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal form">
+                    <div class="form-body">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Type Of Service</label>
+                            <div class ="col-md-8">
+                                <select id="en_product_id" class="form-control select_2" name="prod_id">
+                                {{ form.options(prod_opts, 0) }}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Quantity</label>
+                            <div class ="col-md-8">
+                                <input id="en_qty" type="text" class="form-control" name="qty" placeholder="Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Price</label>
+                            <div class ="col-md-8">
+                                <input id="en_price" type="text" class="form-control" name="price" placeholder="Price">
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label class="col-md-3 control-label">Assign To</label>
+                            <div class ="col-md-8">
+                                <select id="en_assigned_id" class="form-control select_2" name="assigned_id" {{ object.canAssign or object.canReceive ? '' : 'disabled' }}>
+                                {{ form.options(repuser_opts, 0) }}
+                                </select>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+                <button id="btn_en_submit" type="button" class="btn green">Add Service Order Entry</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<form id="prod_form" action="#" method="post" class="form-horizontal">
+    <select name="prodgroup_id" hidden>
+        {{ form.options(pg_default) }}
+    </select>
+    <input name="price_sale" type="text" value="0.00" hidden>
+    <input name="price_purchase" type="text" value="0.00" hidden>
+    <input name="stock_min" type="text" value="0" hidden>
+    <input name="stock_max" type="text" value="0" hidden>
+<div id="prod-form" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Add Customer Item</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal form">
+                    <div class="form-body"><!-- 
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Code</label> -->
+                            <div class="">
+                                <input name="code" type="hidden" class="form-control" placeholder="Code">
+                            </div><!-- 
+                        </div> -->
+
+
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Name</label>
+                            <div class="col-md-8">
+                                <input name="name" type="text" class="form-control" placeholder="Name">
+                            </div>
+                        </div>
+                        {{ form.hidden('prodgroup_id', pg_default) }}
+                        {{ form.group_select('Product Brand', 'brand_id', brand_opts, '', 3, 4, readonly) }}
+                        {{ form.group_select('Product Color', 'color_id', color_opts, '', 3, 4, readonly) }}
+                        {{ form.group_select('Product Condition', 'condition_id', condition_opts, '', 3, 4, readonly) }}
+                        {{ form.group_select('Product Material', 'material_id', material_opts, '', 3, 4, readonly) }}
+
+                        <input type="hidden" name="uom" value="piece">
+                        <!--
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Unit of Measure</label>
+                            <div class="col-md-8">
+                                <input name="uom" type="text" class="form-control" value="piece" readonly>
+                            </div>
+                        </div>
+                        -->
+                        {{ form.group_textarea('Description', 'desc', '', 4, 3, 8) }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+                <button id="btn_prod_submit" type="button" data-dismiss="modal" class="btn green">Add Customer Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

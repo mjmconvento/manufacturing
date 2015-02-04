@@ -1,0 +1,21 @@
+menu_items:
+    - id: menu_sales
+      acl: cat_sales.menu
+      label: Sales
+      icon: fa-tag
+    - id: cat_sales_cust_index
+      acl: cat_sales_cust.menu
+      label: Customer
+      parent: menu_sales
+    - id: cat_sales_quote_index
+      acl: cat_sales_quote.menu
+      label: Quotation
+      parent: menu_sales
+    - id: cat_sales_so_index
+      acl: cat_sales_so.menu
+      label: Sales Order
+      parent: menu_sales
+    - id: cat_sales_pm_index
+      acl: cat_sales_pm.menu
+      label: Payment Method
+      parent: menu_sales

@@ -1,0 +1,48 @@
+cat_inv_wh:
+    resource: "@CatalystInventoryBundle/Resources/config/routes/warehouse.yml"
+    prefix: /warehouses
+
+cat_inv_accnt:
+    resource: "@CatalystInventoryBundle/Resources/config/routes/account.yml"
+    prefix: /accounts
+
+cat_inv_prod:
+    resource: "@CatalystInventoryBundle/Resources/config/routes/product.yml"
+    prefix: /products
+
+cat_inv_brand:
+    resource: "@CatalystInventoryBundle/Resources/config/routes/brand.yml"
+    prefix: /brands
+
+cat_inv_pg:
+    resource: "@CatalystInventoryBundle/Resources/config/routes/product_group.yml"
+    prefix: /product_groups
+
+
+cat_inv_trans_index:
+    pattern: /transaction
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:Transaction:index }
+
+cat_inv_trans_add_submit:
+    pattern: /transaction
+    methods: [POST]
+    defaults: { _controller: CatalystInventoryBundle:Transaction:addSubmit }
+
+
+
+cat_inv_sv_task_ajax_index:
+    pattern: /servicetask
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:ServiceTask:index }
+
+cat_inv_sv_task_ajax_get_by:
+    pattern: /ajax/servicetask/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:ServiceTask:ajaxGet }
+
+cat_inv_sv_task_ajax_get_by_prod:
+    pattern: /ajax/servicetask/product_id/{prod_id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:ServiceTask:ajaxGetByProd }
+

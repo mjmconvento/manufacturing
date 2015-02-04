@@ -1,0 +1,5 @@
+cnt_address_ajax_add:
+    path:   /address/ajax/add
+    methods: [POST]
+    defaults: { _controller: CatalystContactBundle:Address:ajaxAdd }
+

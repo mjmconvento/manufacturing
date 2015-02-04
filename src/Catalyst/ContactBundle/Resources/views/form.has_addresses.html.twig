@@ -1,0 +1,18 @@
+<div id="address-section">
+<h4 class="form-section">Addresses</h4>
+<button type="button" id="add-address" class="btn btn-primary" data-toggle="modal" data-target="#add-address-modal">Add Address</button>
+<br>
+
+{% for a in object.getAddresses %}
+    {{ f.hidden('address_id[]', a.getID) }}
+    {{ f.group_text('Name', 'name', a.getName, 3, 4, true) }}
+    {{ f.group_text('Street Address', 'street', a.getStreet, 3, 4, true) }}
+    {{ f.group_text('City', 'city', a.getCity, 3, 4, true) }}
+    {{ f.group_text('State', 'state', a.getState, 3, 4, true) }}
+    {{ f.group_text('Country', 'country', a.getCountry, 3, 4, true) }}
+    {{ f.group_text('Latitude', 'latitude', a.getLatitude, 3, 4, true) }}
+    {{ f.group_text('Longitude', 'longitude', a.getLongitude, 3, 4, true) }}
+    <button id="delete-address" class="btn btn-default">Delete Address</button>
+    <hr>
+{% endfor %}
+</div>

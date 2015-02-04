@@ -1,0 +1,11 @@
+parameters:
+#    catalyst_sales.example.class: Catalyst\SalesBundle\Example
+
+services:
+#    catalyst_sales.example:
+#        class: %catalyst_sales.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+services:
+     catalyst_configuration:
+         class: Catalyst\ConfigurationBundle\Model\ConfigurationManager
+         arguments: ["@service_container"]

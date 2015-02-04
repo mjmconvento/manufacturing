@@ -1,0 +1,47 @@
+catalyst_media:
+    resource: "@CatalystMediaBundle/Resources/config/routing.yml"
+    prefix:   /media
+
+catalyst_contact:
+    resource: "@CatalystContactBundle/Resources/config/routing.yml"
+    prefix:   /contact
+
+catalyst_core:
+    resource: "@CatalystCoreBundle/Resources/config/routing.yml"
+    prefix:   /core
+
+catalyst_service:
+    resource: "@CatalystServiceBundle/Resources/config/routing.yml"
+    prefix:   /service
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /
+
+catalyst_dashboard:
+    resource: "@CatalystDashboardBundle/Resources/config/routing.yml"
+    prefix:   /
+
+catalyst_configuration:
+    resource: "@CatalystConfigurationBundle/Resources/config/routing.yml"
+    prefix:   /configuration
+
+catalyst_sales:
+    resource: "@CatalystSalesBundle/Resources/config/routing.yml"
+    prefix:   /sales
+
+catalyst_purchasing:
+    resource: "@CatalystPurchasingBundle/Resources/config/routing.yml"
+    prefix:   /purchasing
+
+catalyst_manufacturing:
+    resource: "@CatalystManufacturingBundle/Resources/config/routing.yml"
+    prefix:   /manufacturing
+
+catalyst_inventory:
+    resource: "@CatalystInventoryBundle/Resources/config/routing.yml"
+    prefix:   /inventory
+
+catalyst_user:
+    resource: "@CatalystUserBundle/Resources/config/routing.yml"
+    prefix: /user

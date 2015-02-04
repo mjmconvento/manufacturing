@@ -1,0 +1,522 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form %}
+{% block content %}
+
+{% if (object.getId != NULL) %}
+<div style="padding-bottom: 20px">
+    <a href="{{ path('cat_service_so_print', {'id': object.getID}) }}" class="btn green">Print Job Order</a>
+    <a href="{{ path('cat_service_so_ticket_print', {'id': object.getID}) }}" class="btn green">Print Tickets</a>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Service Order {{ object.getCode }}</div>
+            </div>
+            <div class="portlet-body form">
+                <form id="cust_add_form" method="post" class="form-horizontal">
+
+
+
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+
+
+                        {{ form.group_date('Date Issued', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 3) }}
+
+
+                        {{ form.group_date('Date Due', 'date_need', object.getDateNeed|date('m/d/Y'), 3, 3) }}
+
+                        {{ form.group_text('Date Finished', 'date_completed', object.getDateCompleted is empty ? "" : object.getDateCompleted|date('m/d/Y'), 3, 3, true) }}
+
+                        {{ form.group_text('Date Claimed', 'date_claimed', object.getDateClaimed is empty ? "" : object.getDateClaimed|date('m/d/Y'), 3, 3, true) }}
+
+                        {% if (object.getID != null) %}
+                        {{ form.group_text('Code', 'code', object.getCode, 3, 3, true) }}
+                        {% endif %}
+
+                        {{ form.group_select('Branch', 'warehouse_id', wh_opts, object.getWarehouseID, 3, 5, not object.canEdit) }}
+
+                        {% if (object.canEdit) %}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Customer</label>
+                                <div class="col-md-5">
+                                    <select id="form_customer_id" name="customer_id" class="form-control select_2">
+                                    {{ form.options(cust_opts, object.getCustomerID) }}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <a id="btn_cust_add" href="#cust-form" class="btn green" data-toggle="modal">Add Customer</a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Customer Item</label>
+                                <div class="col-md-5">
+                                    <select id="form_product_id" name="product_id" class="form-control select_2">
+                                    {{ form.options(cprod_opts, object.getProductID) }}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <a id="btn_prod_add" href="#prod-form" class="btn green" data-toggle="modal">Add Customer Item</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            {{ form.group_text('Customer', 'customer_id', object.getCustomer.getName, 3, 5, true) }}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Customer Item</label>
+                                <div class="col-md-5">
+                                    <input type="text" name="product_id" class="form-control" value="{{ object.getProduct.getCode ~ ' - ' ~ object.getProduct.getName }}" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <a id="btn_prod_view" href="{{ path('cat_inv_prod_edit_form', {'id' : object.getProduct.getID }) }}" class="btn green">View Product</a>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {{ form.group_text('Issued By', 'issued_by', object.getUser ? object.getUser.getName : app.user.getName, 3, 3, true) }}
+
+                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 3, true) }}
+
+                        {{ form.group_textarea('Notes', 'note', object.getNote, 5, 3, 5, not object.canEdit) }}
+
+
+                        {% if (object.getID != null) %}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-9">
+                                {% if (object.canReceive) %}
+                                <a href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'received'}) }}" class="btn green">Receive Customer Item</a>
+                                {% endif %}
+
+                                {% if (object.canAssign) %}
+                                <a id="a_assign" href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'assigned'}) }}" data-href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'assigned'}) }}" class="btn green">Assign</a>
+                                {% endif %}
+
+                                {% if (object.canService) %}
+                                <a href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'servicing'}) }}" class="btn green">Service</a>
+                                {% endif %}
+
+                                {% if (object.canFinish) %}
+                                <a href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'finished'}) }}" class="btn green">Finish Service</a>
+                                {% endif %}
+
+                                {% if (object.canReturn) %}
+                                <a href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'claimed'}) }}" class="btn green">Customer Claim</a>
+                                {% endif %}
+
+                                {% if (object.canCancel) %}
+                                <a href="{{ path('cat_service_so_status', {'id': object.getID, 'status_id': 'cancelled'}) }}" class="btn red">Cancel</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+
+                        <h4 class="form-section">Entries</h4>
+
+                        {% if (object.canModifyEntries) %}
+                        <div>
+                            <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Service Order Entry</a>
+                        </div>
+                        {% endif %}
+
+
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-11">
+                                <table id="entry_table" class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50px"></th>
+                                            <th>Service</th>
+                                            <th style="width: 180px">Quantity</th>
+                                            <th style="width: 180px">Price</th>
+                                            <th style="width: 150px">Total</th>
+                                            {% if (object.canModifyEntries) %}
+                                            <th style="width: 50px"></th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody id="en_table">
+                                    {% for entry in object.getEntries %}
+                                        <tr class="so_entry">
+                                            <td><a href="#btn_details"><i class="glyphicon glyphicon-chevron-right font-blue btn_details"></i></a></td>
+                                            <td><input type="hidden" class="en_prod_id" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
+                                            <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
+                                            <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
+                                            <td class="en_total">--</td>
+                                            {% if (object.canModifyEntries) %}
+                                            <td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>
+                                            {% endif %}
+                                        </tr>
+                                        <tr class="hidden">
+                                            <td colspan="6">
+                                                <table class="table table-bordered" style="margin-left: 50px; width: 90%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Task</th>
+                                                            <th>Price</th>
+                                                            <th>Assigned To</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% set sve_index = loop.index0 %}
+                                                    {% for task in entry.getTasks %}
+                                                        <tr>
+                                                            <td>
+                                                                <input type="hidden" name="svet_index[]" value="{{ sve_index }}">
+                                                                <input type="hidden" name="svet_id[]" value="{{ task.getID }}">
+                                                                <input class="form-control" type="text" name="svet_name[]" value="{{ task.getName }}" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <input type="hidden" name="svet_cost_price[]" value="{{ task.getCostPrice }}">
+                                                                <input class="form-control" type="text" name="svet_sell_price[]" value="{{ task.getSellPrice }}" readonly>
+                                                            </td>
+                                                            <td>
+                                                                <select name="svet_assigned_id[]" class="form-control select_2" {{ object.canAssign or object.canReceive ? "" : "disabled" }}>
+                                                                {{ form.options(repuser_opts, task.getAssignedID) }}
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td></td>
+                                            <td>Total</td>
+                                            <td id="total_qty"></td>
+                                            <td id="total_price"></td>
+                                            <td id="total_total"></td>
+                                            {% if (object.canModifyEntries) %}
+                                            <td></td>
+                                            {% endif %}
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            {% if (object.canModifyEntries) %}
+                            <button type="submit" class="btn blue">Submit</button>
+                            {% endif %}  
+
+
+                            <a href="{{ path(route_list) }}" class="btn default">&lt; Back</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Gallery</div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    {% for image in images %}
+                    <div class="col-md-3 col-sd-4">
+                        <a class="fancybox-button" href="/uploads/images/{{ image }}" data-rel="fancybox-button">
+                            <img class="img-responsive" src="/uploads/images/{{ image }}">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if not readonly %}
+                <div class="row">
+                    <form method="post" action="{{ path('cat_inv_prod_upload', {id: object.getID}) }}" class="dropzone dz-clickable">
+                        <div class="dz-default dz-message">
+                            <span>Drop files here to upload</span>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% embed "CatalystServiceBundle:ServiceOrder:modal/en_form.html.twig" %}
+{% endembed %}
+
+{% embed "CatalystServiceBundle:ServiceOrder:modal/cust_form.html.twig" %}
+{% endembed %}
+
+{% embed "CatalystServiceBundle:ServiceOrder:modal/prod_form.html.twig" %}
+{% endembed %}
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+
+
+
+<script>
+function escape_attr(s) {
+    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function escape_html(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function update_totals() {
+    var total_qty = 0.00;
+    var total_price = 0.00;
+    var total_total = 0.00;
+
+    var total_sve_price = 0.00;
+
+    $('#en_table tr.so_entry').each(function() {
+        var qty = $(this).find('.en_qty').val();
+        var price = $(this).find('.en_price').val();
+        var total = qty * price;
+
+        total_qty += parseFloat(qty);
+        total_price += parseFloat(price);
+        total_total += parseFloat(total);
+        
+        $(this).find('.en_total').html(total.toFixed(2));
+    });
+
+    $('#total_qty').html(total_qty.toFixed(2));
+    $('#total_price').html(total_price.toFixed(2));
+    $('#total_total').html(total_total.toFixed(2));
+}
+
+function update_form_price()
+{
+    $.getJSON('/inventory/ajax/product/' + $('#en_product_id').val(), function(data) {
+        $('#en_price').val(data.price_sale);
+    });
+}
+
+function update_assign_button()
+{
+    var href = $('#a_assign').data('href');
+    var user_id = $('#form_user_id').val();
+    $('#a_assign').attr('href', href + '?user_id=' + user_id);
+}
+
+function submitModalForm(post_url, get_url, form_id, field_id)
+{
+    $.post(post_url, $('#' + form_id).serialize()).done(function(data) {
+        if(data.status.success == true)
+        {
+            updateGroupSelect(get_url, field_id, data.data.id);
+            alert('Success: ' + data.status.message);
+        }
+        else
+        {
+            alert('Error: ' + data.status.message);
+        }
+    });
+}
+
+function updateGroupSelect(url, id, value)
+{
+    $.getJSON(url, function(data) {
+        var options;
+        $.each(data, function(i, val) {
+            var selected = val.id == value ? 'selected' : '';
+            var name = id == 'product_id' ? val.code + ' - ' + val.name : val.name;
+            options += '<option value="' + val.id + '"' + selected + '>' + name + '</option>';
+        });
+        $('#form_' + id).html(options).select2();
+    });
+}
+
+function generateOptions(id, arr, select_val)
+{
+    $('#' + id).html(generateOptionsString(arr, select_val)).select2();
+}
+
+function generateOptionsString(arr, select_val)
+{
+    var options = '';
+    for (i in arr) {
+        var selected = (arr[i] == select_val ? 'selected' : '');
+        options += '<option value="' + escape_attr(i) + '" ' + selected + '>' + escape_html(arr[i]) + '</option>';
+    }
+
+    return options;
+}
+
+function getSVETask(prod_id, sve_index)
+{
+    var repuser_opts = {{ repuser_opts | json_encode | raw }};
+
+    $.getJSON('/inventory/ajax/servicetask/product_id/' + prod_id, function(dt) {
+        var mainrow = '<tr class="hidden">';
+        mainrow += '<td colspan="6">';
+
+        var table = '<table class="table table-bordered" style="margin-left: 50px; width: 90%;">';
+        table += '<thead>';
+        table += '<tr>';
+        table += '<th>Task</th>';
+        table += '<th>Price</th>';
+        table += '<th>Assigned To</th>';
+        table += '</tr>';
+        table += '</thead>';
+        table += '<tbody>';
+        var i = 0;
+        $.each(dt, function(index, data){
+            console.log(data);
+            var row = '<tr>';
+            row += '<td><input type="hidden" name="svet_index[]" value="' + sve_index + '">';
+            row += '<input type="hidden" name="svet_id[]" value="' + escape_attr(data.id) + '">';
+            row += '<input class="form-control" type="text" name="svet_name[]" value="' + escape_attr(data.name) + '" readonly></td>';
+
+            row += '<td><input type="hidden" name="svet_cost_price[]" value="' + escape_attr(data.cost_price) + '"><input class="form-control" type="text" name="svet_sell_price[]" value="' + escape_attr(data.sell_price) + '" readonly></td>';
+
+            var options = generateOptionsString(repuser_opts, data.assigned_id);
+
+            row += '<td class="sve_assigned_id"><select name="svet_assigned_id[]" class="form-control select_2" {{ object.canAssign or object.canReceive ? "" : "disabled " }}>' + options + '</select></td>';
+            row += '</tr>';
+
+            table += row;
+        });
+        table += '</tbody>';
+        table += '</table>';
+        mainrow += table;
+        mainrow += '</td>';
+        mainrow += '</tr>';
+
+        // append row
+        $('#en_table').append(mainrow);
+
+    });
+}
+
+$(document).ready(function() {
+    ComponentsPickers.init();
+    update_form_price();
+    update_totals();
+    update_assign_button();
+
+    // initialize to the number of entries we have
+    var index = {{ object.getEntries|length }};
+
+    // button
+    $('#btn_en_add').click(function() {
+        $('#en_qty').val('0.00');
+    });
+
+    // auto price load
+    $('#en_product_id').change(function() {
+        update_form_price();
+    });
+
+    // assign
+    $('#form_user_id').change(function() {
+        update_assign_button();
+    });
+
+    // form - update table
+    $('#btn_en_submit').click(function() {
+        var prod_id = $('#en_product_id').val();
+        var prod_name = $('#en_product_id option:selected').text();
+        var qty = $('#en_qty').val();
+        var price = $('#en_price').val();
+        var total = qty * price;
+        // var assigned_id = $('#sve_assigned_id option:selected').val();
+
+        // build service order entry row
+        var row = '<tr class="so_entry">';
+        row += '<td><a href="#btn_details"><i class="glyphicon glyphicon-chevron-right font-blue btn_details"></i></a></td>';
+        row += '<td><input type="hidden" class="en_prod_id" name="en_prod_id[]" value="' + escape_attr(prod_id) + '">' + escape_html(prod_name) + '</td>';
+        row += '<td><input class="form-control en_qty" type="text" name="en_qty[]" value="' + qty + '"></td>';
+        row += '<td><input class="form-control en_price" type="text" name="en_price[]" value="' + price + '"></td>';
+        row += '<td class="en_total"></td>';
+        row += '<td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>';
+        row += '</tr>';
+
+        // append row
+        $('#en_table').append(row);
+
+        // fetch sve task and add to row
+        getSVETask(prod_id, index);
+
+
+        // increment service order entry index
+        index++;
+
+        update_totals();
+
+        $('#en_form').modal('hide');
+    });
+
+    // customer
+    $('#btn_cust_submit').click(function(){
+        submitModalForm("{{ path('cat_sales_cust_ajax_add') }}", "{{ path('cat_sales_cust_ajax_get_all') }}", "cust_form", "customer_id");
+    });
+
+    // customer item
+    $('#btn_prod_submit').click(function(){
+        submitModalForm("{{ path('cat_inv_prod_ajax_add') }}", "{{ path('cat_inv_prod_ajax_get_by') }}", "prod_form", "product_id");
+    });
+
+    // delete
+    $('#en_table').on('click', '.btn_en_del', function() {
+        var row = $(this).closest('tr');
+        row.next().remove();
+        row.remove();
+        update_totals();
+    });
+
+    // change values
+    $('#en_table').on('change', '.en_qty, .en_price', function() {
+        update_totals();
+    });
+
+    $('#en_table').on('click', '.btn_details', function() {
+        var row = $(this).closest('tr').next();
+        if (row.hasClass('hidden')) {
+            // show
+            row.removeClass('hidden');
+            $(this).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down');
+        } else {
+            // hide
+            row.addClass('hidden');
+            $(this).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+        }
+
+        return false;
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}

@@ -1,0 +1,13 @@
+acl:
+    - category: Service Order
+      entries:
+        - id: cat_service_so.menu
+          label: Menu
+        - id: cat_service_so.view
+          label: View
+        - id: cat_service_so.add
+          label: Add
+        - id: cat_service_so.edit
+          label: Edit
+        - id: cat_service_so.delete
+          label: Delete
