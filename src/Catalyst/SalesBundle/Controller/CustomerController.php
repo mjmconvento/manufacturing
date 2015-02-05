@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Catalyst\ValidationException;
 use DateTime;
 
+
+use Catalyst\CoreBundle\Model\Controller\TrackCreate;
+use Catalyst\ContactBundle\Model\Controller\Contact;
+
 class CustomerController extends CrudController
 {
     public function __construct()

@@ -100,5 +100,6 @@ trait Contact
         $data->email = $this->email;
 
         $this->dataHasAddresses($data);
+        $this->dataHasPHones($data);
     }
 }

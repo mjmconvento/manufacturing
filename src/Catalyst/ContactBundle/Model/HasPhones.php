@@ -38,4 +38,15 @@ trait HasPhones
     {
         return $this->phones;
     }
+    
+    public function dataHasPhones($data)
+    {
+        $phones = array();
+        foreach ($this->phones as $add)
+        {
+            $phones[] = $add->toData();
+        }
+
+        $data->phones = $phones;
+    }
 }

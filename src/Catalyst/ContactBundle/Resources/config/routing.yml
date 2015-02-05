@@ -3,3 +3,8 @@ cnt_address_ajax_add:
     methods: [POST]
     defaults: { _controller: CatalystContactBundle:Address:ajaxAdd }
 
+cnt_phone_ajax_add:
+    path:   /phone/ajax/add
+    methods: [POST]
+    defaults: { _controller: CatalystContactBundle:Phone:ajaxAdd }
+

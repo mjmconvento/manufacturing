@@ -207,7 +207,6 @@ abstract class CrudController extends BaseController
 
         // check if we have access to form
         $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-
         $this->padFormParams($params, $obj);
 
         return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);

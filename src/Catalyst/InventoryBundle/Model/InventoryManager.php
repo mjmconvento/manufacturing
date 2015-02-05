@@ -102,7 +102,7 @@ class InventoryManager
             ->getRepository('CatalystInventoryBundle:Product')
             ->findBy(
                 $filter,
-                array('code' => 'ASC')
+                array('sku' => 'ASC')
             );
 
         $prod_opts = array();

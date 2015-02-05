@@ -48,4 +48,16 @@ class Phone
     {
         return $this->number;
     }
+    
+    
+    public function toData()
+    {
+        $data = new \stdClass();
+
+        $data->id = $this->id;
+        $data->name = $this->name;
+        $data->number = $this->number;
+
+        return $data;
+    }
 }
