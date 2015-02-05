@@ -14,6 +14,9 @@ use Catalyst\ContactBundle\Model\Controller\Contact;
 
 class CustomerController extends CrudController
 {
+    use TrackCreate;
+    use Contact;
+    
     public function __construct()
     {
 
@@ -133,17 +136,12 @@ class CustomerController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
-        $inv = $this->get('catalyst_inventory');
-
-        $o->setName($data['name']);
-        $o->setAddress($data['address']);
-        $o->setContactNumber($data['contact_number']);
-        $o->setEmail($data['email']);
-        $o->setContactPerson($data['contact_person']);
-        $o->setNotes($data['notes']);
-
-        $wh = $inv->findWarehouse($data['warehouse_id']);
-        $o->setWarehouse($wh);
+        $o->setFirstName($data['first_name']);
+        $o->setLastName($data['last_name']);
+        $o->setMiddleName($data['middle_name']);
+        $o->setSalutation($data['salutation']);
+        $this->updateTrackCreate($o, $data, $is_new);
+        $this->updateContact($o, $data, $is_new);
     }
 
     protected function buildData($o)

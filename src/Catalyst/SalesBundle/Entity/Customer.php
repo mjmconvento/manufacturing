@@ -12,7 +12,7 @@ use Catalyst\CoreBundle\Model\TrackCreate;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="pur_supplier")
+ * @ORM\Table(name="sale_customer")
  */
 class Customer
 {
