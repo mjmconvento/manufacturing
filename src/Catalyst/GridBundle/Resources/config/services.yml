@@ -1,0 +1,12 @@
+#parameters:
+#    catalyst_grid.example.class: Catalyst\GridBundle\Example
+
+services:
+    catalyst_grid:
+        class: Catalyst\GridBundle\Model\Factory
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+
+#    catalyst_grid.example:
+#        class: %catalyst_grid.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
