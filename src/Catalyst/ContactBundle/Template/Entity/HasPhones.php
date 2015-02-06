@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ContactBundle\Model;
+namespace Catalyst\ContactBundle\Tempalte\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,7 +11,7 @@ trait HasPhones
     /** @ORM\ManyToMany(targetEntity="\Catalyst\ContactBundle\Entity\Phone") */
     protected $phones;
 
-    public function initializeHasPhones()
+    public function initHasPhones()
     {
         $this->phones = new ArrayCollection();
     }

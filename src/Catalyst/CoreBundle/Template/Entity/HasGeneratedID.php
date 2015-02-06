@@ -18,6 +18,10 @@ trait HasGeneratedID
         return $this->id;
     }
 
+    protected function initHasGeneratedID()
+    {
+    }
+
     public function dataHasGeneratedID($data)
     {
         $data->id = $this->id;

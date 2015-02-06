@@ -1,8 +1,8 @@
 <?php
 
-namespace Catalyst\ContactBundle\Model\Controller;
+namespace Catalyst\ContactBundle\Template\Controller;
 
-trait Contact
+trait HasContactInfo
 {
     use HasAddresses;
     use HasPhones;

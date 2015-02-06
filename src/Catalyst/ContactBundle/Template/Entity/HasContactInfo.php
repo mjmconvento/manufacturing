@@ -1,10 +1,10 @@
 <?php
 
-namespace Catalyst\ContactBundle\Model;
+namespace Catalyst\ContactBundle\Template\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Contact
+trait HasContactInfo
 {
     use HasAddresses;
     use HasPhones;
@@ -24,10 +24,10 @@ trait Contact
     /** @ORM\Column(type="string", length=80) */
     protected $email;
 
-    protected function initializeContact()
+    protected function initHasContactInfo()
     {
-        $this->initializeHasAddresses();
-        $this->initializeHasPhones();
+        $this->initHasAddresses();
+        $this->initHasPhones();
     }
 
     public function setFirstName($name)
@@ -91,7 +91,7 @@ trait Contact
         return $this->last_name . ', ' . $this->first_name;
     }
 
-    public function dataContact($data)
+    public function dataHasContactInfo($data)
     {
         $data->first_name = $this->first_name;
         $data->last_name = $this->last_name;

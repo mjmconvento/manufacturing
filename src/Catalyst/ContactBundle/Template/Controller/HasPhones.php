@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ContactBundle\Model\Controller;
+namespace Catalyst\ContactBundle\Template\Controller;
 
 trait HasPhones
 {

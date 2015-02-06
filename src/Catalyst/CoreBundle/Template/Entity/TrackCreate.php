@@ -17,7 +17,7 @@ trait TrackCreate
      */
     protected $user_create;
 
-    public function initializeTrackCreate()
+    public function initTrackCreate()
     {
         $this->date_create = new DateTime();
     }

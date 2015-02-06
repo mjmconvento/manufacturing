@@ -4,8 +4,8 @@ namespace Catalyst\ContactBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use Catalyst\CoreBundle\Model\HasGeneratedID;
-use Catalyst\CoreBundle\Model\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Tempalte\Entity\TrackCreate;
 
 /**
  * @ORM\Entity
@@ -39,7 +39,8 @@ class Address
 
     public function __construct()
     {
-        $this->initializeTrackCreate();
+        $this->initHasGeneratedID();
+        $this->initTrackCreate();
     }
 
     public function setName($name)
@@ -123,7 +124,9 @@ class Address
     {
         $data = new \stdClass();
 
-        $data->id = $this->id;
+        $this->dataHasGeneratedID($data);
+        $this->dataTrackCreate($data);
+
         $data->name = $this->name;
         $data->street = $this->street;
         $data->city = $this->city;
