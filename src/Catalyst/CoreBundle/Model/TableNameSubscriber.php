@@ -6,6 +6,10 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
+/* 
+ * handles the auto-naming of many to many associations so table prefixes
+ * will be added automatically
+ */
 class TableNameSubscriber implements EventSubscriber
 {
     public function getSubscribedEvents()
