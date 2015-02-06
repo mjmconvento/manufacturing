@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\CoreBundle\Model\Controller;
+namespace Catalyst\CoreBundle\Template\Controller;
 
 trait TrackCreate
 {

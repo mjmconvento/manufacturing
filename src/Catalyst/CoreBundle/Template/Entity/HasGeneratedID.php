@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\CoreBundle\Model;
+namespace Catalyst\CoreBundle\Template\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
