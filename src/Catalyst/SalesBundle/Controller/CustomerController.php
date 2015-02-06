@@ -9,13 +9,13 @@ use Catalyst\ValidationException;
 use DateTime;
 
 
-use Catalyst\CoreBundle\Model\Controller\TrackCreate;
-use Catalyst\ContactBundle\Model\Controller\Contact;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\ContactBundle\Template\Controller\HasContactInfo;
 
 class CustomerController extends CrudController
 {
     use TrackCreate;
-    use Contact;
+    use HasContactInfo;
     
     public function __construct()
     {
@@ -141,7 +141,7 @@ class CustomerController extends CrudController
         $o->setMiddleName($data['middle_name']);
         $o->setSalutation($data['salutation']);
         $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateContact($o, $data, $is_new);
+        $this->updateHasContactInfo($o, $data, $is_new);
     }
 
     protected function buildData($o)

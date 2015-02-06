@@ -5,7 +5,7 @@ namespace Catalyst\ContactBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
-use Catalyst\CoreBundle\Tempalte\Entity\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 
 /**
  * @ORM\Entity

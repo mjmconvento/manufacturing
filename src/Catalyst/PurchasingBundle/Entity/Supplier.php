@@ -5,9 +5,9 @@ namespace Catalyst\PurchasingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Catalyst\InventoryBundle\Entity\Warehouse;
 
-use Catalyst\ContactBundle\Model\Contact;
-use Catalyst\CoreBundle\Model\HasGeneratedID;
-use Catalyst\CoreBundle\Model\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
+use Catalyst\ContactBundle\Template\Entity\HasContactInfo;
 
 
 /**
@@ -18,12 +18,12 @@ class Supplier
 {
     use HasGeneratedID;
     use TrackCreate;
-    use Contact;
+    use HasContactInfo;
 
     public function __construct()
     {
-        $this->initializeTrackCreate();
-        $this->initializeContact();
+        $this->initTrackCreate();
+        $this->initHasContactInfo();
     }
 
     public function toData()
@@ -31,7 +31,7 @@ class Supplier
         $data = new \stdClass();
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
-        $this->dataContact($data);
+        $this->dataHasContactInfo($data);
 
         return $data;
     }

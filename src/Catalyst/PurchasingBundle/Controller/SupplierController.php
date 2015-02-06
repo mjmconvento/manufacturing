@@ -6,13 +6,13 @@ use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\ValidationException;
 
-use Catalyst\CoreBundle\Model\Controller\TrackCreate;
-use Catalyst\ContactBundle\Model\Controller\Contact;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\ContactBundle\Template\Controller\HasContactInfo;
 
 class SupplierController extends CrudController
 {
     use TrackCreate;
-    use Contact;
+    use HasContactInfo;
 
     public function __construct()
     {
@@ -56,7 +56,7 @@ class SupplierController extends CrudController
     protected function update($o, $data, $is_new = false)
     {
         $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateContact($o, $data, $is_new);
+        $this->updateHasContactInfo($o, $data, $is_new);
     }
 
     protected function buildData($o)

@@ -11,7 +11,7 @@ trait HasAddresses
     /** @ORM\ManyToMany(targetEntity="\Catalyst\ContactBundle\Entity\Address") */
     protected $addresses;
 
-    protected function initializeHasAddresses()
+    protected function initHasAddresses()
     {
         $this->addresses = new ArrayCollection();
     }
