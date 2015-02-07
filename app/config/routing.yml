@@ -1,3 +1,7 @@
+catalyst_accounting:
+    resource: "@CatalystAccountingBundle/Resources/config/routing.yml"
+    prefix:   /accounting
+
 catalyst_media:
     resource: "@CatalystMediaBundle/Resources/config/routing.yml"
     prefix:   /media

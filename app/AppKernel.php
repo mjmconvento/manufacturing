@@ -44,6 +44,7 @@ class AppKernel extends Kernel
             new Catalyst\CoreBundle\CatalystCoreBundle(),
             new Catalyst\ContactBundle\CatalystContactBundle(),
             new Catalyst\MediaBundle\CatalystMediaBundle(),
+            new Catalyst\AccountingBundle\CatalystAccountingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

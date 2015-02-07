@@ -1,0 +1,4 @@
+services:
+#    catalyst_accounting.example:
+#        class: Catalyst\AccountingBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
