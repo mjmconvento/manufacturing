@@ -5,8 +5,9 @@ namespace Catalyst\InventoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Catalyst\CoreBundle\Model\HasGeneratedID;
-use Catalyst\CoreBundle\Model\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\HasName;
 
 /**
  * @ORM\Entity
@@ -16,18 +17,42 @@ class Account
 {
     use HasGeneratedID;
     use TrackCreate;
-    
-    /** @ORM\Column(type="string", length=80) */
-    protected $name;
+    use HasName;
 
-    public function setName($name)
+    /** @ORM\Column(type="boolean") */
+    protected $allow_negative;
+
+    public function __construct()
     {
-        $this->name = $name;
+        $this->initHasGeneratedID();
+        $this->initTrackCreate();
+        $this->initHasName();
+
+        $this->allow_negative = false;
+    }
+
+    public function setAllowNegative($allow = true)
+    {
+        $this->allow_negative = $allow;
         return $this;
     }
 
-    public function getName()
+    public function canAllowNegative()
     {
-        return $this->name;
+        if ($this->allow_negative)
+            return true;
+
+        return false;
+    }
+
+    public function toData()
+    {
+        $data = new \stdClass();
+
+        $this->dataHasGeneratedID($data);
+        $this->dataTrackCreate($data);
+        $this->dataHasName($data);
+
+        return $data;
     }
 }
