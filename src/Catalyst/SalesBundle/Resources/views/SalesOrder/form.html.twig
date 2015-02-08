@@ -109,38 +109,7 @@
 
                         <!-- for NON super user user-->
                         {% else %}
-                        {% if (object.canApprove) %}
-                            {{ form.group_select('Branch', 'warehouse_id', wh_opts, object.getWarehouseID, 3, 5) }}
-                            <div class="form-group">
-                                    <label class="col-md-3 control-label">Customer</label>
-                                    <div class="col-md-5">
-                                        <select id="form_customer_id" name="customer_id" class="form-control select_2">
-                                        {{ form.options(cust_opts, object.getCustomerID) }}
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a id="btn_cust_add" href="#cust-form" class="btn green" data-toggle="modal">Add Customer</a>
-                                    </div>
-                                </div>
-                        {% else %}
-                            {{ form.group_text_readonly('Code', 'code', object.getCode, 3, 3) }}
-                            {{ form.group_text_readonly('Branch', 'warehouse_id', object.getWarehouse.getName, 3, 5) }}
-                            {{ form.group_text_readonly('Customer', 'customer_id', object.getCustomer.getName, 3, 5) }}
-                        {% endif %}
-                        {{ form.group_text('Issued By', 'user', object.getUser.getUsername, 3, 4, true) }}
-                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 3, true) }}
 
-                        {% if (object.canApprove) %}
-                            {{ form.group_text('Tax', 'tax', object.getTax, 3, 4) }}
-                            {{ form.group_text('Downpayment', 'downpayment', object.getDownpayment, 3, 4) }}
-                            {{ form.group_text('Balance', 'balance', object.getBalance, 3, 4, true) }} 
-                        {% else %}     
-                            {{ form.group_text('Tax', 'tax', object.getTax, 3, 4, true) }}
-                            {{ form.group_text('Downpayment', 'downpayment', object.getDownpayment, 3, 4, true) }}
-                            {{ form.group_text('Balance', 'balance', object.getBalance, 3, 4, true) }} 
-                        {% endif %}
-
-                        {{ form.group_select('Payment Method', 'payment_id', pm_opts, object.getPaymentMethod.getID|default(null), 3, 3) }}
 
                         {% if (object.getID != null) %}
                         <div class="form-group">
@@ -160,11 +129,9 @@
 
                         <h4 class="form-section">Entries</h4>
 
-                        {% if (object.canModifyEntries) %}
                         <div>
                             <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Sales Order Entry</a>
                         </div>
-                        {% endif %}
 
                         <div class="row table-responsive" style="padding-top:10px">
                             <div class="col-md-11">

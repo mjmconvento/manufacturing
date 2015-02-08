@@ -59,7 +59,7 @@ class SalesOrderController extends CrudController
         return array(
             $grid->newColumn('Code', 'getCode', 'code'),
             $grid->newColumn('Date Issued', 'getDateIssueText', 'date_issue'),
-            $grid->newColumn('Customer', 'getName', 'name', 'c'),
+            $grid->newColumn('Customer', 'getDisplayName', 'last_name', 'c'),
             $grid->newColumn('Issued By', 'getUserName', 'username', 'u'),
             $grid->newColumn('Status', 'getStatusFormatted', 'status_id'),
         );
@@ -189,11 +189,8 @@ class SalesOrderController extends CrudController
     {
         $data = array(
             'id' => $o->getID(),
-            'name' => $o->getName(),
-            'address' => $o->getAddress(),
-            'contact_number' => $o->getContactNumber(),
+            'name' => $o->getDisplayName(),
             'email' => $o->getEmail(),
-            'contact_person' => $o->getContactPerson(),
             'notes' => $o->getNotes(),
         );
 
@@ -277,12 +274,12 @@ class SalesOrderController extends CrudController
     {
     }
 
-    protected function getStockReport()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('select so.code, LOWER(so.date_issue), c.name as c_name, u.name as u_name, so.status_id from Catalyst\SalesBundle\Entity\SalesOrder so join so.customer c join so.user u Order by so.id asc');              
-        return $query->getResult();
-    }    
+//    protected function getStockReport()
+//    {
+//        $em = $this->getDoctrine()->getManager();
+//        $query = $em->createQuery('select so.code, LOWER(so.date_issue), c.name as c_name, u.name as u_name, so.status_id from Catalyst\SalesBundle\Entity\SalesOrder so join so.customer c join so.user u Order by so.id asc');              
+//        return $query->getResult();
+//    }    
 
     public function printJobOrderAction($id)
     {
@@ -339,27 +336,15 @@ class SalesOrderController extends CrudController
     public function addFormAction()
     {
         $this->checkAccess($this->route_prefix . '.add');
-
         $this->hookPreAction();
         $obj = $this->newBaseClass();
 
         $params = $this->getViewParams('Add');
         $params['object'] = $obj;
 
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-
         // check if we have access to form
         $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-
         $this->padFormParams($params, $obj);
-
         return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);
     }
 

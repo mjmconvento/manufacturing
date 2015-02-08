@@ -43,12 +43,12 @@ class SalesManager
             ->getRepository('CatalystSalesBundle:Customer')
             ->findBy(
                 $filter,
-                array('name' => 'ASC')
+                array('last_name' => 'ASC')
             );
 
         $c_opts = array();
         foreach ($custs as $cust)
-            $c_opts[$cust->getID()] = $cust->getName();
+            $c_opts[$cust->getID()] = $cust->getDisplayName();
 
         return $c_opts;
     }

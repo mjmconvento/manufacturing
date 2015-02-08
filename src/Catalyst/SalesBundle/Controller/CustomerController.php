@@ -89,18 +89,15 @@ class CustomerController extends CrudController
     {
         if ($obj == null)
             return '';
-        return $obj->getName();
+        return $obj->getDisplayName();
     }
 
     protected function getGridColumns()
     {
         $grid = $this->get('catalyst_grid');
         return array(
-            $grid->newColumn('Name', 'getName', 'name'),
-            $grid->newColumn('Address', 'getAddress', 'address'),
-            $grid->newColumn('Number', 'getContactNumber', 'contact_number'),
+            $grid->newColumn('Name', 'getDisplayName', 'last_name'),
             $grid->newColumn('Email', 'getEmail', 'email'),
-            $grid->newColumn('Contact', 'getContactPerson', 'contact_person'),
         );
     }
 
