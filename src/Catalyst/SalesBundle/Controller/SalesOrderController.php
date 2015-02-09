@@ -91,7 +91,7 @@ class SalesOrderController extends CrudController
         $params['wh_opts'] = $inv->getWarehouseOptions(array('flag_shopfront' => true));
         $params['prod_opts'] = $inv->getProductOptions(array('flag_sale' => true, 'flag_service' => false));
         $params['cust_opts'] = $sm->getCustomerOptions();
-        $params['v_wh_opts'] = $inv->getWarehouseOptions(array('type_id' => 'virtual'));        
+        $params['v_wh_opts'] = $inv->getWarehouseOptions();        
 
         // payment method
         $pms = $em->getRepository('CatalystSalesBundle:PaymentMethod')->findAll();

@@ -103,10 +103,6 @@ class CustomerController extends CrudController
 
     protected function padFormParams(&$params, $o = null)
     {
-        $inv = $this->get('catalyst_inventory');
-
-        $params['wh_opts'] = $inv->getWarehouseOptions(array('type_id' => 'virtual'));
-
         if ($o->getID())
             $params['stock_cols'] = $this->getStockColumns();
 
