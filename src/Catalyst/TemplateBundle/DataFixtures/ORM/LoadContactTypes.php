@@ -18,7 +18,7 @@ class LoadContactTypes implements FixtureInterface
         $types = ['Work', 'Mobile', 'Home', 'Fax'];
         foreach($types as $type){
             $pt = new PhoneType();
-            $pt->setName($type);
+            $pt->setPhoneType($type);
             $em->persist($pt);
         }
         $em->flush();
@@ -27,7 +27,7 @@ class LoadContactTypes implements FixtureInterface
         $types = ['Individual', 'Company'];
         foreach($types as $type){
             $ct = new ContactType();
-            $ct->setName($type);
+            $ct->setContactType($type);
             $em->persist($ct);
         }
         $em->flush();    

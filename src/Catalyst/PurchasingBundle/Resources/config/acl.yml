@@ -44,3 +44,24 @@ acl:
           label: "Edit"
         - id: cat_pur_del.delete
           label: "Cancel"
+          
+    - category: Purchase Request
+      entries:
+        - id: cat_pur_pr.menu
+          label: "Menu"
+        - id: cat_pur_pr.view
+          label: "View"
+        - id: cat_pur_pr.add
+          label: "Add"
+        - id: cat_pur_pr.edit
+          label: "Edit"
+        - id: cat_pur_pr.approve
+          label: "Approve"
+        - id: cat_pur_pr.send
+          label: "Send"
+        - id: cat_pur_pr.fulfill
+          label: "Fulfill"
+        - id: cat_pur_pr.cancel
+          label: "Cancel"
+        - id: cat_pur_pr.delete
+          label: "Delete"

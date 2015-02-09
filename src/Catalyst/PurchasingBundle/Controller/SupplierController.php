@@ -48,7 +48,7 @@ class SupplierController extends CrudController
     {
         $inv = $this->get('catalyst_inventory');
 
-        $params['wh_opts'] = $inv->getWarehouseOptions(array('type_id' => 'virtual'));
+        $params['wh_opts'] = $inv->getWarehouseOptions();
 
         return $params;
     }

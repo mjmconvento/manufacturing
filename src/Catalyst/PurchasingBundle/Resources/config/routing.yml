@@ -141,3 +141,54 @@ cat_pur_del_delete:
     pattern: /delivery/{id}/delete
     methods: [GET]
     defaults: { _controller: CatalystPurchasingBundle:Delivery:delete }
+
+
+cat_pur_pr_index:
+    pattern: /prs
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:index }
+
+cat_pur_pr_add_form:
+    pattern: /pr
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:addForm }
+
+cat_pur_pr_add_submit:
+    pattern: /pr
+    methods: [POST]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:addSubmit }
+
+cat_pur_pr_add_entry:
+    pattern: /pr/add/{entry_id}
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:addEntry }
+
+cat_pur_pr_add_entry_submit:
+    pattern: /pr/add/{entry_id}
+    methods: [POST]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:addEntrySubmit }
+
+cat_pur_pr_edit_form:
+    pattern: /pr/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:editForm }
+
+cat_pur_pr_edit_submit:
+    pattern: /pr/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:editSubmit }
+
+cat_pur_pr_delete:
+    pattern: /pr/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:delete }
+
+cat_pur_pr_grid:
+    pattern: /prs/grid
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:grid }
+
+cat_pur_pr_ajax_get:
+    pattern: /ajax/pr/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:ajaxGet }

@@ -111,7 +111,7 @@
                             <label class="col-md-3 control-label">Date Issued</label>
                             <div class ="col-md-3">
                                 <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
-                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateIssue|date('m/d/Y') }}" readonly>
+                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateCreate|date('m/d/Y') }}" readonly>
                                     <span class="input-group-btn">
                                     <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
                                     </span>
