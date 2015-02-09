@@ -18,7 +18,7 @@ class Phone
 
     /** 
     * @ORM\ManyToOne(targetEntity="PhoneType")
-    * @ORM\JoinColumn(name="phn_typ_id", referencedColumnName="id")
+    * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
     */
     protected $name;
 
@@ -34,7 +34,7 @@ class Phone
     public function setPhoneType(PhoneType $name)
     {
         $this->name = $name;
-        $this->phn_typ_id= $name->getID();
+        $this->type_id = $name->getID();
         return $this;
     }
 
@@ -62,7 +62,7 @@ class Phone
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
 
-        $data->phn_typ_id = $this->phn_typ_id;
+        $data->type_id = $this->type_id;
         $data->number = $this->number;
 
         return $data;

@@ -8,7 +8,7 @@ use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 
 /**
 * @ORM\Entity
-* @ORM\Table(name="cnt_phn_type")
+* @ORM\Table(name="cnt_phone_type")
 */
 class PhoneType
 {
