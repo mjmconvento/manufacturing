@@ -4,6 +4,8 @@ namespace Catalyst\ContactBundle\Template\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Catalyst\ContactBundle\Entity\ContactType;
+
 trait HasContactInfo
 {
     use HasAddresses;
@@ -23,6 +25,12 @@ trait HasContactInfo
 
     /** @ORM\Column(type="string", length=80) */
     protected $email;
+
+    /** 
+    * @ORM\ManyToOne(targetEntity="\Catalyst\ContactBundle\Entity\ContactType")
+    * @ORM\JoinColumn(name="cnt_type_id", referencedColumnName="id")
+    */
+    protected $contact_type;
 
     protected function initHasContactInfo()
     {
@@ -85,6 +93,17 @@ trait HasContactInfo
         return $this->email;
     }
 
+    public function setContactTypeID(ContactType $c_type)
+    {
+        $this->contact_type = $c_type;
+        return $this;
+    }
+
+    public function getContactTypeID()
+    {
+        return $this->contact_type;
+    }
+
     public function getDisplayName()
     {
         // TODO: figure out if company vs individual
@@ -98,6 +117,7 @@ trait HasContactInfo
         $data->middle_name = $this->middle_name;
         $data->salutation = $this->salutation;
         $data->email = $this->email;
+        $data->cnt_type_id = $this->getContactType()->getID();
 
         $this->dataHasAddresses($data);
         $this->dataHasPHones($data);
