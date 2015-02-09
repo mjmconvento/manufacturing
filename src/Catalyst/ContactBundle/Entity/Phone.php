@@ -16,7 +16,10 @@ class Phone
     use HasGeneratedID;
     use TrackCreate;
 
-    /** @ORM\Column(type="string", length=50) */
+    /** 
+    * @ORM\ManyToOne(targetEntity="PhoneType")
+    * @ORM\JoinColumn(name="phn_typ_id", referencedColumnName="id")
+    */
     protected $name;
 
     /** @ORM\Column(type="string", length=50) */
@@ -28,13 +31,14 @@ class Phone
         $this->initTrackCreate();
     }
 
-    public function setName($name)
+    public function setPhoneType(PhoneType $name)
     {
         $this->name = $name;
+        $this->phn_typ_id= $name->getID();
         return $this;
     }
 
-    public function getName()
+    public function getPhoneType()
     {
         return $this->name;
     }
@@ -58,7 +62,7 @@ class Phone
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
 
-        $data->name = $this->name;
+        $data->phn_typ_id = $this->phn_typ_id;
         $data->number = $this->number;
 
         return $data;
