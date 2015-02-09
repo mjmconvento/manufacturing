@@ -28,7 +28,7 @@ trait HasContactInfo
 
     /** 
     * @ORM\ManyToOne(targetEntity="\Catalyst\ContactBundle\Entity\ContactType")
-    * @ORM\JoinColumn(name="cnt_type_id", referencedColumnName="id")
+    * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
     */
     protected $contact_type;
 
@@ -117,7 +117,7 @@ trait HasContactInfo
         $data->middle_name = $this->middle_name;
         $data->salutation = $this->salutation;
         $data->email = $this->email;
-        $data->cnt_type_id = $this->getContactType()->getID();
+        $data->type_id = $this->getContactType()->getID();
 
         $this->dataHasAddresses($data);
         $this->dataHasPHones($data);
