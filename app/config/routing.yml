@@ -1,3 +1,27 @@
+ser_dashboard:
+    resource: "@SereniteaDashboardBundle/Resources/config/routing.yml"
+    prefix:   /
+
+ser_purchasing:
+    resource: "@SereniteaPurchasingBundle/Resources/config/routing.yml"
+    prefix:   /purchasing
+
+ser_inventory:
+    resource: "@SereniteaInventoryBundle/Resources/config/routing.yml"
+    prefix:   /inventory
+
+ser_online_forms:
+    resource: "@SereniteaOnlineFormsBundle/Resources/config/routing.yml"
+    prefix:   /onlineforms
+
+ser_order:
+    resource: "@SereniteaOrderBundle/Resources/config/routing.yml"
+    prefix:   /ordering
+
+ser_admin:
+    resource: "@SereniteaAdminBundle/Resources/config/routing.yml"
+    prefix:   /
+
 catalyst_accounting:
     resource: "@CatalystAccountingBundle/Resources/config/routing.yml"
     prefix:   /accounting

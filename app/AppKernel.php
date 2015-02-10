@@ -46,6 +46,14 @@ class AppKernel extends Kernel
             new Catalyst\ContactBundle\CatalystContactBundle(),
             new Catalyst\MediaBundle\CatalystMediaBundle(),
             new Catalyst\AccountingBundle\CatalystAccountingBundle(),
+
+            //serenitea modules
+            new Serenitea\AdminBundle\SereniteaAdminBundle(),
+            new Serenitea\DashboardBundle\SereniteaDashboardBundle(),
+            new Serenitea\PurchasingBundle\SereniteaPurchasingBundle(),
+            new Serenitea\OnlineFormsBundle\SereniteaOnlineFormsBundle(),
+            new Serenitea\InventoryBundle\SereniteaInventoryBundle(),
+            new Serenitea\OrderBundle\SereniteaOrderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

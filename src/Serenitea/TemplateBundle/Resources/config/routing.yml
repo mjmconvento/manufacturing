@@ -1,0 +1,3 @@
+serenitea_template_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SereniteaTemplateBundle:Default:index }

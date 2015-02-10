@@ -1,0 +1,89 @@
+ser_dashboard_index:
+    pattern: /
+    methods: [GET]
+    defaults: { _controller: SereniteaDashboardBundle:Dashboard:index }
+
+
+ser_dashboard_unfulfilled:
+    path: /unfulfilled
+    defaults: { _controller: SereniteaDashboardBundle:Dashboard:unfulfilled }
+
+ser_dashboard_unfulfilled_csv:
+    path: /unfulfilled/csv
+    defaults: { _controller: SereniteaDashboardBundle:Dashboard:csv }
+
+
+ser_dashboard_aboutexpire:
+    path: /abouttoexpire
+    defaults: { _controller: SereniteaDashboardBundle:AboutExpire:aboutexpire }
+
+ser_dashboard_aboutexpire_csv:
+    path: /abouttoexpire/csv
+    defaults: { _controller: SereniteaDashboardBundle:AboutExpire:csv }
+
+
+ser_dashboard_expired:
+    path: /expired
+    defaults: { _controller: SereniteaDashboardBundle:Expired:expired }
+
+ser_dashboard_expired_csv:
+    path: /expired/csv
+    defaults: { _controller: SereniteaDashboardBundle:Expired:csv }
+
+
+ser_dashboard_pending:
+    path: /pending
+    defaults: { _controller: SereniteaDashboardBundle:Pending:pending }
+
+ser_dashboard_pending_csv:
+    path: /pending/csv
+    defaults: { _controller: SereniteaDashboardBundle:Pending:csv }
+
+
+ser_dashboard_damaged:
+    path: /damaged
+    defaults: { _controller: SereniteaDashboardBundle:Damaged:damage }
+
+ser_dashboard_damaged_csv:
+    path: /damaged/csv
+    defaults: { _controller: SereniteaDashboardBundle:Damaged:csv }
+
+
+ser_dashboard_returned:
+    path: /returned
+    defaults: { _controller: SereniteaDashboardBundle:Returned:return }
+
+ser_dashboard_returned_csv:
+    path: /returned/csv
+    defaults: { _controller: SereniteaDashboardBundle:Returned:csv }
+
+
+ser_dashboard_unpaid:
+    path: /unpaid
+    defaults: { _controller: SereniteaDashboardBundle:Unpaid:index }
+
+ser_dashboard_unpaid_csv:
+    path: /unpaid/csv
+    defaults: { _controller: SereniteaDashboardBundle:Unpaid:csv }
+
+
+ser_dashboard_incomplete:
+    path: /incomplete
+    defaults: { _controller: SereniteaDashboardBundle:Incomplete:index }
+
+
+ser_dashboard_excessive:
+    path: /excessive
+    defaults: { _controller: SereniteaDashboardBundle:Excessive:index }
+
+ser_dashboard_below:
+    path: /below
+    defaults: { _controller: SereniteaDashboardBundle:Below:index }
+
+ser_dashboard_below_csv:
+    path: /below/csv
+    defaults: { _controller: SereniteaDashboardBundle:Below:csv }
+
+ser_dashboard_above:
+    path: /above
+    defaults: { _controller: SereniteaDashboardBundle:Above:index }

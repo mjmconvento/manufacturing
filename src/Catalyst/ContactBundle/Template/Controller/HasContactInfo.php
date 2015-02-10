@@ -16,7 +16,8 @@ trait HasContactInfo
             ->setLastName($data['last_name'])
             ->setMiddleName($data['middle_name'])
             ->setSalutation($data['salutation'])
-            ->setEmail($data['email']);
+            ->setEmail($data['email'])
+            ->setContactTypeID($data['type_id']);
     }
 }
 

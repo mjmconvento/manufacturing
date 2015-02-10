@@ -5,10 +5,12 @@ catalyst_menu:
         - CatalystConfigurationBundle
         - CatalystUserBundle
         - CatalystInventoryBundle
-        - CatalystManufacturingBundle
+        # - CatalystManufacturingBundle
         - CatalystPurchasingBundle
-        - CatalystSalesBundle
+        # - CatalystSalesBundle
         - CatalystServiceBundle
+        - SereniteaOrderBundle        
+        - SereniteaOnlineFormsBundle        
 
 catalyst_user:
     acl_entries:
@@ -30,6 +32,10 @@ catalyst_user:
           label: Sales
         - id: CatalystServiceBundle
           label: Service
+        - id: SereniteaOrderBundle
+          label: Requisition
+        - id: SereniteaOnlineFormsBundle
+          label: Online Forms        
 
 catalyst_configuration:
     bundles:

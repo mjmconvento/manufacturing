@@ -1,0 +1,7 @@
+parameters:
+#    catalyst_purchasing.example.class: Catalyst\PurchasingBundle\Example
+
+services:
+#    catalyst_purchasing.example:
+#        class: %catalyst_purchasing.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

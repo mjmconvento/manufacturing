@@ -1,0 +1,7 @@
+parameters:
+#    serenitea_admin.example.class: Serenitea\AdminBundle\Example
+
+services:
+#    serenitea_admin.example:
+#        class: %serenitea_admin.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

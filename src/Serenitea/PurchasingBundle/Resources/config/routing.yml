@@ -1,0 +1,4 @@
+serenitea_pur_po:
+    path:     /po
+    methods: [GET]
+    defaults: { _controller: SereniteaPurchasingBundle:PurchaseOrder:po }

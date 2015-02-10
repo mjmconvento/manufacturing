@@ -1,0 +1,13 @@
+menu_items:
+    - id: menu_forms
+      acl: serenitea_forms.menu
+      label: Online Forms
+      icon: fa-file
+    - id: serenitea_pullout_index
+      acl: serenitea_pullout.menu
+      label: Pull Out Forms
+      parent: menu_forms
+    - id: serenitea_repair_index
+      acl: serenitea_repair.menu
+      label: Job Order Forms
+      parent: menu_forms

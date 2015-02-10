@@ -1,0 +1,153 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Requested Item</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Order Information</h4>
+                        <h4>Branch Details: </h4>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Date Issued</label>
+                            <div class ="col-md-3">
+                                <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{#{{ object.getDateIssue|date('m/d/Y') }}#}11/26/2014" readonly>
+                            </div>
+                        </div>
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Code</label>
+                            <div class ="col-md-3">#}
+                                {#<input type="text" class="form-control" name="code" placeholder="Code" value="#}{#{{ object.getCode }}"#} {#readonly>#}
+                            {#</div>#}
+                        {#</div>#}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">PO #</label>
+                            <div class ="col-md-3">
+                               <input id="code" type="text" class="form-control" name="code" value="PO-2014-00001" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Branch Name</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="Makati" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contact Person</label>
+                            <div class ="col-md-3">
+                                <input id="contact_person" type="text" class="form-control" name="contact_person" value="Sample Contact" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Co. Address</label>
+                            <div class ="col-md-3">
+                                <textarea id="address"  class="form-control" name="address" value="" readonly>Sample address somewhere out there Metro Manila, Philippines</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Contact Number</label>
+                            <div class ="col-md-3">
+                                <input id="contact_number" type="text" class="form-control" name="contact_number" value="123-45-67" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Fax</label>
+                            <div class ="col-md-3">
+                                <input id="fax_number" type="text" class="form-control" name="fax_number" value="1212121212" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Date Create P.O.</label>
+                            <div class ="col-md-3">
+                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
+                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{#{{ object.getDateIssue|date('m/d/Y') }}#}11/26/2014" readonly>
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Target Delivery Date</label>
+                            <div class ="col-md-3">
+                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
+                                    <input type="text" class="form-control" name="date_deliver" placeholder="Date Delivered" value="{#{{ delivery.getDateDeliver|date('m/d/Y') }}#}12/01/2014" readonly>
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Status</label>
+                            <div class ="col-md-3">
+                                <input id="status" type="text" class="form-control" name="status" value="Sent" readonly>
+                            </div>
+                        </div>
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Code</label>
+                            <div class ="col-md-3">#}
+                              {#  <input type="text" class="form-control" name="code" placeholder="Delivery Code" value="{{ delivery.getCode }}">
+                            </div>
+                        </div>#}
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Warehouse</label>
+                            <div class ="col-md-3">
+                                <select id="warehouse_id" class="select_2 form-control" name="wh_id">#}
+                                {#{{ form_tools.options(wh_opts, 0) }}#}
+                                {#</select>
+                            </div>
+                        </div>#}
+
+
+
+                        <h4 class="form-section">Entries</h4>
+                                             
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-11">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code </th>
+                                            <th>Item Name</th>
+                                            <th style="width:200px">Requested Quantity</th>
+                                            <th style="width:200px">Approved Quantity</th>                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody id="en_table">
+                                    {#{% for ent in object.getEntries %}#}
+                                        <tr>
+                                            <td>pwd-123</td>
+                                            <td>Frost Powder<input type="hidden" name="en_prod_id[]" value="{#{{ entry.getProduct.getID }}#}">{#{{ entry.getProduct.getCode }}#} {#{{ entry.getProduct.getName }}#}</td>
+                                            <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{#{{ entry.getQuantity }}#}3" readonly></td>
+                                            <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{#{{ entry.getQuantity }}#}"></td>                                           
+                                        </tr>
+                                    {#{% endfor %}#}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path(route_list) }}" class="btn default">&lt; Back</a>
+                        </div>
+                    </div>
+                </form>       
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

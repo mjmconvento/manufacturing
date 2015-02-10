@@ -1,0 +1,38 @@
+serenitea_pullout_index:
+    path:     /pullout
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:index }
+    
+serenitea_pullout_add_form:
+    path:     /pullout/pulloutform
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:addForm }
+    
+serenitea_pullout_csv:
+    path: /pullout/csv
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:csv }   
+
+serenitea_pullout_view:
+    path:     /pullout/preview
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:view }  
+    
+
+serenitea_repair_index:
+    path:     /repair
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:index }
+    
+serenitea_repair_add_form:
+    path:     /repair/repairform
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addForm }
+    
+serenitea_repair_csv:
+    path: /repair/csv
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:csv }    
+
+serenitea_repair_view:
+    path:     /repair/preview
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:view } 

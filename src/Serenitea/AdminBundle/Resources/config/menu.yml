@@ -1,0 +1,5 @@
+menu_items:
+    - id: ser_branch_index
+      acl: ser_branch.menu
+      label: Branch Management
+      parent: menu_admin

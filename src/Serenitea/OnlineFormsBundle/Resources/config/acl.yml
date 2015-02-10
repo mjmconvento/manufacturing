@@ -1,0 +1,35 @@
+acl:
+    - category: Online Forms
+      entries:
+        - id: serenitea_forms.menu
+          label: "Menu"
+    - category: Pull Out Forms
+      entries:
+        - id: serenitea_pullout.menu
+          label: "Menu"
+        - id: serenitea_pullout.view
+          label: "View"
+        - id: serenitea_pullout.add
+          label: "Add"
+        - id: serenitea_pullout.edit
+          label: "Edit"
+        - id: serenitea_pullout.delete
+          label: "Delete"
+    - category: Job Order Forms
+      entries:
+        - id: serenitea_repair.menu
+          label: "Menu"
+        - id: serenitea_repair.view
+          label: "View"
+        - id: serenitea_repair.add
+          label: "Add"
+        - id: serenitea_repair.edit
+          label: "Edit"
+        - id: serenitea_repair.approve
+          label: "Approve"
+        - id: serenitea_repair.send
+          label: "Send"
+        - id: serenitea_repair.fulfill
+          label: "Fulfill"
+        - id: serenitea_repair.cancel
+          label: "Cancel"

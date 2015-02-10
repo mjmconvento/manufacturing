@@ -1,0 +1,13 @@
+acl:
+    - category: Branch Management
+      entries:
+        - id: ser_branch.menu
+          label: "Menu"
+        - id: ser_branch.view
+          label: "View"
+        - id: ser_branch.add
+          label: "Add"
+        - id: ser_branch.edit
+          label: "Edit"
+        - id: ser_branch.delete
+          label: "Delete"

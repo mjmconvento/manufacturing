@@ -1,0 +1,91 @@
+ser_request_index:
+    pattern: /orders
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Request:index}
+
+ser_request_add_form:
+    pattern: /order
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Request:addForm}
+
+ser_request_view:
+    pattern: /orders/view
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Request:view}
+
+
+ser_receive_index:
+    pattern: /receive
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Receive:index}
+
+ser_receive_csv:
+    path: /receive/csv
+    defaults: { _controller: SereniteaOrderBundle:Receive:csv }
+
+ser_receive_print:
+    path: /receive/print
+    defaults: { _controller: SereniteaOrderBundle:Receive:print }
+
+#ser_receive_add_form:
+#    pattern: /receive
+#    methods: [GET]
+#    defaults: { _controller: SereniteaOrderBundle:Receive:addForm }
+
+ser_receive_edit:
+    pattern: /receive/po
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Receive:edit }
+
+ser_receive_edit_form:
+    pattern: /receive/po
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Receive:editForm }
+
+
+serenitea_rlist_index:
+    path:     /requestlist
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestList:index }
+
+serenitea_rlist_csv:
+    path: /requestlist/csv
+    defaults: { _controller: SereniteaOrderBundle:RequestList:csv }
+
+serenitea_rlist_print:
+    path: /requestlist/print
+    defaults: { _controller: SereniteaOrderBundle:RequestList:print }
+
+
+serenitea_rlist_edit:
+    path:     /requestlist/po
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestList:edit }
+
+serenitea_dlist_index:
+    path:     /deliverylist
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:DeliveriesList:index }
+
+serenitea_dlist_view:
+    path:     /deliverylist/receipt
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:DeliveriesList:view }
+
+
+ser_complete_index:
+    pattern: /complete
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Complete:index }
+
+ser_complete_csv:
+    path: /complete/csv
+    defaults: { _controller: SereniteaOrderBundle:Complete:csv }
+
+ser_complete_print:
+    path: /complete/print
+    defaults: { _controller: SereniteaOrderBundle:Complete:print }
+
+ser_complete_view:
+    path: /complete/view
+    defaults: { _controller: SereniteaOrderBundle:Complete:view }

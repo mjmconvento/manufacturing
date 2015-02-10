@@ -1,0 +1,35 @@
+serenitea_inv_index:
+    path:  /internal
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Internal:index }
+
+serenitea_inv_csv:
+    path: /internal/csv
+    defaults: { _controller: SereniteaInventoryBundle:Internal:csv }
+    
+serenitea_inv_print:
+    path: /internal/print
+    defaults: { _controller: SereniteaInventoryBundle:Internal:print }    
+    
+    
+serenitea_inv_br_index:
+    path:     /branch
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Branch:index }
+
+serenitea_inv_edit:
+    path:    /internal/edit
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Internal:edit }
+    
+serenitea_inv_br_csv:
+    path: /branch/csv
+    defaults: { _controller: SereniteaInventoryBundle:Branch:csv }
+    
+serenitea_inv_br_print:
+    path: /branch/print
+    defaults: { _controller: SereniteaInventoryBundle:Branch:print }
+
+serenitea_begin_index:
+    path: /begin 
+    defaults: { _controller: SereniteaInventoryBundle:Begin:index }

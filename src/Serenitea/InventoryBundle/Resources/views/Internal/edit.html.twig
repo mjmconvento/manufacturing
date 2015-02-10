@@ -1,0 +1,229 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Internal Inventory</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Item Code</label>
+                            <div class ="col-md-3">
+                                <input type="text" class="form-control" name="code" placeholder="Code" value="{#{{ object.getDateIssue|date('m/d/Y') }}#}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Description</label>
+                            <div class ="col-md-3">
+                                <input type="text" class="form-control" name="date_issue" placeholder="" value="{#{{ object.getDateIssue|date('m/d/Y') }}#}" readonly>
+                            </div>
+                        </div>
+                            
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Category</label>
+                            <div class ="col-md-3">
+                                <input type="text" class="form-control" name="code" placeholder="" value="{#{{ object.getDateIssue|date('m/d/Y') }}#}" readonly>
+                            </div>
+                        </div>
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Code</label>
+                            <div class ="col-md-3">#}
+                                {#<input type="text" class="form-control" name="code" placeholder="Code" value="#}{#{{ object.getCode }}"#} {#readonly>#}
+                            {#</div>#}
+                        {#</div>#}
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Supplier</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Orig Price</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Selling Price</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Quantity</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Specifications</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">User Created</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Date Created</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Update User</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Update Date</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Status</label>
+                            <div class ="col-md-3">
+                               <input id="name" type="text" class="form-control" name="name" value="" readonly>
+                            </div>
+                        </div>
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Contact Person</label>
+                            <div class ="col-md-3">
+                                <input id="contact_person" type="text" class="form-control" name="contact_person" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Co. Address</label>
+                            <div class ="col-md-3">
+                                <textarea id="address"  class="form-control" name="address" value="" readonly></textarea>
+                            </div>
+                        </div>#}
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Contact Number</label>
+                            <div class ="col-md-3">
+                                <input id="contact_number" type="text" class="form-control" name="contact_number" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Fax</label>
+                            <div class ="col-md-3">
+                                <input id="fax_number" type="text" class="form-control" name="fax_number" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Date Create P.O.</label>
+                            <div class ="col-md-3">
+                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
+                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{#{{ object.getDateIssue|date('m/d/Y') }}" readonly>
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Target Delivery Date</label>
+                            <div class ="col-md-3">
+                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
+                                    <input type="text" class="form-control" name="date_deliver" placeholder="Date Delivered" value="{#{{ delivery.getDateDeliver|date('m/d/Y') }}" readonly>
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>#}
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Code</label>
+                            <div class ="col-md-3">#}
+                              {#  <input type="text" class="form-control" name="code" placeholder="Delivery Code" value="{{ delivery.getCode }}">
+                            </div>
+                        </div>#}
+
+                        {#<div class="form-group">
+                            <label class="col-md-3 control-label">Warehouse</label>
+                            <div class ="col-md-3">
+                                <select id="warehouse_id" class="select_2 form-control" name="wh_id">#}
+                                {#{{ form_tools.options(wh_opts, 0) }}#}
+                                {#</select>
+                            </div>
+                        </div>#}                      
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path(route_list) }}" class="btn default">&lt; Back</a>
+                        </div>
+                    </div>
+                </form>       
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="en_form" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Order Entry</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal form">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Item Name</label>
+                            <div class ="col-md-8">
+                                <select id="en_product_id" class="form-control select_2" name="prod_id">
+                                {#{{ form.options(prod_opts, 0) }}#}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Quantity</label>
+                            <div class ="col-md-8">
+                                <input id="en_qty" type="text" class="form-control" name="qty" placeholder="Quantity">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Unit Price</label>
+                            <div class ="col-md-8">
+                                <input id="en_price" type="text" class="form-control" name="price" placeholder="Price">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+                <button id="btn_en_submit" type="button" class="btn green">Add Item</button>
+            </div>
+        </div>
+    </div>
+</div>                            
+{% endblock %}

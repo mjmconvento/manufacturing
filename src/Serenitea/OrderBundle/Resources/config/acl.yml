@@ -1,0 +1,73 @@
+acl:
+    - category: Order
+      entries:
+        - id: ser_order.menu
+          label: "Menu"
+    - category: Requested Items
+      entries:
+        - id: ser_request.menu
+          label: "Menu"
+        - id: ser_request.view
+          label: "View"
+        - id: ser_request.add
+          label: "Add"
+        - id: ser_request.edit
+          label: "Edit"
+        - id: ser_request.delete
+          label: "Delete"
+    - category: Incomplete Deliveries
+      entries:
+        - id: ser_receive.menu
+          label: "Menu"
+        - id: ser_receive.view
+          label: "View"
+        - id: ser_receive.add
+          label: "Add"
+        - id: ser_receive.edit
+          label: "Edit"
+        - id: ser_receive.approve
+          label: "Approve"
+        - id: ser_receive.send
+          label: "Send"
+        - id: ser_receive.fulfill
+          label: "Fulfill"
+        - id: ser_receive.cancel
+          label: "Cancel"
+        - id: ser_receive.delete
+          label: "Delete"
+    - category: Completed Deliveries
+      entries:
+        - id: ser_complete.menu
+          label: "Menu"
+        - id: ser_complete.view
+          label: "View"
+    - category: Requested Items List (Comi)
+      entries:
+        - id: serenitea_rlist.menu
+          label: "Menu"
+        - id: serenitea_rlist.view
+          label: "View"
+        - id: serenitea_rlist.add
+          label: "Add"
+        - id: serenitea_rlist.edit
+          label: "Edit"
+        - id: serenitea_rlist.delete
+          label: "Delete"     
+    - category: Deliveries List (Comi)
+      entries:
+        - id: serenitea_dlist.menu
+          label: "Menu"
+        - id: serenitea_dlist.view
+          label: "View"
+        - id: serenitea_dlist.add
+          label: "Add"
+        - id: serenitea_dlist.edit
+          label: "Edit"
+        - id: serenitea_dlist.approve
+          label: "Approve"
+        - id: serenitea_dlist.send
+          label: "Send"
+        - id: serenitea_dlist.fulfill
+          label: "Fulfill"
+        - id: serenitea_dlist.cancel
+          label: "Cancel"      

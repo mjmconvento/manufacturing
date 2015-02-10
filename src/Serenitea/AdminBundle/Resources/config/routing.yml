@@ -1,0 +1,4 @@
+ser_branch_index:
+    pattern: /branches
+    methods: [GET]
+    defaults: { _controller: SereniteaAdminBundle:Branch:index }

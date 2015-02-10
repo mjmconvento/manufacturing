@@ -1,0 +1,7 @@
+parameters:
+#    serenitea_dashboard.example.class: Serenitea\DashboardBundle\Example
+
+services:
+#    serenitea_dashboard.example:
+#        class: %serenitea_dashboard.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
