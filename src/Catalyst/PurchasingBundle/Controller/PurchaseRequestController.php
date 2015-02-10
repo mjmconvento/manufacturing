@@ -90,7 +90,9 @@ class PurchaseRequestController extends CrudController
 
     protected function newBaseClass()
     {
-        return new PurchaseRequest();
+        $obj = new PurchaseRequest();
+        $obj->setUserCreate($this->getUser());
+        return $obj;
     }
 
     protected function getObjectLabel($obj)

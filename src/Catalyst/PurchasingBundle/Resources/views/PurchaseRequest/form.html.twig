@@ -6,12 +6,21 @@
     <div class="col-md-12">
         <div class="portlet box blue-hoki">
             <div class="portlet-title">
-                <div class="caption">Purchase Order {{ object.getCode }}</div>
+                <div class="caption">Purchase Request {{ object.getCode }}</div>
             </div>
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
+                        {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
+                        {{ form.group_text('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 3) }}
+                      <h4 class="form-section">Purchase Request Information</h4>
+                        {{ form.group_text('Reference Number', 'reference_num', object.getReferenceNum, 3, 3) }}
+                        {{ form.group_text('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_text('Requested By', 'request_by', object.getUserCreate.getName, 3, 3,true) }}  
+                        {{ form.group_text('Department', 'department', object.getDepartment, 3, 3) }}  
+                        {{ form.group_textarea('Purpose', 'purpose', object.getPurpose,4 , 3, 5) }} 
+                        {{ form.group_textarea('Remarks', 'notes', object.getNotes,4 , 3, 5) }} 
 {#
                         <!-- fields for super user -->
                         {% if super_user.getName == app.user.getName %}
@@ -29,32 +38,6 @@
 
                         {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
                         {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
-
-                        {{ form.group_select('Status', 'status_id', status_opts, object.getStatus, 3, 5) }}
-
-                        {% if (object.getID != null) %}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-5">
-                                {% if (object.canApprove) %}
-                                <a href="{{ path('cat_pur_po_status_approve', {'id': object.getID}) }}" class="btn green">Approve</a>
-                                {% endif %}
-
-                                {% if (object.canSend) %}
-                                <a href="{{ path('cat_pur_po_status_send', {'id': object.getID}) }}" class="btn green">Send</a>
-                                {% endif %}
-
-                                {% if (object.canCancel) %}
-                                <a href="{{ path('cat_pur_po_status_cancel', {'id': object.getID}) }}" class="btn red">Cancel</a>
-                                {% endif %}
-
-                                {% if (object.canFulfill) %}
-                                <a href="{{ path('cat_pur_po_status_fulfill', {'id': object.getID}) }}" class="btn green">Fulfill</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-
 
                         <h4 class="form-section">Entries</h4>
 
@@ -107,6 +90,7 @@
 
                         <!-- fields for NON super user -->
                         {% else %}#}
+                        
                         <div class="form-group">
                             <label class="col-md-3 control-label">Date Issued</label>
                             <div class ="col-md-3">
@@ -119,51 +103,12 @@
                             </div>
                         </div>
 
-                        {% if (object.canModifyEntries) %}
-                            {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {% else %}
-                            {{ form.group_text('Code', 'code', object.getCode, 3, 3, true) }}
-                        {% endif %}
-
-                        {% if (object.canModifyEntries) %}
-                            {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
-                        {% else %}
-                            {{ form.group_text('Supplier', 'supplier_id', object.getSupplier.getName, 3, 5, true) }}
-                        {% endif %}
-
-                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 3,true) }}
-
-                        {% if (object.getID != null) %}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-5">
-                                {% if (object.canApprove) %}
-                                <a href="{{ path('cat_pur_po_status_approve', {'id': object.getID}) }}" class="btn green">Approve</a>
-                                {% endif %}
-
-                                {% if (object.canSend) %}
-                                <a href="{{ path('cat_pur_po_status_send', {'id': object.getID}) }}" class="btn green">Send</a>
-                                {% endif %}
-
-                                {% if (object.canCancel) %}
-                                <a href="{{ path('cat_pur_po_status_cancel', {'id': object.getID}) }}" class="btn red">Cancel</a>
-                                {% endif %}
-
-                                {% if (object.canFulfill) %}
-                                <a href="{{ path('cat_pur_po_status_fulfill', {'id': object.getID}) }}" class="btn green">Fulfill</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-
 
                         <h4 class="form-section">Entries</h4>
 
-                        {% if (object.canModifyEntries) %}
                         <div>
                             <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Product Entry</a>
                         </div>
-                        {% endif %}
 
                         <div class="row table-responsive" style="padding-top:10px">
                             <div class="col-md-11">
@@ -174,9 +119,7 @@
                                             <th style="width: 180px">Quantity</th>
                                             <th style="width: 180px">Price</th>
                                             <th style="width: 150px">Total</th>
-                                            {% if (object.canModifyEntries) %}
                                             <th style="width: 50px"></th>
-                                            {% endif %}
                                         </tr>
                                     </thead>
                                     <tbody id="en_table">
@@ -200,9 +143,7 @@
                                             <td id="total_qty"></td>
                                             <td id="total_price"></td>
                                             <td id="total_total"></td>
-                                            {% if (object.canModifyEntries) %}
                                             <td></td>
-                                            {% endif %}
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -216,9 +157,7 @@
 
                     <div class="form-actions fluid">
                         <div class="col-md-9">
-                            {% if (object.canModifyEntries) or (super_user.getName == app.user.getName) %}
                             <button type="submit" class="btn blue">Submit</button>
-                            {% endif %}
                             <a href="{{ path(route_list) }}" class="btn default">&lt; Back</a>
                         </div>
                     </div>
@@ -228,61 +167,6 @@
         </div>
     </div>
 </div>
-
-{% if (object.canDeliver()) %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="portlet box blue-hoki">
-            <div class="portlet-title">
-                <div class="caption">Deliveries</div>
-            </div>
-            <div class="portlet-body form">
-                <div class="form-body">
-                    <h4 class="form-section">Deliveries</h4>
-
-                    {% if object.canAddDelivery %}
-                    <div>
-                        <a href="{{ path('cat_pur_del_add_form', {'po_id':object.getID}) }}" class="btn green">Add Delivery</a>
-                    </div>
-                    {% endif %}
-
-                    <div class="row table-responsive" style="padding-top:10px">
-                        <div class="col-md-6">
-                            <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
-                                <thead>
-                                    <tr>
-                                        <th>Date Delivered</th>
-                                        <th>Code</th>
-                                        <th style="width: 50px"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="del_table">
-                                {% for del in object.getDeliveries %}
-                                    <tr>
-                                        <td>{{ del.getDateDeliver|date('m/d/Y') }}</td>
-                                        <td>{{ del.getCode }}</td>
-                                        <td>
-                                            <a href="{{ path('cat_pur_del_edit_form', {'id':del.getID}) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i></a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                {% if object.getDeliveries|length == 0 %}
-                                    <tr>
-                                        <td colspan="3">No deliveries yet.</td>
-                                    </tr>
-                                {% endif %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-
 
 <div id="en_form" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">

@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalysy\TemplateBundle\DataFixtures\ORM;
+namespace Catalyst\TemplateBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
