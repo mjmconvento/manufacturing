@@ -9,14 +9,10 @@
                 <div class="caption">Purchase Order {{ object.getCode }}</div>
             </div>
             <div class="portlet-body form">
-                {#<div class="col-md-12" style="padding-top: 10px">
-                    <a class="btn green">Print</a>
-                </div>
-                <br><br>#}
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-
+{#
                         <!-- fields for super user -->
                         {% if super_user.getName == app.user.getName %}
                         <div class="form-group">
@@ -31,54 +27,10 @@
                             </div>
                         </div>
 
-                        {# form.group_text_readonly('Code', 'code', object.getCode, 3, 3) #}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Supplier's Name</label>
-                            <div class ="col-md-8">
-                                <select id="supplier_id" class="form-control select_2" name="supplier_id" style="width:250px">
-                                {{ form.options(supp_opts) }}
-                                </select>
-                            </div>
-                        </div>
-                        {{ form.group_text('Supplier\'s Code', 's_code', '',  3, 4) }}
+                        {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
+                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
 
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Contact Person</label>
-                            <div class ="col-md-4">
-                                <input id="contact_person" type="text" class="form-control" name="contact_person" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Supplier's Address</label>
-                            <div class ="col-md-4">
-                                <textarea id="address"  class="form-control" name="address" value="" readonly></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Contact Number</label>
-                            <div class ="col-md-4">
-                                <input id="contact_number" type="text" class="form-control" name="contact_number" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Fax</label>
-                            <div class ="col-md-4">
-                                <input id="fax_number" type="text" class="form-control" name="fax_number" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">TIN #</label>
-                            <div class ="col-md-4">
-                                <input id="tin_number" type="text" class="form-control" name="tin_number" value="" readonly>
-                            </div>
-                        </div>
-                       {# {{ form.group_text_readonly('Contact Person','','',3,4) }}
-                        {{ form.group_textarea_readonly('Company Address','','',3,3,4)}}
-                        {{ form.group_text_readonly('Contact Number','','',3,4) }}
-                        {{ form.group_text_readonly('Fax','','',3,4) }}
-                        {{ form.group_text_readonly('Tin #','','',3,4) }}#}
-
-                        {{ form.group_select('Status', 'status_id', status_opts, object.getStatus, 3, 4) }}
+                        {{ form.group_select('Status', 'status_id', status_opts, object.getStatus, 3, 5) }}
 
                         {% if (object.getID != null) %}
                         <div class="form-group">
@@ -104,10 +56,10 @@
                         {% endif %}
 
 
-                        <h4 class="form-section">Product Entries</h4>
+                        <h4 class="form-section">Entries</h4>
 
                         <div>
-                            <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Item</a>
+                            <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Product Entry</a>
                         </div>
 
                         <div class="row table-responsive" style="padding-top:10px">
@@ -115,22 +67,18 @@
                                 <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
                                     <thead>
                                         <tr>
-                                            <th>Item # </th>
-                                            <th>Description</th>
-                                            <th>Quantity</th>
-                                            <th>Unit</th>                                            
-                                            <th>Unit Price</th>
-                                            <th>Total</th>
+                                            <th>Product</th>
+                                            <th style="width: 180px">Quantity</th>
+                                            <th style="width: 180px">Price</th>
+                                            <th style="width: 150px">Total</th>
                                             <th style="width: 50px"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="en_table">
                                     {% for entry in object.getEntries %}
                                         <tr>
-                                            <td></td>
                                             <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
                                             <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}"></td>
-                                            <td></td>                                            
                                             <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}"></td>
                                             <td class="en_total">--</td>
 
@@ -143,9 +91,7 @@
                                     <tfoot>
                                         <tr>
                                             <td>Total</td>
-                                            <td></td>
                                             <td id="total_qty"></td>
-                                            <td id="total_unit"></td>                                            
                                             <td id="total_price"></td>
                                             <td id="total_total"></td>
                                             <td></td>
@@ -160,7 +106,7 @@
 
 
                         <!-- fields for NON super user -->
-                        {% else %}
+                        {% else %}#}
                         <div class="form-group">
                             <label class="col-md-3 control-label">Date Issued</label>
                             <div class ="col-md-3">
@@ -176,16 +122,16 @@
                         {% if (object.canModifyEntries) %}
                             {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
                         {% else %}
-                            {{ form.group_text_readonly('Code', 'code', object.getCode, 3, 3) }}
+                            {{ form.group_text('Code', 'code', object.getCode, 3, 3, true) }}
                         {% endif %}
 
                         {% if (object.canModifyEntries) %}
                             {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
                         {% else %}
-                            {{ form.group_text_readonly('Supplier', 'supplier_id', object.getSupplier.getName, 3, 5) }}
+                            {{ form.group_text('Supplier', 'supplier_id', object.getSupplier.getName, 3, 5, true) }}
                         {% endif %}
 
-                        {{ form.group_text_readonly('Status', 'status_id', object.getStatusFormatted, 3, 3) }}
+                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 3,true) }}
 
                         {% if (object.getID != null) %}
                         <div class="form-group">
@@ -264,7 +210,6 @@
                         </div>
 
                         <!-- End for super user -->
-                        {% endif %}
 
 
                     </div>
@@ -350,7 +295,7 @@
                 <div class="row form-horizontal form">
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Item Name</label>
+                            <label class="col-md-3 control-label">Product</label>
                             <div class ="col-md-8">
                                 <select id="en_product_id" class="form-control select_2" name="prod_id">
                                 {{ form.options(prod_opts, 0) }}
@@ -366,7 +311,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label">Unit Price</label>
+                            <label class="col-md-3 control-label">Price</label>
                             <div class ="col-md-8">
                                 <input id="en_price" type="text" class="form-control" name="price" placeholder="Price">
                             </div>
@@ -395,23 +340,13 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script src="{{ asset('bundles/leathertemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
 
 
 
 <script>
-function update_supplier_detail() {
-    $.getJSON('/purchasing/ajax/supplier/' + $('#supplier_id').val(), function(data){
-        $('#contact_person').val(data.contact_person);
-        $('#address').val(data.address);
-        $('#contact_number').val(data.contact_number);
-        $('#fax_number').val(data.fax_number);
-        $('#tin_number').val(data.tin_number);
-    });
-}
-
 function escape_attr(s) {
     return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
@@ -453,11 +388,8 @@ function update_form_price()
 function appendEntry(prod_id, prod_name, qty, price)
 {
     var row = '<tr>';
-    row += '<td></td>';
     row += '<td><input type="hidden" name="en_prod_id[]" value="' + escape_attr(prod_id) + '">' + escape_html(prod_name) + '</td>';
     row += '<td><input class="form-control en_qty" type="text" name="en_qty[]" value="' + qty + '"></td>';
-    row += '<td></td>';
-    row += '<td></td>';
     row += '<td><input class="form-control en_price" type="text" name="en_price[]" value="' + price + '"></td>';
     row += '<td class="en_total"></td>';
     row += '<td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>';
@@ -472,7 +404,6 @@ function appendEntry(prod_id, prod_name, qty, price)
 $(document).ready(function() {
     ComponentsPickers.init();
     FormValidation.init(); // init form validation
-    update_supplier_detail();
     update_form_price();
     update_totals();
 
@@ -507,11 +438,6 @@ $(document).ready(function() {
             element.remove();
         }
     });
-    
-    //load supplier detail
-    $('#supplier_id').change(function(){
-        update_supplier_detail();
-    });
 
     // get prod contents
     var prod;
@@ -535,10 +461,7 @@ $(document).ready(function() {
         rules: {
             code: {
                 required: true
-            },
-            s_code: {
-                required: true
-            },
+            }
         },  
         submitHandler: function(form) {
             form.submit();

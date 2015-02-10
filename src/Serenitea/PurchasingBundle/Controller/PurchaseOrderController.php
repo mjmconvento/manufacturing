@@ -31,6 +31,6 @@ class PurchaseOrderController extends Controller
         $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
         $this->padFormParams($params, $obj);
 
-        return $this->render('SereniteaPurchasingBundle:PurchaseOrder:add.html.twig', $params);
+        return $this->render('SereniteaPurchasingBundle:PurchaseOrder:form.html.twig', $params);
     }
 }
