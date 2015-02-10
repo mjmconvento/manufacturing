@@ -2,3 +2,39 @@ serenitea_pur_po:
     path:     /po
     methods: [GET]
     defaults: { _controller: SereniteaPurchasingBundle:PurchaseOrder:po }
+
+
+cat_pur_inc_index:
+    pattern: /incomplete
+    methods: [GET]
+    defaults: { _controller: SereniteaPurchasingBundle:Incomplete:index }
+
+cat_pur_inc_view:
+    pattern: /incomplete/dr 
+    defaults: { _controller: SereniteaPurchasingBundle:Incomplete:view }
+
+cat_pur_inc_csv:
+    pattern: /incomplete/csv
+    defaults: { _controller: SereniteaPurchasingBundle:Incomplete:csv }
+
+cat_pur_inc_print:
+    pattern: /incomplete/print
+    defaults: { _controller: SereniteaPurchasingBundle:Incomplete:print }
+
+
+cat_pur_com_index:
+    pattern: /complete
+    methods: [GET]
+    defaults: { _controller: SereniteaPurchasingBundle:Complete:index }
+
+cat_pur_com_view:
+    pattern: /complete/dr
+    defaults: { _controller: SereniteaPurchasingBundle:Complete:view }
+
+cat_pur_com_csv:
+    pattern: /complete/csv
+    defaults: { _controller: SereniteaPurchasingBundle:Complete:csv }
+
+cat_pur_com_print:
+    pattern: /complete/print
+    defaults: { _controller: SereniteaPurchasingBundle:Complete:print }
