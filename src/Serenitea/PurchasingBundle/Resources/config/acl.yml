@@ -1,0 +1,21 @@
+acl:
+    - category: In Progress PO
+      entries:
+        - id: cat_pur_inc.menu
+          label: "Menu"
+        - id: cat_pur_inc.add
+          label: "Add"
+        - id: cat_pur_inc.edit
+          label: "Edit"
+        - id: cat_pur_inc.delete
+          label: "Cancel"
+    - category: Completed PO
+      entries:
+        - id: cat_pur_com.menu
+          label: "Menu"
+        - id: cat_pur_com.add
+          label: "Add"
+        - id: cat_pur_com.edit
+          label: "Edit"
+        - id: cat_pur_com.delete
+          label: "Cancel"

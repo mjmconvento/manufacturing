@@ -9,6 +9,7 @@ catalyst_menu:
         - CatalystPurchasingBundle
         # - CatalystSalesBundle
         - CatalystServiceBundle
+        - SereniteaPurchasingBundle
         - SereniteaOrderBundle        
         - SereniteaOnlineFormsBundle        
 
@@ -40,5 +41,6 @@ catalyst_user:
 catalyst_configuration:
     bundles:
         - CatalystPurchasingBundle
+        - SereniteaPurchasingBundle
         - CatalystSalesBundle
         - CatalystServiceBundle
