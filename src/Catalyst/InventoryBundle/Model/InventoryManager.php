@@ -107,13 +107,13 @@ class InventoryManager
 
         $prod_opts = array();
         foreach ($products as $prod)
-            if($prod->getCode() == "")
+            if($prod->getSku() == "")
             {
                 $prod_opts[$prod->getID()] = $prod->getName();
             }
             else
             {
-                $prod_opts[$prod->getID()] = $prod->getCode() . ' - ' . $prod->getName();
+                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
             }
         return $prod_opts;
     }

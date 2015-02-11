@@ -4,6 +4,9 @@ namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\HasName;
+
 use stdClass;
 
 /**
@@ -12,18 +15,11 @@ use stdClass;
  */
 class Product
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
+    use HasGeneratedID;
+    use HasName;
+    
     /** @ORM\Column(type="string", length=25, nullable=false) */
     protected $sku;
-
-    /** @ORM\Column(type="string", length=50) */
-    protected $name;
 
     /** @ORM\Column(type="string", length=20) */
     protected $uom;
@@ -98,21 +94,9 @@ class Product
         $this->attribute_hash = array();
     }
 
-    public function setID($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
-
     public function setSKU($sku)
     {
         $this->sku = $sku;
-        return $this;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
         return $this;
     }
 
@@ -176,19 +160,9 @@ class Product
         return $this;
     }
 
-    public function getID()
-    {
-        return $this->id;
-    }
-
     public function getSKU()
     {
         return $this->sku;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function getUnitOfMeasure()

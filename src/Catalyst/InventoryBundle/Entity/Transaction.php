@@ -5,6 +5,8 @@ namespace Catalyst\InventoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\UserBundle\Entity\User;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use DateTime;
 
 /**
@@ -13,12 +15,8 @@ use DateTime;
  */
 class Transaction
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use HasGeneratedID;
+    use TrackCreate;
 
     /**
      * @ORM\Column(type="datetime")
@@ -53,11 +51,6 @@ class Transaction
         return $this;
     }
 
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-        return $this;
-    }
 
     public function addEntry(Entry $entry)
     {
@@ -66,24 +59,10 @@ class Transaction
         return $this;
     }
 
-    public function getID()
-    {
-        return $this->id;
-    }
-
-    public function getDateCreate()
-    {
-        return $this->date_in;
-    }
 
     public function getDescription()
     {
         return $this->description;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
     }
 
     public function getEntries()
@@ -124,9 +103,9 @@ class Transaction
 
         $data = new \stdClass();
         $data->id = $this->id;
-        $data->date_in = $this->date_in;
+        $data->date_create = $this->date_create;
         $data->description = $this->description;
-        $data->user = $this->getUser()->getID();
+        $data->user = $this->getUserCreate()->getID();
 
         foreach ($this->getEntries() as $entry)
             $entries[] = $entry->toData();
