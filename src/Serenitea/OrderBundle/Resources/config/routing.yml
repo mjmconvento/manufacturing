@@ -1,12 +1,17 @@
 ser_request_index:
     pattern: /orders
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:index}
+    defaults: { _controller: SereniteaOrderBundle:Request:index }
+
+ser_request_grid:
+    pattern: /grid
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Request:grid }
 
 ser_request_add_form:
     pattern: /order
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:addForm}
+    defaults: { _controller: SereniteaOrderBundle:Request:addForm }
 
 ser_request_view:
     pattern: /orders/view
@@ -43,24 +48,28 @@ ser_receive_edit_form:
     defaults: { _controller: SereniteaOrderBundle:Receive:editForm }
 
 
-serenitea_rlist_index:
+ser_rlist_index:
     path:     /requestlist
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:RequestList:index }
+    defaults: { _controller: SereniteaOrderBundle:Requested:index }
 
-serenitea_rlist_csv:
+ser_rlist_grid:
+    pattern: /grid
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Requested:grid }
+
+ser_rlist_csv:
     path: /requestlist/csv
     defaults: { _controller: SereniteaOrderBundle:RequestList:csv }
 
-serenitea_rlist_print:
+ser_rlist_print:
     path: /requestlist/print
     defaults: { _controller: SereniteaOrderBundle:RequestList:print }
 
-
-serenitea_rlist_edit:
+ser_rlist_edit:
     path:     /requestlist/po
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:RequestList:edit }
+    defaults: { _controller: SereniteaOrderBundle:Requested:edit }
 
 serenitea_dlist_index:
     path:     /deliverylist

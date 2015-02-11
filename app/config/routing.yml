@@ -14,7 +14,7 @@ ser_online_forms:
     resource: "@SereniteaOnlineFormsBundle/Resources/config/routing.yml"
     prefix:   /onlineforms
 
-ser_order:
+serenitea_order:
     resource: "@SereniteaOrderBundle/Resources/config/routing.yml"
     prefix:   /ordering
 

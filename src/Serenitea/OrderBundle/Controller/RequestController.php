@@ -3,6 +3,7 @@
 namespace Serenitea\OrderBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\ValidationException;
 
 class RequestController extends CrudController
 {
@@ -13,26 +14,6 @@ class RequestController extends CrudController
 
         $this->list_title = 'Requested Items';
         $this->list_type = 'dynamic';
-    }
-    
-    public function indexAction()
-    {
-        $this->hookPreAction();
-
-        $gl = $this->setupGridLoader();
-
-        $params = $this->getViewParams('List', 'ser_request_index');
-
-        $twig_file = 'SereniteaOrderBundle:Request:index.html.twig';
-
-        $params['list_title'] = $this->list_title;
-        $params['grid_cols'] = $gl->getColumns();        
-
-        $sample = $this->getUser();
-        
-        $params['sample'] = $sample;
-
-        return $this->render($twig_file, $params);          
     }
 
     protected function getGridColumns()
@@ -45,38 +26,40 @@ class RequestController extends CrudController
         );
     }
     
-    protected function padFormParams(&$params, $object = null) {
+    // protected function padFormParams(&$params, $object = null) {
         
-        $em = $this->getDoctrine()->getManager();
-        $inv = $this->get('catalyst_inventory');
+    //     $em = $this->getDoctrine()->getManager();
+    //     $inv = $this->get('catalyst_inventory');
         
-        $prods = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
-        $prod_opts = array();
-        foreach ($prods as $prod)
-            $prod_opts[$prod->getID()] = $prod->getName();
-        $params['prod_opts'] = $prod_opts;
+    //     $prods = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+    //     $prod_opts = array();
+    //     foreach ($prods as $prod)
+    //         $prod_opts[$prod->getID()] = $prod->getName();
+    //     $params['prod_opts'] = $prod_opts;
 
-        $sample = $this->getUser()->getGroups();
+    //     $sample = $this->getUser()->getGroups();
         
-        $params['sample'] = $sample;
+    //     $params['sample'] = $sample;
         
-        $params['status_opts'] = array(
-            'draft' => 'Draft',
-            'approved' => 'Approved',
-            'fulfilled' => 'Fulfilled',
-            'sent' => 'Sent',
-            'cancelled' => 'Cancel',
-        );
+    //     $params['status_opts'] = array(
+    //         'draft' => 'Draft',
+    //         'approved' => 'Approved',
+    //         'fulfilled' => 'Fulfilled',
+    //         'sent' => 'Sent',
+    //         'cancelled' => 'Cancel',
+    //     );
         
-        return $params;
-    }
+    //     return $params;
+    // }
     
    
-    protected function getObjectLabel($object) {
+    protected function getObjectLabel($object)
+    {
         
     }
 
-    protected function newBaseClass() {
+    protected function newBaseClass()
+    {
         
     }
     
@@ -110,13 +93,6 @@ class RequestController extends CrudController
 
         return $this->render('SereniteaOrderBundle:Orders:add.html.twig', $params);
     }
-    
-    public function viewAction(){
-        $this->title = 'Requested Items';
-        $params = $this->getViewParams('', 'ser_request_view');
-
-        return $this->render('SereniteaOrderBundle:Orders:view.html.twig', $params);
-    }  
     
     public function formatDate($date)
     {
