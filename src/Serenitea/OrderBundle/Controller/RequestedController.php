@@ -3,29 +3,41 @@
 namespace Serenitea\OrderBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 
-class RequestListController extends CrudController
+class RequestedController extends CrudController
 {
     public function __construct()
     {
-        $this->route_prefix = 'serenitea_rlist';
+        $this->route_prefix = 'ser_rlist';
         $this->title = 'Requested Item List';
 
         $this->list_title = 'Requested Items Lists';
-        $this->list_type = 'static';
+        $this->list_type = 'dynamic';
     }
+    
+    protected function getGridColumns()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        return array(
+            $grid->newColumn('P.O. #','',''),
+            $grid->newColumn('Date Created','',''),
+            $grid->newColumn('Target Delivery Date','',''),
+            $grid->newColumn('Branch','',''),
+            $grid->newColumn('Status','',''),
+        );
+    }
+
     public function indexAction()
     {
         $this->hookPreAction();
 
         $gl = $this->setupGridLoader();
 
-        $params = $this->getViewParams('', 'serenitea_rlist_index');
+        $params = $this->getViewParams('', 'ser_rlist_index');
 
-        $twig_file = 'SereniteaOrderBundle:Requested:index.html.twig';
+        $twig_file = 'SereniteaOrderBundle:Requested:form.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();                  
@@ -47,7 +59,7 @@ class RequestListController extends CrudController
         $params['title'] = $this->title;
         $params['print'] = $this->print;
         $params['csv'] = $this->csv;
-        $params['br_opts'] = $inv->getBranchOptions();
+        // $params['br_opts'] = $inv->getBranchOptions();
         
         return $this->render($twig_file, $params);
     }
@@ -109,30 +121,30 @@ class RequestListController extends CrudController
             'SereniteaOrderBundle:Request:print.html.twig', $params);
     }
     
-    public function editAction(){
-        $this->title = 'Requested Items List';
-        $params = $this->getViewParams('', 'serenitea_rlist_edit');
+    public function editAction()
+    {        
+        $params = $this->getViewParams('', 'ser_rlist_edit');
 
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         
-        $prods = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
-        $prod_opts = array();
-        foreach ($prods as $prod)
-            $prod_opts[$prod->getID()] = $prod->getName();
-        $params['prod_opts'] = $prod_opts;
+        // $prods = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+        // $prod_opts = array();
+        // foreach ($prods as $prod)
+        //     $prod_opts[$prod->getID()] = $prod->getName();
+        // $params['prod_opts'] = $prod_opts;
 
-        $sample = $this->getUser()->getGroups();
+        // $sample = $this->getUser()->getGroups();
         
-        $params['sample'] = $sample;
+        // $params['sample'] = $sample;
         
-        $params['status_opts'] = array(
-            'draft' => 'Draft',
-            'approved' => 'Approved',
-            'fulfilled' => 'Fulfilled',
-            'sent' => 'Sent',
-            'cancelled' => 'Cancel',
-        );
+        // $params['status_opts'] = array(
+        //     'draft' => 'Draft',
+        //     'approved' => 'Approved',
+        //     'fulfilled' => 'Fulfilled',
+        //     'sent' => 'Sent',
+        //     'cancelled' => 'Cancel',
+        // );
         
         return $this->render('SereniteaOrderBundle:Requested:edit.html.twig', $params);
     }

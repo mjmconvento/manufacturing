@@ -1,0 +1,32 @@
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+<h4 class="form-section">Branch Details</h4>
+{{ f.group_text_readonly('Name','','',3,4)}}
+{{ f.group_text_readonly('Date Issued','','',3,4)}}
+{{ f.group_text_readonly('P.O #','','',3,4)}}
+{{ f.group_text_readonly('Name','','',3,4)}}
+{{ f.group_text_readonly('Address','','',3,4)}}
+{{ f.group_text_readonly('Target Delivery Date','','',3,4)}}
+
+<h4 class="form-section">Phones</h4>
+{{ f.group_text_readonly('Office','','',3,4)}}
+{{ f.group_text_readonly('Fax','','',3,4)}}
+<h4 class="form-section">Entries</h4>
+<button type="button" id="add-item" class="btn btn-primary" data-toggle="modal" data-target="#add-item-modal">Add Item</button>
+<div class="row table-responsive" style="padding-top:10px">
+	<div class="col-md-12">
+		<table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+			<thead>
+                <tr>
+	                <th>Item Code</th>
+	                <th>Description</th>
+	                <th>Requested Quantity</th>
+	                <th>Approved Quantity</th>
+	                <th style="width: 60px"></th>
+                </tr>
+            </thead>
+            <tbody id="from_table">            	
+            </tbody>
+		</table>
+	</div>
+</div>

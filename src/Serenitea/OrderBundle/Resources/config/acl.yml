@@ -1,5 +1,5 @@
 acl:
-    - category: Order
+    - category: Requisition
       entries:
         - id: ser_order.menu
           label: "Menu"
@@ -41,19 +41,19 @@ acl:
           label: "Menu"
         - id: ser_complete.view
           label: "View"
-    - category: Requested Items List (Comi)
+    - category: Requested Items List
       entries:
-        - id: serenitea_rlist.menu
+        - id: ser_rlist.menu
           label: "Menu"
-        - id: serenitea_rlist.view
+        - id: ser_rlist.view
           label: "View"
-        - id: serenitea_rlist.add
+        - id: ser_rlist.add
           label: "Add"
-        - id: serenitea_rlist.edit
+        - id: ser_rlist.edit
           label: "Edit"
-        - id: serenitea_rlist.delete
+        - id: ser_rlist.delete
           label: "Delete"     
-    - category: Deliveries List (Comi)
+    - category: Deliveries List
       entries:
         - id: serenitea_dlist.menu
           label: "Menu"

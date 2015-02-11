@@ -1,25 +1,25 @@
 menu_items:
-    - id: menu_order
+    - id: ser_order
       acl: ser_order.menu
       label: Requisitions
       icon: fa-truck
     - id: ser_request_index
       acl: ser_request.menu
       label: Requested Items
-      parent: menu_order
+      parent: ser_order
     - id: ser_receive_index
       acl: ser_receive.menu
       label: Incomplete Deliveries
-      parent: menu_order
+      parent: ser_order
     - id: ser_complete_index
       acl: ser_complete.menu
       label: Completed Deliveries
-      parent: menu_order
-    - id: serenitea_rlist_index
-      acl: serenitea_rlist.menu
+      parent: ser_order
+    - id: ser_rlist_index
+      acl: ser_rlist.menu
       label: Requested Items List
-      parent: menu_order
+      parent: ser_order
     - id: serenitea_dlist_index
       acl: serenitea_dlist.menu
       label: Deliveries List
-      parent: menu_order
+      parent: ser_order
