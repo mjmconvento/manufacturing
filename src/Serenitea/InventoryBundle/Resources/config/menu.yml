@@ -7,3 +7,7 @@ menu_items:
       acl: ser_inv_prod.menu
       label: Supplies
       parent: menu_inventory
+    - id: ser_inv_pg_index
+      acl: ser_inv_pg.menu
+      label: Product Category
+      parent: menu_inventory

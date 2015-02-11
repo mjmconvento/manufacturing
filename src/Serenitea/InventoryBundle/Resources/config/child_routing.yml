@@ -12,3 +12,18 @@ ser_inv_prod_grid:
     pattern: /grid
     methods: [GET]
     defaults: { _controller: SereniteaInventoryBundle:Supply:grid }
+
+ser_inv_pg_index:
+    pattern: /categories
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Category:index }
+
+ser_inv_pg_add_form:
+    pattern: /category
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Category:addForm }
+
+ser_inv_pg_grid:
+    pattern: /grid/
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Category:grid }

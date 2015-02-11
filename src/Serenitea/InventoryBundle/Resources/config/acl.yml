@@ -21,3 +21,15 @@ acl:
           label: "View Cost Price"
         - id: ser_inv_prod.restricted
           label: "Restricted Product"
+    - category: Product Category
+      entries:
+        - id: ser_inv_pg.menu
+          label: "Menu"
+        - id: ser_inv_pg.view
+          label: "View"
+        - id: ser_inv_pg.add
+          label: "Add"
+        - id: ser_inv_pg.edit
+          label: "Edit"
+        - id: ser_inv_pg.delete
+          label: "Delete"
