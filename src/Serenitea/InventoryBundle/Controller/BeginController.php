@@ -8,19 +8,19 @@ class BeginController extends CrudController
 {
 	public function __construct()
 	{
-		$this->route_prefix = 'serenitea_begin';
+		$this->route_prefix = 'ser_begin';
         $this->title = 'Beginning Inventory';
 
         $this->list_title = 'Beginning Inventory';
-        $this->list_type = 'static';
+        $this->list_type = 'dynamic';
 	}
 
 	public function indexAction()
 	{
 		$this->title = 'Beginning Inventory';
-        $params = $this->getViewParams('', 'serenitea_begin_index');
+        $params = $this->getViewParams('', 'ser_begin_index');
 
-        return $this->render('SereniteaInventoryBundle:Begin:index.html.twig', $params);
+        return $this->render('SereniteaInventoryBundle:Begin:form.html.twig', $params);
 	}
 
 	protected function getObjectLabel($object) {

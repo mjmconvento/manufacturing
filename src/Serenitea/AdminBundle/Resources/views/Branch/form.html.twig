@@ -1,0 +1,38 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">{% block form_header %}{% endblock %}</div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        {% include "SereniteaAdminBundle::branch.html.twig" %}
+                    </div>
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path(route_list) }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "SereniteaAdminBundle::modal.branch.html.twig" %}
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_addresses.js') }}"></script>
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_phones.js') }}"></script>
+{% endblock %}

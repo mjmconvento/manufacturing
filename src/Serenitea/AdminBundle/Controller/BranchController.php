@@ -2,24 +2,28 @@
 
 namespace Serenitea\AdminBundle\Controller;
 
-use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\InventoryBundle\Controller\WarehouseController;
+use Catalyst\InventoryBundle\Entity\Warehouse;
+use Catalyst\ValidationException;
 
-class BranchController extends CrudController
+class BranchController extends WarehouseController
 {
 	public function __construct()
 	{
-		$this->title = 'Branch Management';
+		$this->route_prefix = 'ser_branch';
+        $this->title = 'Branch';
 
-		$params = $this->getViewParams('', 'ser_branch_index');
-
-		return $this->render('SereniteaAdminBundle:Main:index.html.twig', $params);
+        $this->list_title = 'Branches';
+        $this->list_type = 'dynamic';		
 	}
 
-	protected function newBaseClass()
-    {        
-    }
-
-    protected function getObjectLabel($obj)
-    {        
+	protected function getGridColumns()
+    {
+        $grid = $this->get('catalyst_grid');
+        return array(
+            $grid->newColumn('Name', 'getName', 'name'),
+            $grid->newColumn('Address', 'getAddress', 'address'),
+            $grid->newColumn('ContactNumber', 'getContactNumber', 'contact_num'),            
+        );
     }
 }

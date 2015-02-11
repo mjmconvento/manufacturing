@@ -11,7 +11,8 @@ catalyst_menu:
         - CatalystServiceBundle
         - SereniteaPurchasingBundle
         - SereniteaOrderBundle        
-        - SereniteaOnlineFormsBundle        
+        - SereniteaOnlineFormsBundle
+        - SereniteaAdminBundle      
 
 catalyst_user:
     acl_entries:

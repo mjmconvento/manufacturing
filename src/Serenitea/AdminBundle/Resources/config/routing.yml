@@ -2,3 +2,13 @@ ser_branch_index:
     pattern: /branches
     methods: [GET]
     defaults: { _controller: SereniteaAdminBundle:Branch:index }
+
+ser_branch_add_form:
+    pattern: /branch
+    methods: [GET]
+    defaults: { _controller: SereniteaAdminBundle:Branch:addForm }
+
+ser_branch_grid:
+    pattern: /branches/grid
+    methods: [GET]
+    defaults: { _controller: SereniteaAdminBundle:Branch:grid }

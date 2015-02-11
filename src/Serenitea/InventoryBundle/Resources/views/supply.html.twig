@@ -1,0 +1,28 @@
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+<h4 class="form-section">Information</h4>
+{{ f.group_text('Description','','',3,4)}}
+{{ f.group_select('Category','','', '',3,4)}}
+{{ f.group_select('Supplier','','', '',3,4)}} 
+{{ f.group_text('Supplier\'s Code','','',3,4)}}
+{{ f.group_text_readonly('User Created','','',3,4)}}
+{{ f.group_text_readonly('Date Created','','',3,4)}}
+{{ f.group_text_readonly('Update User','','',3,4)}}
+{{ f.group_text_readonly('Update Date','','',3,4)}}
+
+
+{% set view_sell_price = app.user.hasAccess(prefix ~ '.view_sell_price') %}
+{% set view_cost_price = app.user.hasAccess(prefix ~ '.view_cost_price') %}
+
+{% if view_sell_price or view_cost_price %}
+<h4 class="form-section">Pricing</h4>
+{% endif %}
+{% if view_sell_price %}
+{{ f.group_number('Original Price', 'price_purchase', object.getPricePurchase|number_format(2, '.', ''), 3, 4, readonly) }}
+{% endif %}
+{% if view_cost_price %}
+{{ f.group_number('Selling Price', 'price_sale', object.getPriceSale|number_format(2, '.', ''), 3, 4, readonly) }}
+{% endif %}
+
+
+
