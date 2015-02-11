@@ -1,0 +1,14 @@
+ser_inv_prod_index:
+    pattern: /supplies
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Supply:index }
+
+ser_inv_prod_add_form:
+    pattern: /supply
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Supply:addForm }
+
+ser_inv_prod_grid:
+    pattern: /grid
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Supply:grid }

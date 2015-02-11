@@ -1,0 +1,23 @@
+acl:
+    - category: Inventory
+      entries:
+        - id: ser_inv.menu
+          label: "Menu"
+    - category: Supplies
+      entries:
+        - id: ser_inv_prod.menu
+          label: "Menu"
+        - id: ser_inv_prod.view
+          label: "View"
+        - id: ser_inv_prod.add
+          label: "Add"
+        - id: ser_inv_prod.edit
+          label: "Edit"
+        - id: ser_inv_prod.delete
+          label: "Delete"
+        - id: ser_inv_prod.view_sell_price
+          label: "View Sell Price"
+        - id: ser_inv_prod.view_cost_price
+          label: "View Cost Price"
+        - id: ser_inv_prod.restricted
+          label: "Restricted Product"

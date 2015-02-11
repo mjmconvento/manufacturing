@@ -1,0 +1,9 @@
+menu_items:
+    - id: menu_inventory
+      acl: cat_inv.menu
+      label: Inventory
+      icon: fa-suitcase
+    - id: ser_inv_prod_index
+      acl: ser_inv_prod.menu
+      label: Supplies
+      parent: menu_inventory
