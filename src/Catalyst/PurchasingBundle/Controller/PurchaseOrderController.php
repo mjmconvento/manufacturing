@@ -143,6 +143,7 @@ class PurchaseOrderController extends CrudController
             throw new ValidationException('Could not find supplier.');
         
         $o->setSupplier($supp);
+        $o->setStatus($data['status_id']);            
 
         // clear entries
         $ents = $o->getEntries();
@@ -187,8 +188,6 @@ class PurchaseOrderController extends CrudController
             $supp_opts[$supp->getID()] = $supp->getName();
         $params['supp_opts'] = $supp_opts;
 
-        $params['prod_opts'] = $inv->getProductOptions(array('flag_purchase' => true));
-
         $params['status_opts'] = array(
             'draft' => 'Draft',
             'approved' => 'Approved',
@@ -196,6 +195,8 @@ class PurchaseOrderController extends CrudController
             'sent' => 'Sent',
             'cancelled' => 'Cancel',
         );
+        
+        $params['prod_opts'] = $inv->getProductOptions();
 
         return $params;
     }
@@ -237,97 +238,5 @@ class PurchaseOrderController extends CrudController
     {
         return $this->statusUpdate($id, PurchaseOrder::STATUS_FULFILLED);
     }
-
-    public function editFormAction($id)
-    {
-        $this->checkAccess($this->route_prefix . '.view');
-
-        $this->hookPreAction();
-        $em = $this->getDoctrine()->getManager();
-        $obj = $em->getRepository($this->repo)->find($id);
-
-        $params = $this->getViewParams('Edit');
-        $params['object'] = $obj;
-        $params['o_label'] = $this->getObjectLabel($obj);
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.edit');
-
-        $this->padFormParams($params, $obj);
-
-        return $this->render('CatalystTemplateBundle:Object:edit.html.twig', $params);
-    }
-
-    public function editSubmitAction($id)
-    {
-        $this->checkAccess($this->route_prefix . '.edit');
-
-        $this->hookPreAction();
-        try
-        {
-            $em = $this->getDoctrine()->getManager();
-            $data = $this->getRequest()->request->all();
-
-            $object = $em->getRepository($this->repo)->find($id);
-            $object->setStatus($data['status_id']);            
-
-            $this->update($object, $data);
-
-            $em->flush();
-
-            $odata = $object->toData();
-            $this->logUpdate($odata);
-
-            $this->addFlash('success', $this->title . ' ' . $this->getObjectLabel($object) . ' edited successfully.');
-
-            return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
-        }
-        catch (ValidationException $e)
-        {
-            $this->addFlash('error', $e->getMessage());
-            return $this->editError($object, $id);
-        }
-        catch (DBALException $e)
-        {
-            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
-            error_log($e->getMessage());
-            return $this->addError($object);
-        }
-    }
-
-    public function addFormAction()
-    {
-        $this->checkAccess($this->route_prefix . '.add');
-
-        $this->hookPreAction();
-        $obj = $this->newBaseClass();
-
-        $params = $this->getViewParams('Add');
-        $params['object'] = $obj;
-
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-
-        $this->padFormParams($params, $obj);
-
-        return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);
-    }
-
 
 }

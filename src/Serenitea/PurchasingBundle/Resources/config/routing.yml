@@ -1,8 +1,8 @@
-serenitea_pur_po:
-    path:     /po
-    methods: [GET]
-    defaults: { _controller: SereniteaPurchasingBundle:PurchaseOrder:po }
-
+#serenitea_pur_po:
+#    path:     /po
+#    methods: [GET]
+#    defaults: { _controller: SereniteaPurchasingBundle:PurchaseOrder:po }
+#
 
 cat_pur_inc_index:
     pattern: /incomplete

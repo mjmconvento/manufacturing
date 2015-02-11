@@ -84,7 +84,7 @@ class TransactionController extends BaseController
 
             // setup transaction
             $trans = new Transaction();
-            $trans->setUser($this->getUser())
+            $trans->setUserCreate($this->getUser())
                 ->setDescription($data['desc']);
 
             // add entries

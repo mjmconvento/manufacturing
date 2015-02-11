@@ -294,28 +294,9 @@
             <div class="modal-body">
                 <div class="row form-horizontal form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Product</label>
-                            <div class ="col-md-8">
-                                <select id="en_product_id" class="form-control select_2" name="prod_id">
-                                {{ form.options(prod_opts, 0) }}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Quantity</label>
-                            <div class ="col-md-8">
-                                <input id="en_qty" type="text" class="form-control" name="qty" placeholder="Quantity">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Price</label>
-                            <div class ="col-md-8">
-                                <input id="en_price" type="text" class="form-control" name="price" placeholder="Price">
-                            </div>
-                        </div>
+                        {{ form.group_select('Product', 'en_prod_id',prod_opts,'', 3, 8) }}
+                        {{ form.group_text('Quantity', 'en_qty','0.00', 3, 8) }}
+                        {{ form.group_text('Price', 'en_price','0.00', 3, 8) }}
                     </div>
                 </div>
             </div>
@@ -340,9 +321,9 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script src="{{ asset('bundles/leathertemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
 
 
 
@@ -379,7 +360,7 @@ function update_totals() {
 
 function update_form_price()
 {
-    $.getJSON('/inventory/ajax/product/' + $('#en_product_id').val(), function(data) {
+    $.getJSON('/inventory/ajax/product/' + $('#prod_id').val(), function(data) {
         $('#en_price').val(data.price_purchase);
     });
 }
@@ -474,13 +455,13 @@ $(document).ready(function() {
     });
 
     // auto price load
-    $('#en_product_id').change(function() {
+    $('#en_prod_id').change(function() {
         update_form_price();
     });
 
     // form - update table
     $('#btn_en_submit').click(function() {
-        var prod_id = $('#en_product_id').val();
+        var prod_id = $('#en_prod_id').val();
         var prod_name = $('#en_product_id option:selected').text();
 
         var qty = $('#en_qty').val();

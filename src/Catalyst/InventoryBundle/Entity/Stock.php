@@ -4,6 +4,9 @@ namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\HasQuantity;
+use Catalyst\CoreBundle\Template\Entity\HasProduct;
 
 /**
  * @ORM\Entity
@@ -11,22 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Stock
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    protected $quantity;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $product_id;
+    use HasGeneratedID;
+    use HasQuantity;
+    use HasProduct;
 
     /**
      * @ORM\ManyToOne(targetEntity="Warehouse")
@@ -34,39 +24,10 @@ class Stock
      */
     protected $warehouse;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Product")
-     * #ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     */
-    protected $product;
-
-    public function __construct()
-    {
-        $this->quantity = 0.00;
-    }
-
-    public function setQuantity($qty)
-    {
-        $this->quantity = $qty;
-        return $this;
-    }
-
     public function setWarehouse(Warehouse $wh)
     {
         $this->warehouse = $wh;
         return $this;
-    }
-
-    public function setProduct(Product $prod)
-    {
-        $this->product = $prod;
-        $this->product_id = $prod->getID();
-        return $this;
-    }
-
-    public function getQuantity()
-    {
-        return $this->quantity;
     }
 
     public function getWarehouse()
@@ -74,8 +35,4 @@ class Stock
         return $this->warehouse;
     }
 
-    public function getProduct()
-    {
-        return $this->product;
-    }
 }
