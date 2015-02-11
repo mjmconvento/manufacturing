@@ -38,6 +38,15 @@
 </div>
 {% endmacro %}
 
+{% macro group_text_readonly(label, name, value, label_size, body_size, readonly = false) %}
+<div class="form-group">
+    <label class="col-md-{{ label_size }} control-label">{{ label }}</label>
+    <div class="col-md-{{ body_size }}">
+        <input type="text" name="{{ name }}" class="form-control" placeholder="{{ label }}" value="{{ value }}" readonly>
+    </div>
+</div>
+{% endmacro %}
+
 {% macro group_password(label, name, label_size, body_size, readonly = false, prefix = 'c') %}
 <div id="{{ prefix }}group-{{ name }}" class="form-group">
     <label class="col-md-{{ label_size }} control-label">{{ label }}</label>
