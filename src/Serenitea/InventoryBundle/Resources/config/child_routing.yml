@@ -27,3 +27,8 @@ ser_inv_pg_grid:
     pattern: /grid/
     methods: [GET]
     defaults: { _controller: SereniteaInventoryBundle:Category:grid }
+
+ser_begin_index:
+    pattern: /beginning
+    methods: [GET]
+    defaults: { _controller: SereniteaInventoryBundle:Begin:index }

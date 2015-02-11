@@ -33,3 +33,9 @@ acl:
           label: "Edit"
         - id: ser_inv_pg.delete
           label: "Delete"
+    - category: Beginning Inventory
+      entries:
+        - id: ser_begin.menu
+          label: "Menu"
+        - id: ser_begin.view
+          label: "View"

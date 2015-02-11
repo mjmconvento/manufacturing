@@ -1,6 +1,6 @@
 menu_items:
     - id: menu_inventory
-      acl: cat_inv.menu
+      acl: ser_inv.menu
       label: Inventory
       icon: fa-suitcase
     - id: ser_inv_prod_index
@@ -10,4 +10,8 @@ menu_items:
     - id: ser_inv_pg_index
       acl: ser_inv_pg.menu
       label: Product Category
+      parent: menu_inventory
+    - id: ser_begin_index
+      acl: ser_begin.menu
+      label: Beginning Inventory
       parent: menu_inventory
