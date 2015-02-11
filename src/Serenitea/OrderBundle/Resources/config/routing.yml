@@ -13,12 +13,6 @@ ser_request_add_form:
     methods: [GET]
     defaults: { _controller: SereniteaOrderBundle:Request:addForm }
 
-ser_request_view:
-    pattern: /orders/view
-    methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:view}
-
-
 ser_receive_index:
     pattern: /receive
     methods: [GET]
@@ -31,11 +25,6 @@ ser_receive_csv:
 ser_receive_print:
     path: /receive/print
     defaults: { _controller: SereniteaOrderBundle:Receive:print }
-
-#ser_receive_add_form:
-#    pattern: /receive
-#    methods: [GET]
-#    defaults: { _controller: SereniteaOrderBundle:Receive:addForm }
 
 ser_receive_edit:
     pattern: /receive/po
@@ -71,15 +60,20 @@ ser_rlist_edit:
     methods: [GET]
     defaults: { _controller: SereniteaOrderBundle:Requested:edit }
 
-serenitea_dlist_index:
+ser_dlist_index:
     path:     /deliverylist
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:DeliveriesList:index }
+    defaults: { _controller: SereniteaOrderBundle:Deliveries:index }
 
-serenitea_dlist_view:
+ser_dlist_grid:
+    pattern: /grid
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Deliveries:grid }
+
+ser_dlist_view:
     path:     /deliverylist/receipt
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:DeliveriesList:view }
+    defaults: { _controller: SereniteaOrderBundle:Deliveries:view }
 
 
 ser_complete_index:

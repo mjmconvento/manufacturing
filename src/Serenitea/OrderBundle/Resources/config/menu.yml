@@ -19,7 +19,7 @@ menu_items:
       acl: ser_rlist.menu
       label: Requested Items List
       parent: ser_order
-    - id: serenitea_dlist_index
-      acl: serenitea_dlist.menu
+    - id: ser_dlist_index
+      acl: ser_dlist.menu
       label: Deliveries List
       parent: ser_order

@@ -55,19 +55,19 @@ acl:
           label: "Delete"     
     - category: Deliveries List
       entries:
-        - id: serenitea_dlist.menu
+        - id: ser_dlist.menu
           label: "Menu"
-        - id: serenitea_dlist.view
+        - id: ser_dlist.view
           label: "View"
-        - id: serenitea_dlist.add
+        - id: ser_dlist.add
           label: "Add"
-        - id: serenitea_dlist.edit
+        - id: ser_dlist.edit
           label: "Edit"
-        - id: serenitea_dlist.approve
+        - id: ser_dlist.approve
           label: "Approve"
-        - id: serenitea_dlist.send
+        - id: ser_dlist.send
           label: "Send"
-        - id: serenitea_dlist.fulfill
+        - id: ser_dlist.fulfill
           label: "Fulfill"
-        - id: serenitea_dlist.cancel
+        - id: ser_dlist.cancel
           label: "Cancel"      
