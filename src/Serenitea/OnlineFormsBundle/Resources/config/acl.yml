@@ -1,35 +1,35 @@
 acl:
     - category: Online Forms
       entries:
-        - id: serenitea_forms.menu
+        - id: ser_forms.menu
           label: "Menu"
     - category: Pull Out Forms
       entries:
-        - id: serenitea_pullout.menu
+        - id: ser_pullout.menu
           label: "Menu"
-        - id: serenitea_pullout.view
+        - id: ser_pullout.view
           label: "View"
-        - id: serenitea_pullout.add
+        - id: ser_pullout.add
           label: "Add"
-        - id: serenitea_pullout.edit
+        - id: ser_pullout.edit
           label: "Edit"
-        - id: serenitea_pullout.delete
+        - id: ser_pullout.delete
           label: "Delete"
     - category: Job Order Forms
       entries:
-        - id: serenitea_repair.menu
+        - id: ser_repair.menu
           label: "Menu"
-        - id: serenitea_repair.view
+        - id: ser_repair.view
           label: "View"
-        - id: serenitea_repair.add
+        - id: ser_repair.add
           label: "Add"
-        - id: serenitea_repair.edit
+        - id: ser_repair.edit
           label: "Edit"
-        - id: serenitea_repair.approve
+        - id: ser_repair.approve
           label: "Approve"
-        - id: serenitea_repair.send
+        - id: ser_repair.send
           label: "Send"
-        - id: serenitea_repair.fulfill
+        - id: ser_repair.fulfill
           label: "Fulfill"
-        - id: serenitea_repair.cancel
+        - id: ser_repair.cancel
           label: "Cancel"

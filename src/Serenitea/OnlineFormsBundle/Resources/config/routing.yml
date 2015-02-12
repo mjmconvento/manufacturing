@@ -1,10 +1,15 @@
-serenitea_pullout_index:
+ser_pullout_index:
     path:     /pullout
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:index }
+
+ser_pullout_grid:
+    path:    /grid
+    methods: [GET]
+    defaults: { _controller:SereniteaOnlineFormsBundle:PullOut:grid }
     
-serenitea_pullout_add_form:
-    path:     /pullout/pulloutform
+ser_pullout_add_form:
+    path:     /pullout/form
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:addForm }
     

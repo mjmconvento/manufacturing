@@ -10,7 +10,7 @@ ser_inventory:
     resource: "@SereniteaInventoryBundle/Resources/config/child_routing.yml"
     prefix:   /inventory
 
-ser_online_forms:
+serenitea_online_forms:
     resource: "@SereniteaOnlineFormsBundle/Resources/config/routing.yml"
     prefix:   /onlineforms
 
