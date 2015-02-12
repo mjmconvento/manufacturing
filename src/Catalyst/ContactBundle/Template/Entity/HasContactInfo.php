@@ -92,14 +92,14 @@ trait HasContactInfo
     {
         return $this->email;
     }
-
-    public function setContactTypeID(ContactType $c_type)
+    
+    public function setContactType(ContactType $c_type)
     {
         $this->contact_type = $c_type;
         return $this;
     }
 
-    public function getContactTypeID()
+    public function getContactType()
     {
         return $this->contact_type;
     }
@@ -107,7 +107,11 @@ trait HasContactInfo
     public function getDisplayName()
     {
         // TODO: figure out if company vs individual
-        return $this->last_name . ', ' . $this->first_name;
+        if($this->getContactType()->getName() === 'Individual'){
+            return $this->last_name . ', ' . $this->first_name;
+        }else{
+            return $this->first_name;
+        }
     }
 
     public function dataHasContactInfo($data)

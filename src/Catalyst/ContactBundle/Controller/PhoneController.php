@@ -24,7 +24,8 @@ class PhoneController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
-        $o->setName($data['name'])
+        $cnt = $this->get('catalyst_contact');
+        $o->setPhoneType($cnt->getPhoneType($data['phone_type']))
             ->setNumber($data['number']);
 
         $o->setUserCreate($this->getUser());

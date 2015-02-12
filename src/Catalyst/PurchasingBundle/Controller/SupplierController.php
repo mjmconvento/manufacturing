@@ -49,16 +49,17 @@ class SupplierController extends CrudController
         $inv = $this->get('catalyst_inventory');
 
         $params['wh_opts'] = $inv->getWarehouseOptions();
-
+        $this->padFormContactInfo($params);
+        
         return $params;
     }
 
     protected function update($o, $data, $is_new = false)
     {
         $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateHasContactInfo($o, $data, $is_new);
+        $this->updateContact($o, $data, $is_new);
     }
-
+    
     protected function buildData($o)
     {
         $data = array(

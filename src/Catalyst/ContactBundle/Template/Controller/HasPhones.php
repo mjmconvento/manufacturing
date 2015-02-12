@@ -16,5 +16,10 @@ trait HasPhones
             }
         }
     }
+    
+    protected function padFormPhoneType(&$params){
+        $cnt = $this->get('catalyst_contact');
+        $params['phone_type_opts'] = $cnt->getPhoneTypeOptions();
+    }
 }
 
