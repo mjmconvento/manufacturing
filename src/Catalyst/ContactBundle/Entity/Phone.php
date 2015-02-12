@@ -62,7 +62,7 @@ class Phone
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
 
-        $data->type_id = $this->type_id;
+        $data->type = $this->getPhoneType()->getName();
         $data->number = $this->number;
 
         return $data;
