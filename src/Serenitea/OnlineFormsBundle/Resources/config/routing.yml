@@ -7,37 +7,42 @@ ser_pullout_grid:
     path:    /grid
     methods: [GET]
     defaults: { _controller:SereniteaOnlineFormsBundle:PullOut:grid }
-    
+
 ser_pullout_add_form:
     path:     /pullout/form
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:addForm }
-    
+
 serenitea_pullout_csv:
     path: /pullout/csv
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:csv }   
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:csv }
 
 serenitea_pullout_view:
     path:     /pullout/preview
     methods: [GET]
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:view }  
-    
+    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:view }
 
-serenitea_repair_index:
+
+ser_repair_index:
     path:     /repair
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:index }
-    
-serenitea_repair_add_form:
-    path:     /repair/repairform
+
+ser_repair_add_form:
+    path:     /repair/form
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addForm }
-    
+
+ser_repair_grid:
+    path:    /grid
+    methods: [GET]
+    defaults: { _controller:SereniteaOnlineFormsBundle:Repair:grid }
+
 serenitea_repair_csv:
     path: /repair/csv
-    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:csv }    
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:csv }
 
 serenitea_repair_view:
     path:     /repair/preview
     methods: [GET]
-    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:view } 
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:view }

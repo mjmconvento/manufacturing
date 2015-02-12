@@ -3,33 +3,43 @@
 namespace Serenitea\OnlineFormsBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 
 class RepairController extends CrudController
 {
      public function __construct()
     {
-        $this->route_prefix = 'serenitea_repair';
-        $this->title = 'Job Order Forms';
+        $this->route_prefix = 'ser_repair';
+        $this->title = 'Job Order Form';
 
         $this->list_title = 'Job Order Forms';
-        $this->list_type = 'static';
+        $this->list_type = 'dynamic';
+    }
+
+    protected function getGridColumns()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        return array(
+            $grid->newColumn('Job Order No.','',''),
+            $grid->newColumn('Date Created','',''),
+            $grid->newColumn('Created By','',''),
+            $grid->newColumn('Status','',''),
+        );
     }
     
  
-    public function indexAction()
-    {
-        $this->title = 'Job Order Forms';
-        $params = $this->getViewParams('', 'serenitea_repair_index');
+    // public function indexAction()
+    // {
+    //     $this->title = 'Job Order Forms';
+    //     $params = $this->getViewParams('', 'serenitea_repair_index');
         
-        $this->csv = 'serenitea_repair_csv';
+    //     $this->csv = 'serenitea_repair_csv';
         
-        $params['csv'] = $this->csv;
+    //     $params['csv'] = $this->csv;
         
-        return $this->render('SereniteaOnlineFormsBundle:Repair:index.html.twig', $params);
-    }
+    //     return $this->render('SereniteaOnlineFormsBundle:Repair:index.html.twig', $params);
+    // }
 
     public function headers()
     {
@@ -66,46 +76,16 @@ class RepairController extends CrudController
 
         return $response;
     }      
-    
-    public function addFormAction()
+
+    protected function getObjectLabel($obj) 
     {
-        $this->checkAccess($this->route_prefix . '.add');
-
-        $this->hookPreAction();
-        $obj = $this->newBaseClass();
-
-        $params = $this->getViewParams('Add');
-        $params['object'] = $obj;
-
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-
-        $this->padFormParams($params, $obj);
-
-        return $this->render('SereniteaOnlineFormsBundle:Repair:add.html.twig', $params);
-    }
-    
-    protected function getObjectLabel($obj) {
         
     }
 
-    protected function newBaseClass() {
+    protected function newBaseClass() 
+    {
         
     }
     
-     public function viewAction(){
-        $this->title = 'Job Order Forms';
-        $params = $this->getViewParams('', 'serenitea_repair_view');
-        return $this->render('SereniteaOnlineFormsBundle:Repair:view.html.twig', $params);
-    }
 
 }
