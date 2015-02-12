@@ -3,6 +3,68 @@ th {
   text-align: center;
 }
 
+.page-header.navbar{
+	background: url(/bundles/sereniteatemplate/images/greengrass.jpg);
+}
+
+.page-content-wrapper{
+	background-color: #3E5316;
+}
+
+.page-footer{
+	background-color: #313900;
+}
+
+.page-sidebar .page-sidebar-menu > li:hover > a, .page-sidebar .page-sidebar-menu > li.open > a {
+    background: #242a00;
+    color: white;
+}
+
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li:hover > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.open > a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu > li.active > a, .page-sidebar .page-sidebar-menu .sub-menu > li:hover > a, .page-sidebar .page-sidebar-menu .sub-menu > li.open > a, .page-sidebar .page-sidebar-menu .sub-menu > li.active > a{
+	background: #242a00 !important;
+}
+
+.page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a{
+	background: #242a00 !important;
+}
+
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li > a,
+.page-sidebar .page-sidebar-menu > li > a {
+	border-top: 1px solid #CFD792;
+}
+.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu > li.active.open + li > a,
+.page-sidebar .page-sidebar-menu > li.active.open + li > a {
+	border-top: 1px solid #CFD792;	
+}
+
+.page-content-wrapper .page-content{
+	background: url(/bundles/sereniteatemplate/images/body.jpg) no-repeat top left;
+	background-size: 100%;
+  background-color: #FFF;
+}
+
+.page-sidebar.navbar-collapse.collapse{
+  background-color: #313900;
+}
+
+.portlet.box.blue-hoki > .portlet-title{
+    background-color: #2E3110;
+}
+
+.portlet.box.blue-hoki {
+    border: 1px solid #2E3110;
+    border-top: 0;
+}
+
+
+.page-sidebar.navbar-collapse.collapse{
+	background-color: #313900;
+}
+
+.page-breadcrumb.breadcrumb {
+  background-color: rgba(247, 247, 247, 0);
+}
+
 .returned{
   background-color:#ffaa41 !important;
 }
@@ -13,4 +75,22 @@ th {
 
 .received{
   background-color:#71ceea !important;
+}
+
+.page-header.navbar .page-logo .logo-default{
+	width:70% !important;
+	margin-top: 0px;
+}
+
+th{
+  background-color: #3f4500  !important;
+  color: white !important;
+}
+
+.table .content-heading{
+  /*background-color: #003f45 !important;*/
+  background-color: #317256 !important;
+  border: 0px;
+  margin: 0px;
+  color: white;
 }
