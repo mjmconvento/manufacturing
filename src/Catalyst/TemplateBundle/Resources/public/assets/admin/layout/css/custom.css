@@ -2,3 +2,15 @@
 th {
   text-align: center;
 }
+
+.returned{
+  background-color:#ffaa41 !important;
+}
+
+.damaged{
+  background-color:#ea4d4d !important;
+}
+
+.received{
+  background-color:#71ceea !important;
+}
