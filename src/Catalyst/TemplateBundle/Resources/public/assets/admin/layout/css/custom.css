@@ -104,3 +104,7 @@ th{
   color: #fff;
   border-color: #35AA47;
 }
+
+.page-sidebar .page-sidebar-menu > li .sub-menu {
+  background-color: #3E5316 !important;
+}
