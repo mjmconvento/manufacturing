@@ -1,4 +1,12 @@
 menu_items:
+    - id: cat_user_user_index
+      acl: cat_user_user.menu
+      label: User
+      parent: menu_admin
+    - id: cat_user_group_index
+      acl: cat_user_group.menu
+      label: Role
+      parent: menu_admin
     - id: ser_branch_index
       acl: ser_branch.menu
       label: Branch Management

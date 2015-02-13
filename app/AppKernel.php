@@ -54,6 +54,7 @@ class AppKernel extends Kernel
             new Serenitea\OnlineFormsBundle\SereniteaOnlineFormsBundle(),
             new Serenitea\InventoryBundle\SereniteaInventoryBundle(),
             new Serenitea\OrderBundle\SereniteaOrderBundle(),
+            new Serenitea\TemplateBundle\SereniteaTemplateBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

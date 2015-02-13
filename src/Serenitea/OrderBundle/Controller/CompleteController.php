@@ -15,10 +15,20 @@ class CompleteController extends CrudController
         $this->title = 'Completed Delivery';
 
         $this->list_title = 'Completed Deliveries';
-        $this->list_type = 'static';
+        $this->list_type = 'dynamic';
+    }
+
+    protected function getGridColumns()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        return array(
+            $grid->newColumn('D.R. #','',''),            
+            $grid->newColumn('Target Delivery Date','',''),            
+            $grid->newColumn('Status','',''),
+        );
     }
     
- 
     public function indexAction()
     {
         $this->hookPreAction();
@@ -27,7 +37,7 @@ class CompleteController extends CrudController
 
         $params = $this->getViewParams('List', 'ser_complete_index');
 
-        $twig_file = 'SereniteaOrderBundle:Complete:index.html.twig';
+        $twig_file = 'SereniteaOrderBundle:Complete:form.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();        
@@ -105,30 +115,12 @@ class CompleteController extends CrudController
         return $this->render('SereniteaOrderBundle:Complete:view.html.twig', $params);
     }
     
-    protected function newBaseClass() {
+    protected function newBaseClass() 
+    {
         
     }
     protected function getObjectLabel($obj)
     {
-//        if ($obj == null) {
-//            return '';
-//        }
-//        return $obj->getCode();
-    }
-    
-//    protected function getGridColumns()
-//    {
-//        $grid = $this->get('catalyst_grid');
-//        return array(
-//            $grid->newColumn('PO #', 'getCode', 'code'),
-//            $grid->newColumn('Date Issued', 'getDateIssue', 'date_issue', 'o', array($this, 'formatDate')),
-//            $grid->newColumn('Supplier', 'getName', 'name', 's'),
-//            $grid->newColumn('Price', 'getTotalPrice', 'total_price'),
-//            $grid->newColumn('Status', 'getStatusFormatted', 'status_id'),
-//        );
-//    }
-    
-   
-    
 
+    }
 }

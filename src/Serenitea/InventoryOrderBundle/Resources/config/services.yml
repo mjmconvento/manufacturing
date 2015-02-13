@@ -1,7 +1,0 @@
-parameters:
-#    serenitea_inventory_order.example.class: Serenitea\InventoryOrderBundle\Example
-
-services:
-#    serenitea_inventory_order.example:
-#        class: %serenitea_inventory_order.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
