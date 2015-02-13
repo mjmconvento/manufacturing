@@ -38,6 +38,11 @@ trait HasAddresses
     {
         return $this->addresses;
     }
+    
+    public function getPrimaryAddress()
+    {
+        
+    }
 
     public function dataHasAddresses($data)
     {

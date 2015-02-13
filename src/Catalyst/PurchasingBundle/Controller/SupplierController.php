@@ -21,6 +21,7 @@ class SupplierController extends CrudController
 
         $this->list_title = 'Suppliers';
         $this->list_type = 'static';
+        $this->view_path = 'CatalystPurchasingBundle:Supplier';
     }
 
     protected function newBaseClass()
@@ -62,16 +63,7 @@ class SupplierController extends CrudController
     
     protected function buildData($o)
     {
-        $data = array(
-            'id' => $o->getID(),
-            'name' => $o->getName(),
-            'address' => $o->getAddress(),
-            'contact_number' => $o->getContactNumber(),
-            'email' => $o->getEmail(),
-            'contact_person' => $o->getContactPerson(),
-            'notes' => $o->getNotes(),
-        );
-
+        $data = $o->toData();
         return $data;
     }
 }

@@ -13,10 +13,10 @@
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
                         {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {{ form.group_text('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_date('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 3) }}
                       <h4 class="form-section">Purchase Request Information</h4>
                         {{ form.group_text('Reference Number', 'reference_num', object.getReferenceNum, 3, 3) }}
-                        {{ form.group_text('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_date('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 3) }}
                         {{ form.group_text('Requested By', 'request_by', object.getUserCreate.getName, 3, 3,true) }}  
                         {{ form.group_text('Department', 'department', object.getDepartment, 3, 3) }}  
                         {{ form.group_textarea('Purpose', 'purpose', object.getPurpose,4 , 3, 5) }} 
@@ -90,19 +90,6 @@
 
                         <!-- fields for NON super user -->
                         {% else %}#}
-                        
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Date Issued</label>
-                            <div class ="col-md-3">
-                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
-                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateCreate|date('m/d/Y') }}" readonly>
-                                    <span class="input-group-btn">
-                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
 
                         <h4 class="form-section">Entries</h4>
 
