@@ -40,7 +40,7 @@ th {
 .page-content-wrapper .page-content{
 	background: url(/bundles/sereniteatemplate/images/body.jpg) no-repeat top left;
 	background-size: 100%;
-  background-color: #FFF;
+  background-color: #F4F4F2;
 }
 
 .page-sidebar.navbar-collapse.collapse{
@@ -93,4 +93,18 @@ th{
   border: 0px;
   margin: 0px;
   color: white;
+}
+
+.login .content h3 {
+  color: #fff;
+}
+
+.login .content .form-actions{
+  background-color: #34381C;
+  color: #fff;
+  border-color: #35AA47;
+}
+
+.page-sidebar .page-sidebar-menu > li .sub-menu {
+  background-color: #3E5316 !important;
 }
