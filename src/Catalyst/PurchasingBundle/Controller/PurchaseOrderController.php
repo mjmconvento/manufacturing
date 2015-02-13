@@ -3,6 +3,7 @@
 namespace Catalyst\PurchasingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
 use Catalyst\PurchasingBundle\Entity\POEntry;
 use Catalyst\InventoryBundle\Entity\Product;
@@ -11,6 +12,7 @@ use DateTime;
 
 class PurchaseOrderController extends CrudController
 {
+    use TrackCreate;
     public function __construct()
     {
         $this->route_prefix = 'cat_pur_po';
@@ -119,7 +121,7 @@ class PurchaseOrderController extends CrudController
         return array(
             $grid->newColumn('Code', 'getCode', 'code'),
             $grid->newColumn('Date Issued', 'getDateIssue', 'date_issue', 'o', array($this, 'formatDate')),
-            $grid->newColumn('Suppplier', 'getName', 'name', 's'),
+            $grid->newColumn('Suppplier', 'getDisplayName', 'name', 's'),
             $grid->newColumn('Price', 'getTotalPrice', 'total_price'),
             $grid->newColumn('Status', 'getStatusFormatted', 'status_id'),
         );
@@ -128,23 +130,14 @@ class PurchaseOrderController extends CrudController
     protected function update($o, $data, $is_new = false)
     {
         $em = $this->getDoctrine()->getManager();
-
-        // validate code
-        if (strlen($data['code']) > 0)
-            $o->setCode($data['code']);
-        else
-            throw new ValidationException('Cannot leave code blank');
-
-        $o->setDateIssue(new DateTime($data['date_issue']));
-
-        // supplier
-        $supp = $em->getRepository('CatalystPurchasingBundle:Supplier')->find($data['supplier_id']);
-        if ($supp == null)
-            throw new ValidationException('Could not find supplier.');
+        $pur = $this->get('catalyst_purchasing');
         
-        $o->setSupplier($supp);
+        $o->setDateIssue(new DateTime($data['date_issue']));
+        $o->setDateNeeded(new DateTime($data['date_need']));
+        $o->setReferenceCode($data['reference_code']);
+        $o->setSupplier($pur->getSupplier($data['supplier_id']));
         $o->setStatus($data['status_id']);            
-
+        $this->updateTrackCreate($o,$data,$is_new);
         // clear entries
         $ents = $o->getEntries();
         foreach ($ents as $ent)
@@ -180,13 +173,9 @@ class PurchaseOrderController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
-
+        $pur = $this->get('catalyst_purchasing');
         // suppplier
-        $supps = $em->getRepository('CatalystPurchasingBundle:Supplier')->findAll();
-        $supp_opts = array();
-        foreach ($supps as $supp)
-            $supp_opts[$supp->getID()] = $supp->getName();
-        $params['supp_opts'] = $supp_opts;
+        $params['supp_opts'] = $pur->getSupplierOptions();
 
         $params['status_opts'] = array(
             'draft' => 'Draft',
@@ -237,6 +226,18 @@ class PurchaseOrderController extends CrudController
     public function statusFulfillAction($id)
     {
         return $this->statusUpdate($id, PurchaseOrder::STATUS_FULFILLED);
+    }
+    
+    protected function hookPostSave($obj,$is_new = false) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->generateCode();
+            $obj->setUserCreate($this->getUser());
+            $em->persist($obj);
+            $em->flush();
+        }
+       
     }
 
 }

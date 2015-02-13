@@ -11,7 +11,7 @@ $(document).ready(function() {
                 // make phone node
                 var html = '';
                 html += '<input type="hidden" name="phone_id[]" value="' + data.data.id + '">';
-                html += data.data.name;
+                html += data.data.type;
                 html += '<hr>';
 
                 // copy over data and display

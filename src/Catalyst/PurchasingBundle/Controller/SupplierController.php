@@ -21,6 +21,7 @@ class SupplierController extends CrudController
 
         $this->list_title = 'Suppliers';
         $this->list_type = 'static';
+        $this->view_path = 'CatalystPurchasingBundle:Supplier';
     }
 
     protected function newBaseClass()
@@ -49,28 +50,20 @@ class SupplierController extends CrudController
         $inv = $this->get('catalyst_inventory');
 
         $params['wh_opts'] = $inv->getWarehouseOptions();
-
+        $this->padFormContactInfo($params);
+        
         return $params;
     }
 
     protected function update($o, $data, $is_new = false)
     {
         $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateHasContactInfo($o, $data, $is_new);
+        $this->updateContact($o, $data, $is_new);
     }
-
+    
     protected function buildData($o)
     {
-        $data = array(
-            'id' => $o->getID(),
-            'name' => $o->getName(),
-            'address' => $o->getAddress(),
-            'contact_number' => $o->getContactNumber(),
-            'email' => $o->getEmail(),
-            'contact_person' => $o->getContactPerson(),
-            'notes' => $o->getNotes(),
-        );
-
+        $data = $o->toData();
         return $data;
     }
 }

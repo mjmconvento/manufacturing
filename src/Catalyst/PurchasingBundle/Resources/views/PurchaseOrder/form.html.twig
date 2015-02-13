@@ -107,31 +107,11 @@
 
                         <!-- fields for NON super user -->
                         {% else %}#}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Date Issued</label>
-                            <div class ="col-md-3">
-                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
-                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateIssue|date('m/d/Y') }}" readonly>
-                                    <span class="input-group-btn">
-                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if (object.canModifyEntries) %}
-                            {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {% else %}
-                            {{ form.group_text('Code', 'code', object.getCode, 3, 3, true) }}
-                        {% endif %}
-
-                        {% if (object.canModifyEntries) %}
-                            {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
-                        {% else %}
-                            {{ form.group_text('Supplier', 'supplier_id', object.getSupplier.getName, 3, 5, true) }}
-                        {% endif %}
-
-                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 3,true) }}
+                        {{ form.group_date('Date Issued', 'date_issue', object.getDateCreate|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4) }}
+                        {{ form.group_date('Date Needed', 'date_need', object.getDateCreate|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 4) }}
+                        {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 4,true) }}
 
                         {% if (object.getID != null) %}
                         <div class="form-group">
@@ -216,7 +196,7 @@
 
                     <div class="form-actions fluid">
                         <div class="col-md-9">
-                            {% if (object.canModifyEntries) or (super_user.getName == app.user.getName) %}
+                            {% if (object.canModifyEntries) %}
                             <button type="submit" class="btn blue">Submit</button>
                             {% endif %}
                             <a href="{{ path(route_list) }}" class="btn default">&lt; Back</a>
@@ -440,9 +420,6 @@ $(document).ready(function() {
            this.element(element);
         },
         rules: {
-            code: {
-                required: true
-            }
         },  
         submitHandler: function(form) {
             form.submit();

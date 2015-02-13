@@ -8,11 +8,10 @@ catalyst_menu:
         # - CatalystManufacturingBundle
         - CatalystPurchasingBundle
         # - CatalystSalesBundle
-        - CatalystServiceBundle
+        # - CatalystServiceBundle
         - SereniteaPurchasingBundle
         - SereniteaOrderBundle        
-        - SereniteaOnlineFormsBundle
-        - SereniteaAdminBundle      
+        - SereniteaOnlineFormsBundle        
 
 catalyst_user:
     acl_entries:
@@ -26,14 +25,14 @@ catalyst_user:
           label: User
         - id: CatalystInventoryBundle
           label: Inventory
-        - id: CatalystManufacturingBundle
-          label: Manufacturing
+        # - id: CatalystManufacturingBundle
+        #   label: Manufacturing
         - id: CatalystPurchasingBundle
           label: Purchasing
-        - id: CatalystSalesBundle
-          label: Sales
-        - id: CatalystServiceBundle
-          label: Service
+        # - id: CatalystSalesBundle
+        #   label: Sales
+        # - id: CatalystServiceBundle
+        #   label: Service
         - id: SereniteaOrderBundle
           label: Requisition
         - id: SereniteaOnlineFormsBundle

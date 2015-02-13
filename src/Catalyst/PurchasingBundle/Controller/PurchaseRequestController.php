@@ -3,6 +3,7 @@
 namespace Catalyst\PurchasingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\PurchasingBundle\Entity\PurchaseRequest;
 use Catalyst\PurchasingBundle\Entity\PREntry;
 use Catalyst\InventoryBundle\Entity\Product;
@@ -11,6 +12,7 @@ use DateTime;
 
 class PurchaseRequestController extends CrudController
 {
+    use TrackCreate;
     public function __construct()
     {
         $this->route_prefix = 'cat_pur_pr';
@@ -91,7 +93,6 @@ class PurchaseRequestController extends CrudController
     protected function newBaseClass()
     {
         $obj = new PurchaseRequest();
-        $obj->setUserCreate($this->getUser());
         return $obj;
     }
 
@@ -111,9 +112,9 @@ class PurchaseRequestController extends CrudController
     {
         $grid = $this->get('catalyst_grid');
         return array(
-            $grid->newColumn('Requisition No', 'getCode', 'code'),
+            $grid->newColumn('Request No', 'getCode', 'code'),
             $grid->newColumn('Date Issued', 'getDateCreate', 'date_create', 'o', array($this, 'formatDate')),
-            $grid->newColumn('Reference No', 'getReferenceNum', 'total_price'),
+            $grid->newColumn('Reference No', 'getReferenceCode', 'total_price'),
             $grid->newColumn('Department', 'getDepartment', 'total_price'),
             $grid->newColumn('Date Needed', 'getDateNeeded', 'date_needed', 'o', array($this, 'formatDate')),
         );
@@ -122,25 +123,15 @@ class PurchaseRequestController extends CrudController
     protected function update($o, $data, $is_new = false)
     {
         $em = $this->getDoctrine()->getManager();
-
-        // validate code
-        if (strlen($data['code']) > 0)
-            $o->setCode($data['code']);
-        else
-            throw new ValidationException('Cannot leave code blank');
-
-        $o->setDateIssue(new DateTime($data['date_issue']));
-
-        // supplier
-        $supp = $em->getRepository('CatalystPurchasingBundle:Supplier')->find($data['supplier_id']);
-        if ($supp == null)
-            throw new ValidationException('Could not find supplier.');
-        
-        $o->setSupplier($supp);
-
+        $o->setDateNeeded(new DateTime($data['date_need']));
+        $o->setPurpose($data['purpose']);
+        $o->setNotes($data['notes']);
+        $o->setReferenceCode($data['reference_code']);
+        $o->setDepartment($data['department']);
+        $this->updateTrackCreate($o,$data,$is_new);
         // clear entries
         $ents = $o->getEntries();
-        foreach ($ents as $ent)
+        foreach($ents as $ent)
             $em->remove($ent);
         $o->clearEntries();
 
@@ -151,16 +142,15 @@ class PurchaseRequestController extends CrudController
             {
                 // fields
                 $qty = $data['en_qty'][$index];
-                $price = $data['en_price'][$index];
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
                 if ($prod == null)
                     throw new ValidationException('Could not find product.');
 
                 // instantiate
-                $entry = new POEntry();
+                $entry = new PREntry();
                 $entry->setProduct($prod)
                     ->setQuantity($qty)
-                    ->setPrice($price);
+                    ->setUserCreate($this->getUser());
 
                 // add entry
                 $o->addEntry($entry);
@@ -175,7 +165,7 @@ class PurchaseRequestController extends CrudController
         $inv = $this->get('catalyst_inventory');
 
         // suppplier
-        $params['prod_opts'] = $inv->getProductOptions(array('flag_purchase' => true));
+        $params['prod_opts'] = $inv->getProductOptions();
         return $params;
     }
 
@@ -197,95 +187,15 @@ class PurchaseRequestController extends CrudController
         return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $id)));
     }
 
-    public function editFormAction($id)
+    protected function hookPostSave($obj,$is_new = false) 
     {
-        $this->checkAccess($this->route_prefix . '.view');
-
-        $this->hookPreAction();
         $em = $this->getDoctrine()->getManager();
-        $obj = $em->getRepository($this->repo)->find($id);
-
-        $params = $this->getViewParams('Edit');
-        $params['object'] = $obj;
-        $params['o_label'] = $this->getObjectLabel($obj);
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.edit');
-
-        $this->padFormParams($params, $obj);
-
-        return $this->render('CatalystTemplateBundle:Object:edit.html.twig', $params);
-    }
-
-    public function editSubmitAction($id)
-    {
-        $this->checkAccess($this->route_prefix . '.edit');
-
-        $this->hookPreAction();
-        try
-        {
-            $em = $this->getDoctrine()->getManager();
-            $data = $this->getRequest()->request->all();
-
-            $object = $em->getRepository($this->repo)->find($id);
-            $object->setStatus($data['status_id']);            
-
-            $this->update($object, $data);
-
+        if($is_new){
+            $obj->generateCode();
+            $em->persist($obj);
             $em->flush();
-
-            $odata = $object->toData();
-            $this->logUpdate($odata);
-
-            $this->addFlash('success', $this->title . ' ' . $this->getObjectLabel($object) . ' edited successfully.');
-
-            return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
         }
-        catch (ValidationException $e)
-        {
-            $this->addFlash('error', $e->getMessage());
-            return $this->editError($object, $id);
-        }
-        catch (DBALException $e)
-        {
-            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
-            error_log($e->getMessage());
-            return $this->addError($object);
-        }
-    }
-
-    public function addFormAction()
-    {
-        $this->checkAccess($this->route_prefix . '.add');
-
-        $this->hookPreAction();
-        $obj = $this->newBaseClass();
-
-        $params = $this->getViewParams('Add');
-        $params['object'] = $obj;
-
-
-        // Getting super user
-        $prodgroup = $this->get('catalyst_configuration');
-        $repository = $this->getDoctrine()
-            ->getRepository('CatalystUserBundle:Group');
-        $super_user = $repository->findOneById($prodgroup->get('catalyst_super_user_role_default'));    
-        $params['super_user'] = $super_user;
-
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-
-        $this->padFormParams($params, $obj);
-
-        return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);
+       
     }
 
 

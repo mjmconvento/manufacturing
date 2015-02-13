@@ -5,7 +5,7 @@
 
 {% for a in object.getPhones %}
     {{ f.hidden('phone_id[]', a.getID) }}
-    {{ f.group_text('Name', 'name', a.getName, 3, 4, true) }}
+    {{ f.group_text('Type', 'name', a.getPhoneType.getName, 3, 4, true) }}
     {{ f.group_text('Number', 'number', a.getNumber, 3, 4, true) }}
     <button id="delete-phone" class="btn btn-default">Delete Phone</button>
     <hr>

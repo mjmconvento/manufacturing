@@ -32,6 +32,7 @@ class PREntry
     public function __construct()
     {
         $this->initHasQuantity();
+        $this->initTrackCreate();
     }
 
     public function setPurchaseRequest(PurchaseRequest $pr)

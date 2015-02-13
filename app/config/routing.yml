@@ -22,8 +22,8 @@ serenitea_order:
     resource: "@SereniteaOrderBundle/Resources/config/routing.yml"
     prefix:   /ordering
 
-ser_admin:
-    resource: "@SereniteaAdminBundle/Resources/config/routing.yml"
+serenitea_admin:
+    resource: "@SereniteaAdminBundle/Resources/config/child_routing.yml"
     prefix:   /
 
 catalyst_accounting:
