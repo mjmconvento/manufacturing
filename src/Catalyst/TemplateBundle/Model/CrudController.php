@@ -78,7 +78,7 @@ abstract class CrudController extends BaseController
         $this->getControllerBase();
     }
     
-    protected function hookPostSave($obj)
+    protected function hookPostSave($obj, $is_new = false)
     {
         //action after save
     }
@@ -251,7 +251,7 @@ abstract class CrudController extends BaseController
 
         $em->persist($obj);
         $em->flush();
-        $this->hookPostSave($obj);
+        $this->hookPostSave($obj,true);
         error_log('added');
 
         // log
@@ -306,6 +306,7 @@ abstract class CrudController extends BaseController
         }
         catch (DBALException $e)
         {
+            print_r($e->getMessage());
             $this->addFlash('error', 'Database error encountered. Possible duplicate.');
             error_log($e->getMessage());
             return $this->addError($obj);
@@ -364,7 +365,7 @@ abstract class CrudController extends BaseController
             // update db
             $this->update($object, $data);
             $em->flush();
-
+            $this->hookPostSave($object);
             // log
             $odata = $object->toData();
             $this->logUpdate($odata);

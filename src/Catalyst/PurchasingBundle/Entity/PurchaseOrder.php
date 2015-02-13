@@ -166,7 +166,8 @@ class PurchaseOrder
     
     public function generateCode()
     {
-        $this->code = "POS-".str_pad($this->id,8, "0", STR_PAD_LEFT);
+        $year = date('Y');
+        $this->code = "POS-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
     }
 
     public function getSupplierID()
@@ -274,7 +275,7 @@ class PurchaseOrder
 
     public function canModifyEntries()
     {
-        if ($this->status_id == self::STATUS_DRAFT)
+        if (strtolower($this->status_id) == strtolower(self::STATUS_DRAFT))
             return true;
 
         return false;

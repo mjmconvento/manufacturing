@@ -11,33 +11,14 @@
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
-                        <h4 class="form-section">Information</h4>
-                        {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {{ form.group_date('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 3) }}
-                      <h4 class="form-section">Purchase Request Information</h4>
-                        {{ form.group_text('Reference Number', 'reference_num', object.getReferenceNum, 3, 3) }}
-                        {{ form.group_date('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 3) }}
-                        {{ form.group_text('Requested By', 'request_by', object.getUserCreate.getName, 3, 3,true) }}  
-                        {{ form.group_text('Department', 'department', object.getDepartment, 3, 3) }}  
+                       <h4 class="form-section">Purchase Request Information</h4>
+                        {{ form.group_date('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 4) }}
+                        {{ form.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4) }}
+                        {{ form.group_date('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 4) }}
+                        {{ form.group_text('Requested By', 'request_by', object.getUserCreate is not null? object.getUserCreate.getName:'', 3, 4,true) }}  
+                        {{ form.group_text('Department', 'department', object.getDepartment, 3, 4) }}  
                         {{ form.group_textarea('Purpose', 'purpose', object.getPurpose,4 , 3, 5) }} 
                         {{ form.group_textarea('Remarks', 'notes', object.getNotes,4 , 3, 5) }} 
-{#
-                        <!-- fields for super user -->
-                        {% if super_user.getName == app.user.getName %}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Date Issued</label>
-                            <div class ="col-md-3">
-                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
-                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateIssue|date('m/d/Y') }}" readonly>
-                                    <span class="input-group-btn">
-                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
 
                         <h4 class="form-section">Entries</h4>
 
@@ -52,87 +33,19 @@
                                         <tr>
                                             <th>Product</th>
                                             <th style="width: 180px">Quantity</th>
-                                            <th style="width: 180px">Price</th>
-                                            <th style="width: 150px">Total</th>
                                             <th style="width: 50px"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="en_table">
                                     {% for entry in object.getEntries %}
                                         <tr>
-                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
+                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getSku }} - {{ entry.getProduct.getName }}</td>
                                             <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}"></td>
-                                            <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}"></td>
-                                            <td class="en_total">--</td>
-
-                                            <td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>  
-                                            <!-- <td><a href="#" class="btn btn_dim_del default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td> -->
-
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td>Total</td>
-                                            <td id="total_qty"></td>
-                                            <td id="total_price"></td>
-                                            <td id="total_total"></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <!-- fields for NON super user -->
-                        {% else %}#}
-
-                        <h4 class="form-section">Entries</h4>
-
-                        <div>
-                            <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Product Entry</a>
-                        </div>
-
-                        <div class="row table-responsive" style="padding-top:10px">
-                            <div class="col-md-11">
-                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th style="width: 180px">Quantity</th>
-                                            <th style="width: 180px">Price</th>
-                                            <th style="width: 150px">Total</th>
-                                            <th style="width: 50px"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="en_table">
-                                    {% for entry in object.getEntries %}
-                                        <tr>
-                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
-                                            <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
-                                            <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
-                                            <td class="en_total">--</td>
-                                            {% if (object.canModifyEntries) %}
                                             <td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>
-
                                             <!-- <td><a href="#" class="btn btn_dim_del default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td> -->
-                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td>Total</td>
-                                            <td id="total_qty"></td>
-                                            <td id="total_price"></td>
-                                            <td id="total_total"></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -165,34 +78,14 @@
             <div class="modal-body">
                 <div class="row form-horizontal form">
                     <div class="form-body">
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Product</label>
-                            <div class ="col-md-8">
-                                <select id="en_product_id" class="form-control select_2" name="prod_id">
-                                {{ form.options(prod_opts, 0) }}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Quantity</label>
-                            <div class ="col-md-8">
-                                <input id="en_qty" type="text" class="form-control" name="qty" placeholder="Quantity">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Price</label>
-                            <div class ="col-md-8">
-                                <input id="en_price" type="text" class="form-control" name="price" placeholder="Price">
-                            </div>
-                        </div>
+                        {{ form.group_select('Product', 'en_prod_id',prod_opts,'', 3, 8) }}
+                        {{ form.group_text('Quantity', 'en_qty','0.00', 3, 8) }}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn default">Close</button>
-                <button id="btn_en_submit" type="button" class="btn green">Add Purchase Order Entry</button>
+                <button id="btn_en_submit" type="button" class="btn green">Add Purchase Request Entry</button>
             </div>
         </div>
     </div>
@@ -211,9 +104,9 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script src="{{ asset('bundles/leathertemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
 
 
 
@@ -256,13 +149,11 @@ function update_form_price()
 }
 
 // append entries to entry table
-function appendEntry(prod_id, prod_name, qty, price)
+function appendEntry(prod_id, prod_name, qty)
 {
     var row = '<tr>';
     row += '<td><input type="hidden" name="en_prod_id[]" value="' + escape_attr(prod_id) + '">' + escape_html(prod_name) + '</td>';
     row += '<td><input class="form-control en_qty" type="text" name="en_qty[]" value="' + qty + '"></td>';
-    row += '<td><input class="form-control en_price" type="text" name="en_price[]" value="' + price + '"></td>';
-    row += '<td class="en_total"></td>';
     row += '<td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>';
     row += '</tr>';
 
@@ -330,9 +221,6 @@ $(document).ready(function() {
            this.element(element);
         },
         rules: {
-            code: {
-                required: true
-            }
         },  
         submitHandler: function(form) {
             form.submit();
@@ -350,16 +238,15 @@ $(document).ready(function() {
     });
 
     // form - update table
-    $('#btn_en_submit').click(function() {
-        var prod_id = $('#en_product_id').val();
-        var prod_name = $('#en_product_id option:selected').text();
+    $('#btn_en_submit').on('click',function() {
+        console.log('adasda');
+        var prod_id = $('#cform-en_prod_id').val();
+        var prod_name = $('#cform-en_prod_id option:selected').text();
 
-        var qty = $('#en_qty').val();
-        var price = $('#en_price').val();
-        var total = qty * price;
+        var qty = $('#cform-en_qty').val();
 
         // changed to appendentry func for reusability
-        appendEntry(prod_id, prod_name, qty, price);
+        appendEntry(prod_id, prod_name, qty);
 
         update_totals();
 

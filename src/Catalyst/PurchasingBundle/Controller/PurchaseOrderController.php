@@ -3,6 +3,7 @@
 namespace Catalyst\PurchasingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
 use Catalyst\PurchasingBundle\Entity\POEntry;
 use Catalyst\InventoryBundle\Entity\Product;
@@ -11,6 +12,7 @@ use DateTime;
 
 class PurchaseOrderController extends CrudController
 {
+    use TrackCreate;
     public function __construct()
     {
         $this->route_prefix = 'cat_pur_po';
@@ -132,11 +134,10 @@ class PurchaseOrderController extends CrudController
         
         $o->setDateIssue(new DateTime($data['date_issue']));
         $o->setDateNeeded(new DateTime($data['date_need']));
-        $o->setUserCreate($this->getUser());
         $o->setReferenceCode($data['reference_code']);
         $o->setSupplier($pur->getSupplier($data['supplier_id']));
         $o->setStatus($data['status_id']);            
-
+        $this->updateTrackCreate($o,$data,$is_new);
         // clear entries
         $ents = $o->getEntries();
         foreach ($ents as $ent)
@@ -227,13 +228,16 @@ class PurchaseOrderController extends CrudController
         return $this->statusUpdate($id, PurchaseOrder::STATUS_FULFILLED);
     }
     
-    protected function hookPostSave($obj) 
+    protected function hookPostSave($obj,$is_new = false) 
     {
         $em = $this->getDoctrine()->getManager();
-        
-        $obj->generateCode();
-        $em->persist($obj);
-        $em->flush();
+        if($is_new){
+            $obj->generateCode();
+            $obj->setUserCreate($this->getUser());
+            $em->persist($obj);
+            $em->flush();
+        }
+       
     }
 
 }

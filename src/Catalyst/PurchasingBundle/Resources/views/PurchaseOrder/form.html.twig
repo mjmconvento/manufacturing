@@ -108,13 +108,9 @@
                         <!-- fields for NON super user -->
                         {% else %}#}
                         {{ form.group_date('Date Issued', 'date_issue', object.getDateCreate|date('m/d/Y'), 3, 3) }}
-                        {{ form.group_date('Date Needed', 'date_need', object.getDateCreate|date('m/d/Y'), 3, 3) }}
-
-                        {{ form.group_text('Code', 'code', object.getCode, 3, 4, true) }}
                         {{ form.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4) }}
-
+                        {{ form.group_date('Date Needed', 'date_need', object.getDateCreate|date('m/d/Y'), 3, 3) }}
                         {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 4) }}
-
                         {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 4,true) }}
 
                         {% if (object.getID != null) %}
