@@ -25,10 +25,14 @@ class Phone
     /** @ORM\Column(type="string", length=50) */
     protected $number;
 
+    /** @ORM\Column(type="boolean") */
+    protected $is_primary;
+
     public function __construct()
     {
         $this->initHasGeneratedID();
         $this->initTrackCreate();
+        $this->is_primary = false;
     }
 
     public function setPhoneType(PhoneType $name)
@@ -53,8 +57,18 @@ class Phone
     {
         return $this->number;
     }
-    
-    
+
+    public function setIsPrimary($pri = true)
+    {
+        $this->is_primary = $pri;
+        return $this;
+    }
+
+    public function getIsPrimary()
+    {
+        return $this->is_primary;
+    }
+
     public function toData()
     {
         $data = new \stdClass();
@@ -64,6 +78,7 @@ class Phone
 
         $data->type = $this->getPhoneType()->getName();
         $data->number = $this->number;
+        $data->is_primary = $this->is_primary;
 
         return $data;
     }

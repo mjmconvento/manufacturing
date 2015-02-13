@@ -18,6 +18,12 @@
                     {{ f.group_text('Country', 'country', '', 3, 8, false, prefix) }}
                     {{ f.group_text('Latitude', 'latitude', '', 3, 8, false, prefix) }}
                     {{ f.group_text('Longitude', 'longitude', '', 3, 8, false, prefix) }}
+                    <div class="form-group">
+                        <label class="col-md-3"></label>
+                        <div class="col-md-5">
+                            {{ f.checkbox('is_primary', 1, 'Set as Primary Address', '', '')}}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
