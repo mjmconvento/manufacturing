@@ -21,6 +21,7 @@ abstract class CrudController extends BaseController
 
     protected $list_title;
     protected $list_type;
+    protected $view_path;
 
 
     protected function getRouteGen()
@@ -75,6 +76,11 @@ abstract class CrudController extends BaseController
     protected function hookPreAction()
     {
         $this->getControllerBase();
+    }
+    
+    protected function hookPostSave($obj, $is_new = false)
+    {
+        //action after save
     }
 
     protected function getControllerBase()
@@ -245,7 +251,7 @@ abstract class CrudController extends BaseController
 
         $em->persist($obj);
         $em->flush();
-
+        $this->hookPostSave($obj,true);
         error_log('added');
 
         // log
@@ -300,6 +306,7 @@ abstract class CrudController extends BaseController
         }
         catch (DBALException $e)
         {
+            print_r($e->getMessage());
             $this->addFlash('error', 'Database error encountered. Possible duplicate.');
             error_log($e->getMessage());
             return $this->addError($obj);
@@ -358,7 +365,7 @@ abstract class CrudController extends BaseController
             // update db
             $this->update($object, $data);
             $em->flush();
-
+            $this->hookPostSave($object);
             // log
             $odata = $object->toData();
             $this->logUpdate($odata);
@@ -435,6 +442,20 @@ abstract class CrudController extends BaseController
         $resp->headers->set('Content-Type', 'application/json');
 
         return $resp;
+    }
+    
+    public function viewTemplateAction($id)
+    {
+        $this->checkAccess($this->route_prefix . '.view');
+        $this->hookPreAction();
+        $obj = $this->newBaseClass();
+        $params['object'] = $obj;
+
+        // check if we have access to form
+        $params['readonly'] = true;
+        $this->padFormParams($params, $obj);
+        return $this->render($this->view_path.':form.html.twig', $params);
+  
     }
 
     protected function logDelete($data)

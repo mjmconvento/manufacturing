@@ -134,7 +134,6 @@ class User extends BaseUser
         $data->username = $this->username;
         $data->email = $this->email;
         $data->enabled = $this->enabled;
-        $data->password = $this->password;
         $data->groups = $groups;
 
         return $data;

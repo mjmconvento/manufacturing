@@ -3,7 +3,7 @@
 <h4 class="form-section">Name</h4>
 {% set contact_type = object.getContactType is not null? object.getContactType.getName: '' %}
 {{ f.group_select('Contact Type', 'contact_type', contact_opts, object.getContactType is not null? object.getContactType.getID: null, 3, 4) }}
-<div id="contact-individual" class='{{ contact_type == "Individual"?'':'hidden'}}'>
+<div id="contact-individual" class='{{ contact_type == "Individual" or contact_type == ''?'':'hidden'}}'>
 {{ f.group_text('First Name', 'first_name', object.getFirstName, 3, 4) }}
 {{ f.group_text('Middle Name', 'middle_name', object.getMiddleName, 3, 4) }}
 {{ f.group_text('Last Name', 'last_name', object.getLastName, 3, 4) }}

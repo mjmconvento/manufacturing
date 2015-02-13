@@ -38,6 +38,12 @@ cat_pur_supp_ajax_get:
     methods: [GET]
     defaults: { _controller: CatalystPurchasingBundle:Supplier:ajaxGet }
 
+cat_pur_supp_bare:
+    pattern: /supplier/{id}/bare
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:Supplier:viewTemplate }
+
+
 
 
 cat_pur_po_index:

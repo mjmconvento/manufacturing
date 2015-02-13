@@ -22,7 +22,7 @@ class PurchaseRequest
     const STATUS_APPROVED = 'Approved';
     const STATUS_DRAFT = 'Draft';
 
-    /** @ORM\Column(type="string", length=40, nullable=false) */
+    /** @ORM\Column(type="string", length=40, nullable=true) */
     protected $code;
 
     /** @ORM\Column(type="date") */
@@ -53,6 +53,7 @@ class PurchaseRequest
     {
         $this->initTrackCreate();
         $this->status_id = self::STATUS_DRAFT;
+        $this->entries = new ArrayCollection();
     }
 
     // setters
@@ -74,7 +75,7 @@ class PurchaseRequest
         return $this;
     }
     
-    public function setReferenceNum($reference)
+    public function setReferenceCode($reference)
     {
         $this->reference_num = $reference;
         return $this;
@@ -137,7 +138,7 @@ class PurchaseRequest
         return $this->purpose;
     }
     
-    public function getReferenceNum()
+    public function getReferenceCode()
     {
         return $this->reference_num;
     }
@@ -150,6 +151,12 @@ class PurchaseRequest
     public function getDateNeeded()
     {
         return $this->date_needed;
+    }
+    
+    public function generateCode()
+    {
+        $year = date('Y');
+        $this->code = "PR-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
     }
 
 

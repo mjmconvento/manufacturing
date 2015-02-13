@@ -4,6 +4,8 @@ namespace Catalyst\PurchasingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use DateTime;
 
 /**
@@ -12,27 +14,26 @@ use DateTime;
  */
 class PurchaseOrder
 {
+    use HasGeneratedID;
+    use TrackCreate;
     const STATUS_DRAFT      = 'draft';
     const STATUS_APPROVED   = 'approved';
     const STATUS_SENT       = 'sent';
     const STATUS_CANCEL     = 'cancelled';
     const STATUS_FULFILLED  = 'fulfilled';
 
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /** @ORM\Column(type="string", length=40, nullable=false) */
+    /** @ORM\Column(type="string", length=40,nullable=true) */
     protected $code;
+    
+    /** @ORM\Column(type="string", length=40) */
+    protected $reference_code;
 
-    /** @ORM\Column(type="datetime") */
-    protected $date_in;
 
     /** @ORM\Column(type="date") */
     protected $date_issue;
+    
+    /** @ORM\Column(type="date") */
+    protected $date_need;
 
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $total_price;
@@ -62,11 +63,12 @@ class PurchaseOrder
 
     public function __construct()
     {
-        $this->date_in = new DateTime();
+        $this->initTrackCreate();
+        $this->status_id = self::STATUS_DRAFT;
         $this->entries = new ArrayCollection();
         $this->deliveries = new ArrayCollection();
         $this->total_price = 0.0;
-        $this->status_id = 'draft';
+        
     }
 
     // setters
@@ -81,10 +83,22 @@ class PurchaseOrder
         $this->date_issue = $date;
         return $this;
     }
+    
+    public function setDateNeeded(DateTime $date)
+    {
+        $this->date_need = $date;
+        return $this;
+    }
 
     public function setTotalPrice($total_price)
     {
         $this->total_price = $total_price;
+        return $this;
+    }
+    
+    public function setReferenceCode($ref)
+    {
+        $this->reference_code = $ref;
         return $this;
     }
 
@@ -149,18 +163,25 @@ class PurchaseOrder
     {
         return $this->code;
     }
+    
+    public function generateCode()
+    {
+        $year = date('Y');
+        $this->code = "POS-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
+    }
 
     public function getSupplierID()
     {
         return $this->supplier_id;
     }
 
-    public function getDateCreate()
-    {
-        return $this->date_in;
-    }
 
     public function getDateIssue()
+    {
+        return $this->date_issue;
+    }
+    
+    public function getDateNeeded()
     {
         return $this->date_issue;
     }
@@ -188,6 +209,11 @@ class PurchaseOrder
     public function getStatus()
     {
         return $this->status_id;
+    }
+    
+    public function getReferenceCode()
+    {
+        return $this->reference_code;
     }
 
     public function getStatusFormatted()
@@ -249,7 +275,7 @@ class PurchaseOrder
 
     public function canModifyEntries()
     {
-        if ($this->status_id == self::STATUS_DRAFT)
+        if (strtolower($this->status_id) == strtolower(self::STATUS_DRAFT))
             return true;
 
         return false;
@@ -274,12 +300,14 @@ class PurchaseOrder
     public function toData()
     {
         $data = new \stdClass();
-
-        $data->id = $this->id;
+        
+        $this->dataHasGeneratedID($data);
+        $this->dataTrackCreate($data);
         $data->code = $this->code;
-        $data->date_in = $this->date_in;
+        $data->reference_code = $this->reference_code;
         $data->date_issue = $this->date_issue;
-        $data->supplier_id = $this->supplier_id;
+        $data->date_need = $this->date_need;
+        $data->supplier = $this->supplier->getDisplayName();
         $data->total_price = $this->total_price;
         $data->status_id = $this->status_id;
 
