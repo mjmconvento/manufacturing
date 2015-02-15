@@ -20,6 +20,20 @@
                         {{ form.group_textarea('Purpose', 'purpose', object.getPurpose,4 , 3, 5) }} 
                         {{ form.group_textarea('Remarks', 'notes', object.getNotes,4 , 3, 5) }} 
 
+                        {% if (object.getID != null) %}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-5">
+                                {% if (object.canApprove) %}
+                                <a href="{{ path('cat_pur_pr_status_approve', {'id': object.getID}) }}" class="btn green">Approve</a>
+                                {% endif %}
+
+                                {% if (object.canCancel) %}
+                                <a href="{{ path('cat_pur_pr_status_cancel', {'id': object.getID}) }}" class="btn red">Deny</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
                         <h4 class="form-section">Entries</h4>
 
                         <div>
@@ -94,31 +108,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
-
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
-
-
-
 <script>
-function escape_attr(s) {
-    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function escape_html(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
 function update_totals() {
     var total_qty = 0.00;
     var total_price = 0.00;
@@ -143,7 +133,7 @@ function update_totals() {
 
 function update_form_price()
 {
-    $.getJSON('/inventory/ajax/product/' + $('#en_product_id').val(), function(data) {
+    $.getJSON('/inventory/products/ajax/' + $('#cform-en_prod_id').val(), function(data) {
         $('#en_price').val(data.price_purchase);
     });
 }
@@ -268,6 +258,4 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block css %}
-<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
 {% endblock %}

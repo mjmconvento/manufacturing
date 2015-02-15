@@ -57,10 +57,6 @@ acl:
           label: "Edit"
         - id: cat_pur_pr.approve
           label: "Approve"
-        - id: cat_pur_pr.send
-          label: "Send"
-        - id: cat_pur_pr.fulfill
-          label: "Fulfill"
         - id: cat_pur_pr.cancel
           label: "Cancel"
         - id: cat_pur_pr.delete

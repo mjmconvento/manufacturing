@@ -21,6 +21,7 @@ class PurchaseRequest
 
     const STATUS_APPROVED = 'Approved';
     const STATUS_DRAFT = 'Draft';
+    const STATUS_CANCELLED = 'Cancelled';
 
     /** @ORM\Column(type="string", length=40, nullable=true) */
     protected $code;
@@ -157,6 +158,22 @@ class PurchaseRequest
     {
         $year = date('Y');
         $this->code = "PR-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
+    }
+    
+    public function canApprove()
+    {
+        if (strtolower($this->status_id) === strtolower(self::STATUS_DRAFT))
+            return true;
+
+        return false;
+    }
+    
+    public function canCancel()
+    {
+        if (strtolower($this->status_id) === strtolower(self::STATUS_DRAFT))
+            return true;
+
+        return false;
     }
 
 

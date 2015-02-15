@@ -16,11 +16,11 @@ class PurchaseOrder
 {
     use HasGeneratedID;
     use TrackCreate;
-    const STATUS_DRAFT      = 'draft';
-    const STATUS_APPROVED   = 'approved';
-    const STATUS_SENT       = 'sent';
-    const STATUS_CANCEL     = 'cancelled';
-    const STATUS_FULFILLED  = 'fulfilled';
+    const STATUS_DRAFT      = 'Draft';
+    const STATUS_APPROVED   = 'Approved';
+    const STATUS_SENT       = 'Sent';
+    const STATUS_CANCEL     = 'Cancelled';
+    const STATUS_FULFILLED  = 'Fulfilled';
 
     /** @ORM\Column(type="string", length=40,nullable=true) */
     protected $code;
@@ -41,12 +41,9 @@ class PurchaseOrder
     /** @ORM\Column(type="string", length=30) */
     protected $status_id;
 
-    /** @ORM\Column(type="integer") */
-    protected $supplier_id;
-
     /**
      * @ORM\ManyToOne(targetEntity="Supplier")
-     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id", nullable=true)
      */
     protected $supplier;
 
@@ -105,7 +102,6 @@ class PurchaseOrder
     public function setSupplier(Supplier $supplier)
     {
         $this->supplier = $supplier;
-        $this->supplier_id = $supplier->getID();
         return $this;
     }
 
@@ -169,12 +165,6 @@ class PurchaseOrder
         $year = date('Y');
         $this->code = "POS-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
     }
-
-    public function getSupplierID()
-    {
-        return $this->supplier_id;
-    }
-
 
     public function getDateIssue()
     {
@@ -296,6 +286,10 @@ class PurchaseOrder
 
         return false;
     }
+    
+    public function getSupplierID(){
+        return $this->supplier->getID();
+    }
 
     public function toData()
     {
@@ -307,13 +301,15 @@ class PurchaseOrder
         $data->reference_code = $this->reference_code;
         $data->date_issue = $this->date_issue;
         $data->date_need = $this->date_need;
-        $data->supplier = $this->supplier->getDisplayName();
         $data->total_price = $this->total_price;
         $data->status_id = $this->status_id;
-
+        $data->supplier = $this->supplier != null? $this->supplier->getDisplayName():'';
+        
         $entries = array();
-        foreach ($this->entries as $entry)
+        foreach ($this->entries as $entry){
             $entries[] = $entry->toData();
+        }
+           
         $data->entries = $entries;
 
         return $data;
