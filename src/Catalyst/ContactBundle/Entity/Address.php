@@ -37,10 +37,14 @@ class Address
     /** @ORM\Column(type="decimal", precision=10, scale=7) */
     protected $longitude;
 
+    /** @ORM\Column(type="boolean") */
+    protected $is_primary;
+
     public function __construct()
     {
         $this->initHasGeneratedID();
         $this->initTrackCreate();
+        $this->is_primary = false;
     }
 
     public function setName($name)
@@ -120,6 +124,17 @@ class Address
         return $this->longitude;
     }
 
+    public function setIsPrimary($pri = true)
+    {
+        $this->is_primary = $pri;
+        return $this;
+    }
+
+    public function getIsPrimary()
+    {
+        return $this->is_primary;
+    }
+
     public function toData()
     {
         $data = new \stdClass();
@@ -134,6 +149,7 @@ class Address
         $data->country = $this->country;
         $data->latitude = $this->latitude;
         $data->longitude = $this->longitude;
+        $data->is_primary = $this->is_primary;
 
         return $data;
     }

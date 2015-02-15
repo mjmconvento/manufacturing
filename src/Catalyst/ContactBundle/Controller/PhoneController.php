@@ -28,6 +28,10 @@ class PhoneController extends CrudController
         $o->setPhoneType($cnt->getPhoneType($data['phone_type']))
             ->setNumber($data['number']);
 
+        //set as primary number
+        if(isset($data['is_primary']) && $data['is_primary'] == 1)
+            $o->setIsPrimary();
+
         $o->setUserCreate($this->getUser());
     }
 
@@ -41,6 +45,7 @@ class PhoneController extends CrudController
         $data = array(
             'id' => $o->getID(),
             'name' => $o->getName(),
+            'is_primary' => $o->getIsPrimary(),
             'number' => $o->getNumber()
         );
 

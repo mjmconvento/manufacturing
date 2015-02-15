@@ -12,6 +12,12 @@
                 <div class="form-body">
                     {{ f.group_select('Type', 'phone_type', phone_type_opts, '', 3, 8) }}
                     {{ f.group_text('Number', 'number', '', 3, 8, false, prefix) }}
+                    <div class="form-group">
+                        <label class="col-md-3"></label>
+                        <div class="col-md-5">
+                            {{ f.checkbox('is_primary', 1, 'Set as Primary Number', '', '')}}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
