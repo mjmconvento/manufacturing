@@ -19,7 +19,6 @@ use DateTime;
 class PREntry
 {
     use HasGeneratedID;
-    use TrackCreate;
     use HasQuantity;
     use HasProduct;
 
@@ -32,7 +31,6 @@ class PREntry
     public function __construct()
     {
         $this->initHasQuantity();
-        $this->initTrackCreate();
     }
 
     public function setPurchaseRequest(PurchaseRequest $pr)
@@ -53,7 +51,6 @@ class PREntry
         $data = new \stdClass();
 
         $this->dataHasGeneratedID($data);
-        $this->dataTrackCreate($data);
         $this->dataHasQuantity($data);
         $this->dataHasProduct($data);
         $data->pr_id = $this->getPurchaseRequest()->getID();

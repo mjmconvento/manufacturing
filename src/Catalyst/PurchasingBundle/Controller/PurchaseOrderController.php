@@ -121,7 +121,7 @@ class PurchaseOrderController extends CrudController
         return array(
             $grid->newColumn('Code', 'getCode', 'code'),
             $grid->newColumn('Date Issued', 'getDateIssue', 'date_issue', 'o', array($this, 'formatDate')),
-            $grid->newColumn('Suppplier', 'getDisplayName', 'name', 's'),
+            $grid->newColumn('Supplier', 'getDisplayName', 'first_name', 's'),
             $grid->newColumn('Price', 'getTotalPrice', 'total_price'),
             $grid->newColumn('Status', 'getStatusFormatted', 'status_id'),
         );
@@ -186,7 +186,10 @@ class PurchaseOrderController extends CrudController
         );
         
         $params['prod_opts'] = $inv->getProductOptions();
-
+//        foreach($po->getEntries() as $e){
+//            print_r($e->getProduct());
+//        }
+        $po->toData();
         return $params;
     }
 

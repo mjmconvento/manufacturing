@@ -4,5 +4,4 @@ parameters:
 services:
     catalyst_purchasing:
         class: Catalyst\PurchasingBundle\Model\PurchasingManager
-        arguments:
-            em: "@doctrine.orm.entity_manager"
+        arguments: [ "@doctrine.orm.entity_manager", "@security.context" ]

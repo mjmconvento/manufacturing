@@ -32,6 +32,10 @@ class AddressController extends CrudController
             ->setLatitude($data['latitude'])
             ->setLongitude($data['longitude']);
 
+        //set as primary address
+        if(isset($data['is_primary']) && $data['is_primary'] == 1)
+            $o->setIsPrimary();
+
         $o->setUserCreate($this->getUser());
     }
 
@@ -50,6 +54,7 @@ class AddressController extends CrudController
             'email' => $o->getEmail(),
             'contact_person' => $o->getContactPerson(),
             'notes' => $o->getNotes(),
+            'is_primary' => $o->getIsPrimary(),
         );
 
         return $data;

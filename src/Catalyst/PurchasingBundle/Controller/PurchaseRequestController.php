@@ -149,8 +149,7 @@ class PurchaseRequestController extends CrudController
                 // instantiate
                 $entry = new PREntry();
                 $entry->setProduct($prod)
-                    ->setQuantity($qty)
-                    ->setUserCreate($this->getUser());
+                    ->setQuantity($qty);
 
                 // add entry
                 $o->addEntry($entry);
@@ -169,23 +168,6 @@ class PurchaseRequestController extends CrudController
         return $params;
     }
 
-    protected function statusUpdate($id, $status)
-    {
-        $log = $this->get('catalyst_log');
-        $em = $this->getDoctrine()->getManager();
-        $po = $em->getRepository('CatalystPurchasingBundle:PurchaseOrder')->find($id);
-        if ($po == null)
-            throw new ValidationError('Cannot find purchase order.');
-
-        $po->setStatus($status);
-        $em->flush();
-
-        $log->log('cat_pur_po_status_update', 'status updated for Purchase Order ' . $po->getID() . '.', $po->toData());
-
-        $this->addFlash('success', 'Purchase order ' . $po->getCode() . ' status has been updated to ' . $status . '.');
-
-        return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $id)));
-    }
 
     protected function hookPostSave($obj,$is_new = false) 
     {
@@ -197,6 +179,41 @@ class PurchaseRequestController extends CrudController
         }
        
     }
+    
+    public function statusApproveAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseRequest::STATUS_APPROVED);
+    }
+
+    public function statusCancelAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseRequest::STATUS_CANCEL);
+    }
+    
+    protected function statusUpdate($id, $status)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $log = $this->get('catalyst_log');
+        $pur = $this->get('catalyst_purchasing');
+        
+        $pr = $pur->getPurchaseRequest($id);
+        
+        switch($status){
+            case PurchaseRequest::STATUS_APPROVED :
+                $pur->copytoPurchaseOrder($pr);
+                break;
+            case PurchaseRequest::STATUS_CANCELLED :
+                break;
+        }
+        $pr->setStatus($status);
+        $em->persist($pr);
+        $em->flush();
+
+        $this->addFlash('success', 'Purchase request ' . $pr->getCode() . ' status has been updated to ' . $status . '.');
+
+        return $this->redirect($this->generateUrl('cat_pur_pr_edit_form', array('id' => $id)));
+    }
+
 
 
 }

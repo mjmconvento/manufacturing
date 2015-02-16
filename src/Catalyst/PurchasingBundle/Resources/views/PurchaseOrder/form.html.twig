@@ -12,105 +12,10 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-{#
-                        <!-- fields for super user -->
-                        {% if super_user.getName == app.user.getName %}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Date Issued</label>
-                            <div class ="col-md-3">
-                                <div class="input-group input-medium date date-picker" data-date-format="mm/dd/yyyy">
-                                    <input type="text" class="form-control" name="date_issue" placeholder="Date Issued" value="{{ object.getDateIssue|date('m/d/Y') }}" readonly>
-                                    <span class="input-group-btn">
-                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{ form.group_text('Code', 'code', object.getCode, 3, 3) }}
-                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 5) }}
-
-                        {{ form.group_select('Status', 'status_id', status_opts, object.getStatus, 3, 5) }}
-
-                        {% if (object.getID != null) %}
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-5">
-                                {% if (object.canApprove) %}
-                                <a href="{{ path('cat_pur_po_status_approve', {'id': object.getID}) }}" class="btn green">Approve</a>
-                                {% endif %}
-
-                                {% if (object.canSend) %}
-                                <a href="{{ path('cat_pur_po_status_send', {'id': object.getID}) }}" class="btn green">Send</a>
-                                {% endif %}
-
-                                {% if (object.canCancel) %}
-                                <a href="{{ path('cat_pur_po_status_cancel', {'id': object.getID}) }}" class="btn red">Cancel</a>
-                                {% endif %}
-
-                                {% if (object.canFulfill) %}
-                                <a href="{{ path('cat_pur_po_status_fulfill', {'id': object.getID}) }}" class="btn green">Fulfill</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
-
-
-                        <h4 class="form-section">Entries</h4>
-
-                        <div>
-                            <a id="btn_en_add" href="#en_form" class="btn green" data-toggle="modal">Add Product Entry</a>
-                        </div>
-
-                        <div class="row table-responsive" style="padding-top:10px">
-                            <div class="col-md-11">
-                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th style="width: 180px">Quantity</th>
-                                            <th style="width: 180px">Price</th>
-                                            <th style="width: 150px">Total</th>
-                                            <th style="width: 50px"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="en_table">
-                                    {% for entry in object.getEntries %}
-                                        <tr>
-                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
-                                            <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}"></td>
-                                            <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}"></td>
-                                            <td class="en_total">--</td>
-
-                                            <td><a href="#btn_en_add" class="btn_en_del btn_dim_del"><i class="glyphicon glyphicon-remove-circle font-red"></i></a></td>  
-                                            <!-- <td><a href="#" class="btn btn_dim_del default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td> -->
-
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td>Total</td>
-                                            <td id="total_qty"></td>
-                                            <td id="total_price"></td>
-                                            <td id="total_total"></td>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <!-- fields for NON super user -->
-                        {% else %}#}
-                        {{ form.group_date('Date Issued', 'date_issue', object.getDateCreate|date('m/d/Y'), 3, 3) }}
+                        {{ form.group_date('Date Issued', 'date_issue', object.getDateCreate|date('m/d/Y'), 3, 4) }}
                         {{ form.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4) }}
-                        {{ form.group_date('Date Needed', 'date_need', object.getDateCreate|date('m/d/Y'), 3, 3) }}
-                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplierID, 3, 4) }}
+                        {{ form.group_date('Date Needed', 'date_need', object.getDateCreate|date('m/d/Y'), 3, 4) }}
+                        {{ form.group_select('Supplier', 'supplier_id', supp_opts, object.getSupplier is not null ? object.getSupplier.getID, 3, 4) }}
                         {{ form.group_text('Status', 'status_id', object.getStatusFormatted, 3, 4,true) }}
 
                         {% if (object.getID != null) %}
@@ -162,7 +67,7 @@
                                     <tbody id="en_table">
                                     {% for entry in object.getEntries %}
                                         <tr>
-                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getCode }} - {{ entry.getProduct.getName }}</td>
+                                            <td><input type="hidden" name="en_prod_id[]" value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getSku }} - {{ entry.getProduct.getName }}</td>
                                             <td><input type="text" class="en_qty form-control" name="en_qty[]" value="{{ entry.getQuantity }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
                                             <td><input type="text" class="en_price form-control" name="en_price[]" value="{{ entry.getPrice }}" {% if (not object.canModifyEntries) %}readonly{% endif %}></td>
                                             <td class="en_total">--</td>
@@ -291,31 +196,7 @@
 {% endblock %}
 
 {% block js %}
-<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
-
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
-
-
-
 <script>
-function escape_attr(s) {
-    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function escape_html(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
 function update_totals() {
     var total_qty = 0.00;
     var total_price = 0.00;
@@ -340,7 +221,7 @@ function update_totals() {
 
 function update_form_price()
 {
-    $.getJSON('/inventory/ajax/product/' + $('#prod_id').val(), function(data) {
+    $.getJSON('/inventory/products/ajax/' + $('#cform-en_prod_id').val(), function(data) {
         $('#en_price').val(data.price_purchase);
     });
 }
@@ -438,11 +319,11 @@ $(document).ready(function() {
 
     // form - update table
     $('#btn_en_submit').click(function() {
-        var prod_id = $('#en_prod_id').val();
-        var prod_name = $('#en_product_id option:selected').text();
+        var prod_id = $('#cform-en_prod_id').val();
+        var prod_name = $('#cform-en_prod_id option:selected').text();
 
-        var qty = $('#en_qty').val();
-        var price = $('#en_price').val();
+        var qty = $('#cform-en_qty').val();
+        var price = $('#cform-en_price').val();
         var total = qty * price;
 
         // changed to appendentry func for reusability
@@ -468,6 +349,4 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block css %}
-<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
 {% endblock %}

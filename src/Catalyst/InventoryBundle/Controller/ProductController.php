@@ -227,7 +227,7 @@ class ProductController extends CrudController
             'flag_purchase' => $o->canPurchase(),
             'price_sale' => $o->getPriceSale(),
             'price_purchase' => $o->getPricePurchase(),
-            'prodgroup_id' => $o->getProductGroupID(),
+            'prodgroup_id' => $o->getProductGroup()->getID(),
         );
 
         return $data;
@@ -314,11 +314,12 @@ class ProductController extends CrudController
         return $data;
     }
 
-    public function ajaxGetByAction()
+    public function ajaxGetByAction($id)
     {
-        $prodgroup = $this->get('catalyst_configuration');
-        $data = $this->findBy(array('prodgroup' => $prodgroup->get('catalyst_product_group_default')));
-
+        //$prodgroup = $this->get('catalyst_configuration');
+        //$data = $this->findBy(array('prodgroup' => $prodgroup->get('catalyst_product_group_default')));
+        $inv = $this->get('catalyst_inventory');
+        $data = $inv->findProduct($id)->toData();
         // setup json response
         $resp = new Response(json_encode($data));
         $resp->headers->set('Content-Type', 'application/json');

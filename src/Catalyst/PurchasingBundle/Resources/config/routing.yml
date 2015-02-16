@@ -198,3 +198,13 @@ cat_pur_pr_ajax_get:
     pattern: /ajax/pr/{id}
     methods: [GET]
     defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:ajaxGet }
+
+cat_pur_pr_status_approve:
+    pattern: /pr/{id}/status/approve
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:statusApprove }
+
+cat_pur_pr_status_cancel:
+    pattern: /pr/{id}/status/cancel
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:PurchaseRequest:statusCancel }
