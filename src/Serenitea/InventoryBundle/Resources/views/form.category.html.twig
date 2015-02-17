@@ -1,0 +1,4 @@
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{{ f.group_text('Name', 'name', object.getName ,3,4)}}
+{{ f.group_text('Code', 'code', object.getCode ,3,4)}}
