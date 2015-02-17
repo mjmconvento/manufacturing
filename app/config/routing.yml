@@ -1,6 +1,6 @@
-catalyst_notes:
-    resource: "@CatalystNotesBundle/Resources/config/routing.yml"
-    prefix:   /
+#catalyst_notes:
+#    resource: "@CatalystNotesBundle/Resources/config/routing.yml"
+#    prefix:   /
 
 ser_dashboard:
     resource: "@SereniteaDashboardBundle/Resources/config/routing.yml"
