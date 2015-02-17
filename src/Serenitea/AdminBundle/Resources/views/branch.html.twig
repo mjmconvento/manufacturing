@@ -9,10 +9,11 @@
 {{ f.group_text('Unit / Number', 'name', '', 3, 4, false, prefix) }}
 {{ f.group_text('Street Address', 'street', '', 3, 4, false, prefix) }}
 {{ f.group_text('City', 'city', '', 3, 4, false, prefix) }}
-{{ f.group_text('State', 'state', '', 3, 4, false, prefix) }}
+{{ f.group_text('Province', 'state', '', 3, 4, false, prefix) }}
 {{ f.group_text('Country', 'country', '', 3, 4, false, prefix) }}
 {{ f.group_text('Latitude', 'latitude', '', 3, 4, false, prefix) }}
 {{ f.group_text('Longitude', 'longitude', '', 3, 4, false, prefix) }}
+
 
 {% include "CatalystContactBundle::form.has_phones.html.twig" %}
 
