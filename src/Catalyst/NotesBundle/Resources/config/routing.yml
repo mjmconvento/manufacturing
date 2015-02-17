@@ -1,0 +1,3 @@
+catalyst_notes_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: CatalystNotesBundle:Default:index }

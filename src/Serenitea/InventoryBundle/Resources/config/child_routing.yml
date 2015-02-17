@@ -23,8 +23,13 @@ ser_inv_pg_add_form:
     methods: [GET]
     defaults: { _controller: SereniteaInventoryBundle:Category:addForm }
 
+ser_inv_pg_add_submit:
+    pattern: /category
+    methods: [POST]
+    defaults: { _controller: SereniteaInventoryBundle:Category:addSubmit }
+
 ser_inv_pg_grid:
-    pattern: /grid/
+    pattern: /grid
     methods: [GET]
     defaults: { _controller: SereniteaInventoryBundle:Category:grid }
 

@@ -1,10 +1,11 @@
 {% import "CatalystTemplateBundle::form.html.twig" as f %}
 
 <h4 class="form-section">Information</h4>
-{{ f.group_text('Description','','',3,4)}}
-{{ f.group_select('Category','','', '',3,4)}}
-{{ f.group_select('Supplier','','', '',3,4)}} 
-{{ f.group_text('Supplier\'s Code','','',3,4)}}
+{{ f.group_text('Description','name','' ,3 ,4 )}}
+{{ f.group_select('Category','prod_cat_id', pc_opts, object.getProductCategory,3 ,4)}}
+{{ f.group_select('Supplier','supplier_id',supp_opts, object.getSupplier,3,4)}} 
+{{ f.group_text('Supplier\'s Code','supp_code','',3,4)}}
+{{ f.group_text('Specs','uom',object.getUnitOfMeasure,3,4)}}
 {{ f.group_text_readonly('User Created','','',3,4)}}
 {{ f.group_text_readonly('Date Created','','',3,4)}}
 {{ f.group_text_readonly('Update User','','',3,4)}}
