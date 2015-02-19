@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\HasName;
 use Catalyst\PurchasingBundle\Entity\Supplier;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
+use Catalyst\CoreBundle\Template\Entity\TrackUpdate;
 
 use stdClass;
 
@@ -18,8 +20,10 @@ class Product
 {
     use HasGeneratedID;
     use HasName;
+    use TrackCreate;
+    use TrackUpdate;
     
-    /** @ORM\Column(type="string", length=25, nullable=false) */
+    /** @ORM\Column(type="string", length=25, nullable=true) */
     protected $sku;
 
     /** @ORM\Column(type="string", length=20) */
@@ -46,7 +50,7 @@ class Product
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $stock_max;
 
-    /** @ORM\Column(type="string", length=50) */
+    /** @ORM\Column(type="string", length=50, nullable=true) */
     protected $supp_code;
 
     /**
@@ -102,6 +106,9 @@ class Product
         $this->attributes = new ArrayCollection();
 
         $this->attribute_hash = array();
+
+        $this->initTrackCreate();
+        $this->initTrackUpdate();
     }
 
     public function setSKU($sku)
@@ -285,10 +292,10 @@ class Product
     public function toData()
     {
         $data = new stdClass();
+
         $data->id = $this->id;
         $data->sku = $this->sku;
-        $data->name = $this->name;
-        $data->supplier_id = $this->supplier->getID();
+        $data->name = $this->name;        
         $data->prodgroup_id = $this->prodgroup->getID();
         $data->uom = $this->uom;
         $data->supp_code = $this->supp_code;
