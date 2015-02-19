@@ -6,7 +6,12 @@ ser_inv_pg:
     resource: "@SereniteaInventoryBundle/Resources/config/routes/product_group.yml"    
     prefix:  /product_groups
 
-ser_begin_index:
-    pattern: /beginning
+ser_inv_begin_index:
+    pattern: /begin
     methods: [GET]
-    defaults: { _controller: SereniteaInventoryBundle:Begin:index }
+    defaults: { _controller: SereniteaInventoryBundle:Transaction:index }
+
+bgn_entry_ajax_add:
+    pattern: /entry/ajax/add
+    methods: [POST]
+    defaults: { _controller: SereniteaInventoryBundle:Begin:ajaxAdd}

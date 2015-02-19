@@ -35,7 +35,7 @@ acl:
           label: "Delete"
     - category: Beginning Inventory
       entries:
-        - id: ser_begin.menu
+        - id: ser_inv_begin.menu
           label: "Menu"
-        - id: ser_begin.view
+        - id: ser_inv_begin.view
           label: "View"
