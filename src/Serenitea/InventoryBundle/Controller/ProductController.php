@@ -4,10 +4,15 @@ namespace Serenitea\InventoryBundle\Controller;
 
 use Catalyst\InventoryBundle\Controller\ProductController as Controller;
 use Catalyst\InventoryBundle\Entity\Product;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 use Catalyst\ValidationException;
 
 class ProductController extends Controller
 {
+    use TrackUpdate;
+    use TrackCreate;
+
 	public function __construct()
 	{	
 		$this->repo = 'CatalystInventoryBundle:Product';
@@ -16,8 +21,16 @@ class ProductController extends Controller
 		$this->title = 'Supply';
 
         $this->list_title = 'Supplies';
-        $this->list_type = 'dynamic';
+        $this->list_type = 'dynamic';        
 	}
+
+    protected function getObjectLabel($obj)
+    {
+        if ($obj == null)
+            return '';
+        return $obj->getName();
+    }
+
 
 	public function indexAction()
     {
@@ -33,18 +46,6 @@ class ProductController extends Controller
         $params['grid_cols'] = $gl->getColumns();
 
         return $this->render($twig_file, $params);
-    }
-
-    protected function newBaseClass()
-    {
-        return new Product();
-    }
-
-    protected function getObjectLabel($obj)
-    {
-        if ($obj == null)
-            return '';
-        return $obj->getSKU();
     }
 
     protected function getGridJoins()
@@ -64,18 +65,6 @@ class ProductController extends Controller
             $grid->newColumn('Specs', 'getUnitOfMeasure', 'uom'),
             $grid->newColumn('Product Category', 'getName', 'name', 'pg'),
         );
-    }
-
-    protected function getFieldOptions($repo)
-    {
-        // brand
-        $em = $this->getDoctrine()->getManager();
-        $objects = $em->getRepository('CatalystInventoryBundle:' . $repo)->findAll();
-        $opts = array();
-        foreach ($objects as $o)
-            $opts[$o->getId()] = $o->getName();
-
-        return $opts;
     }
 
     protected function padFormParams(&$params, $prod = null)
@@ -109,8 +98,8 @@ class ProductController extends Controller
     protected function validate($data, $type)
     {
         // SKU validation check
-        if (empty($data['sku']))
-            throw new ValidationException('Cannot leave SKU blank');
+        // if (empty($data['sku']))
+        //     throw new ValidationException('Cannot leave SKU blank');
 
         // validate name
         if (empty($data['name']))
@@ -132,30 +121,30 @@ class ProductController extends Controller
             $o->setUnitOfMeasure('');
 
         // service
-        if (isset($data['flag_service']) && $data['flag_service'] == 1)
-            $o->setFlagService();
-        else
-            $o->setFlagService(false);
+        // if (isset($data['flag_service']) && $data['flag_service'] == 1)
+        //     $o->setFlagService();
+        // else
+        //     $o->setFlagService(false);
 
         // can sell
-        if (isset($data['flag_sale']) && $data['flag_sale'] == 1)
-            $o->setFlagSale();
-        else
-            $o->setFlagSale(false);
+        // if (isset($data['flag_sale']) && $data['flag_sale'] == 1)
+        //     $o->setFlagSale();
+        // else
+        //     $o->setFlagSale(false);
 
         // can purchase
-        if (isset($data['flag_purchase']) && $data['flag_purchase'] == 1)
-            $o->setFlagPurchase();
-        else
-            $o->setFlagPurchase(false);
+        // if (isset($data['flag_purchase']) && $data['flag_purchase'] == 1)
+        //     $o->setFlagPurchase();
+        // else
+        //     $o->setFlagPurchase(false);
 
         // prices
         $o->setPriceSale($data['price_sale']);
         $o->setPricePurchase($data['price_purchase']);       
 
         // threshold values
-        $o->setStockMin($data['stock_min']);
-        $o->setStockMax($data['stock_max']);
+        // $o->setStockMin($data['stock_min']);
+        // $o->setStockMax($data['stock_max']);
 
 
         // product group
@@ -167,22 +156,34 @@ class ProductController extends Controller
         //supplier's code
         $o->setSupplierCode($data['supp_code']);
 
+        $supp = $em->getRepository('CatalystPurchasingBundle:Supplier')->find($data['supplier_id']);
+        if ($supp == null)
+            throw new ValidationException('Could not find supplier.');
+        
+        $o->setSupplier($supp);
+
+        $this->updateTrackCreate($o, $data, $is_new);
+        $this->updateTrackUpdate($o, $data);
+        
         // product brand
-        $pb = $inv->findBrand($data['brand_id']);
-        if ($pb != null)
-            $o->setBrand($pb);        
+        // $pb = $inv->findBrand($data['brand_id']);
+        // if ($pb != null)
+        //     $o->setBrand($pb);        
 
 
         //TODO: auto generate sku based from code category
         // sku check
-        if ($o->getSKU() != $data['sku'])
-        {
-            $em = $this->getDoctrine()->getManager();
-            $dupe = $em->getRepository('CatalystInventoryBundle:Product')->findOneBy(array('sku' => $data['sku']));
-            if ($dupe != null)
-                throw new ValidationException('Product with SKU ' . $data['sku'] . ' already exists.');
-            $o->setSKU($data['sku']);
-        }
+        // if ($o->getSKU() != $data['sku'])
+        // {
+        //     $em = $this->getDoctrine()->getManager();
+        //     $dupe = $em->getRepository('CatalystInventoryBundle:Product')->findOneBy(array('sku' => $data['sku']));
+        //     if ($dupe != null)
+        //         throw new ValidationException('Product with SKU ' . $data['sku'] . ' already exists.');
+        //     $o->setSKU($data['sku']);
+        // }
+
+        //set user update
+        // $o->setUserUpdate($this->getUser());
 
 
         /*
@@ -221,16 +222,18 @@ class ProductController extends Controller
     {
         $data = array(
             'id' => $o->getID(),
-            'sku' => $o->getSKU(),
+            // 'sku' => $o->getSKU(),
             'name' => $o->getName(),
             'uom' => $o->getUnitOfMeasure(),
-            'flag_service' => $o->isService(),
-            'flag_sale' => $o->canSell(),
+            // 'flag_service' => $o->isService(),
+            // 'flag_sale' => $o->canSell(),
             'supp_code' => $o->getSupplierCode(),
-            'flag_purchase' => $o->canPurchase(),
+            // 'flag_purchase' => $o->canPurchase(),
             'price_sale' => $o->getPriceSale(),
             'price_purchase' => $o->getPricePurchase(),
             'prodgroup_id' => $o->getProductGroup()->getID(),
+            'supplier_id' => $o->getSupplier()->getID(),
+            'user_update' => $o->getUserUpdate(),
         );
 
         return $data;
@@ -252,10 +255,10 @@ class ProductController extends Controller
         return new Response('Success');
     }
 
-    protected function getGallery($id)
-    {
-        return new Gallery(__DIR__ . '/../../../../web/uploads/images', $id);
-    }
+    // protected function getGallery($id)
+    // {
+    //     return new Gallery(__DIR__ . '/../../../../web/uploads/images', $id);
+    // }
 
     public function ajaxAddAction()
     {

@@ -3,6 +3,7 @@
 namespace Serenitea\InventoryBundle\Controller;
 
 use Catalyst\InventoryBundle\Controller\ProductGroupController as Controller;
+use Catalyst\InventoryBundle\Entity\ProductGroup;
 use Catalyst\ValidationException;
 
 
@@ -17,7 +18,7 @@ class ProductGroupController extends Controller
 
         $this->list_title = 'Categories';
         $this->list_type = 'dynamic';
-    }    
+    }
 
     protected function getGridColumns()
     {
@@ -31,17 +32,24 @@ class ProductGroupController extends Controller
 
     protected function update($o, $data, $is_new = false )
     {            
-        // validate name
-        if (strlen($data['name']) > 0)
+        if ($o->getName() != $data['name'])
+        {
+            $em = $this->getDoctrine()->getManager();
+            $dupe = $em->getRepository('CatalystInventoryBundle:ProductGroup')->findOneBy(array('name' => $data['name']));
+            if ($dupe != null)
+                throw new ValidationException('Category name already exists.');
+            // if (strlen($data['name']) > 0)
             $o->setName($data['name']);
-        else
-            throw new ValidationException('Cannot leave name blank');
+        }
 
-        //validate code
-        if (strlen($data['code']) > 0)
+        if ($o->getCode() != $data['code'])
+        {
+            $em = $this->getDoctrine()->getManager();
+            $dupe = $em->getRepository('CatalystInventoryBundle:ProductGroup')->findOneBy(array('code' => $data['code']));
+            if ($dupe != null)
+                throw new ValidationException('Category code already exists.');
+        // if (strlen($data['code']) > 0)
             $o->setCode($data['code']);
-        else
-            throw new ValidationException('Cannot leave code blank');
-
-    }    
+        }
+    }
 }
