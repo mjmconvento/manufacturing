@@ -6,6 +6,8 @@ use Catalyst\InventoryBundle\Controller\ProductController as Controller;
 use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
+use Symfony\Component\HttpFoundation\Response;
+use Catalyst\InventoryBundle\Model\Gallery;
 use Catalyst\ValidationException;
 
 class ProductController extends Controller
@@ -111,6 +113,11 @@ class ProductController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
+
+        if($is_new)
+        {
+            $o->setSKU('');
+        }
         
         $o->setName($data['name']);
 
@@ -169,9 +176,7 @@ class ProductController extends Controller
         // $pb = $inv->findBrand($data['brand_id']);
         // if ($pb != null)
         //     $o->setBrand($pb);        
-
-
-        //TODO: auto generate sku based from code category
+        
         // sku check
         // if ($o->getSKU() != $data['sku'])
         // {
@@ -180,12 +185,16 @@ class ProductController extends Controller
         //     if ($dupe != null)
         //         throw new ValidationException('Product with SKU ' . $data['sku'] . ' already exists.');
         //     $o->setSKU($data['sku']);
-        // }
+        // }              
 
-        //set user update
-        // $o->setUserUpdate($this->getUser());
+        if($is_new)
+        {
+            $em->persist($o);
+            $em->flush();
 
-
+            $o->setSKU($o->getProductGroup()->getCode() . "-" . str_pad($o->getID(),10,"0",STR_PAD_LEFT));            
+            $em->flush();
+        }
         /*
         // clear service tasks
         $tasks = $o->getTasks();
@@ -222,7 +231,7 @@ class ProductController extends Controller
     {
         $data = array(
             'id' => $o->getID(),
-            // 'sku' => $o->getSKU(),
+            'sku' => $o->getSKU(),
             'name' => $o->getName(),
             'uom' => $o->getUnitOfMeasure(),
             // 'flag_service' => $o->isService(),
@@ -255,10 +264,10 @@ class ProductController extends Controller
         return new Response('Success');
     }
 
-    // protected function getGallery($id)
-    // {
-    //     return new Gallery(__DIR__ . '/../../../../web/uploads/images', $id);
-    // }
+    protected function getGallery($id)
+    {
+        return new Gallery(__DIR__ . '/../../../../web/uploads/images', $id);
+    }
 
     public function ajaxAddAction()
     {

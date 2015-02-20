@@ -1,6 +1,12 @@
 {% extends "CatalystTemplateBundle::base.html.twig" %}
 {% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
 
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/fancybox/source/jquery.fancybox.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/catalysttemplate/assets/admin/pages/css/portfolio.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/dropzone/css/dropzone.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-12">
@@ -13,8 +19,7 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         {% include "SereniteaInventoryBundle::supply.html.twig" %}
-                    </div>
-
+                    </div>                    
 
                     <div class="form-actions fluid">
                         <div class="col-md-offset-3 col-md-9">
@@ -22,10 +27,41 @@
                             <a href="{{ path(route_list) }}" class="btn default">Cancel</a>
                         </div>
                     </div>
-                </form>
+                </form>                
                 <!-- END FORM-->
-            </div>
+            </div>            
         </div>
+        {% if object.getID != null %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="portlet box blue-hoki">
+                                <div class="portlet-title">
+                                    <div class="caption">Gallery</div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="row">
+                                        {% for image in images %}
+                                        <div class="col-md-3 col-sd-4">
+                                            <a class="fancybox-button" href="/uploads/images/{{ image }}" data-rel="fancybox-button">
+                                                <img class="img-responsive" src="/uploads/images/{{ image }}">
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if not readonly %}
+                                    <div class="row">
+                                        <form method="post" action="{{ path('ser_inv_prod_upload', {id: object.getID}) }}" class="dropzone dz-clickable">
+                                            <div class="dz-default dz-message">
+                                                <span>Drop files here to upload</span>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
     </div>
 </div>
 
@@ -33,6 +69,71 @@
 {% endblock %}
 
 {% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-mixitup/jquery.mixitup.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/fancybox/source/jquery.fancybox.pack.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/portfolio.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-dropzone.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
 <script src="{{ asset('bundles/catalystcontact/js/catalyst.has_addresses.js') }}"></script>
+<script>
+    $(document).ready(function() {
+    Portfolio.init();
+    FormDropzone.init();
+    FormValidation.init(); // init form validation
+
+    // handle price toggles
+    update_price();
+    $('#cform-flag_sale').change(function() {
+        update_price();
+    });
+    $('#cform-flag_purchase').change(function() {
+        update_price();
+    });
+
+    // set default error and success elements
+    jQuery.validator.setDefaults({
+        errorClass: 'help-block',
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {
+                error.appendTo(element.parent().last());
+                element.parent().parent().addClass('has-error');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                error.appendTo(element.parent().parent().parent().parent().last());
+                element.parent().parent().parent().parent().addClass('has-error');
+            }
+            else
+            {
+                error.appendTo(element.parent().parent().last());
+                element.parent().parent().parent().addClass('has-error');
+            }
+        },
+        success: function(element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {  
+                element.parent().parent().removeClass('has-error');
+                element.parent().parent().addClass('has-success');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                element.parent().parent().parent().parent().addClass('has-error');
+                element.parent().parent().parent().parent().addClass('has-success');
+            }
+            else
+            {  
+                element.parent().parent().parent().removeClass('has-error');
+                element.parent().parent().parent().addClass('has-success');
+            }
+
+            element.remove();
+        }
+    });
+
+</script>
 <script src="{{ asset('bundles/catalystcontact/js/catalyst.has_phones.js') }}"></script>
 {% endblock %}
+
