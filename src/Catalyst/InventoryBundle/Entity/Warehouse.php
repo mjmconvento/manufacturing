@@ -38,11 +38,10 @@ class Warehouse
 
     public function __construct()
     {
-        $this->initHasGeneratedID();
-        $this->initTrackCreate();
         $this->initHasAddress();
         $this->initHasAccount();
         $this->initHasPhones();
+        $this->initTrackCreate();
 
         $this->flag_threshold = true;
         $this->flag_shopfront = false;
@@ -100,7 +99,7 @@ class Warehouse
 
     public function toData()
     {
-        $data = new \stdClass();
+        $data = new \stdClass();        
 
         $data->internal_code = $this->internal_code;
         $data->flag_threshold = $this->flag_threshold;

@@ -4,10 +4,13 @@ namespace Serenitea\AdminBundle\Controller;
 
 use Catalyst\InventoryBundle\Controller\WarehouseController as Controller;
 use Catalyst\InventoryBundle\Entity\Warehouse;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\ValidationException;
 
 class WarehouseController extends Controller
 {  
+    use TrackCreate;
+    
 	public function __construct()
 	{
         $this->repo = 'CatalystInventoryBundle:Warehouse';
@@ -139,6 +142,7 @@ class WarehouseController extends Controller
         $data = array(
             'id' => $o->getID(),
             'name' => $o->getName(),
+            'pm_terms' =>$o->getPaymentTerm(),
         );
 
         return $data;
