@@ -18,16 +18,11 @@ use DateTime;
 
 class DeliveryController extends BaseController
 {
-    protected function findPO($po_id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        // get the PO
-        $po = $em->getRepository('CatalystPurchasingBundle:PurchaseOrder')->find($po_id);
-        if ($po == null)
-            throw new ValidationException('Cannot find purchase order.');
-
-        return $po;
+    
+    public function __construct() {
+        $this->title = 'Deliveries';
+        $this->list_title = 'Deliveries';
+        $this->list_type = 'static';
     }
 
     protected function findDelivery($id)
@@ -44,9 +39,10 @@ class DeliveryController extends BaseController
     public function indexAction($id)
     {
         $this->title = 'Purchase Order';
+        $pur = $this->get('catalyst_purchasing');
         $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
 
-        $params['object'] = $this->findPO($id);
+        $params['object'] = $pur->getPurchaseOrder($id);
 
         return $this->render('CatalystPurchasingBundle:Delivery:index.html.twig', $params);
     }
@@ -54,10 +50,11 @@ class DeliveryController extends BaseController
     public function addFormAction($po_id)
     {
         $inv = $this->get('catalyst_inventory');
+        $pur = $this->get('catalyst_purchasing');
         $this->title = 'Purchase Order';
         $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
 
-        $po = $this->findPO($po_id);
+        $po = $pur->getPurchaseOrder($po_id);
 
         $delivery = new PODelivery();
         $delivery->setPurchaseOrder($po);
@@ -227,4 +224,19 @@ class DeliveryController extends BaseController
 
         return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $po_id)));
     }
+    
+    public function searchAction(){
+        $data = $this->getRequest()->request->all();
+        $pur = $this->get('catalyst_purchasing');
+        $params = $this->getViewParams('Deliveries', 'cat_pur_del_search');
+        $params['list_title'] = $this->list_title;  
+        $params['po_opts'] = $pur->findPurchaseOrderOptions(array('status_id' => 'Sent'));
+        if(isset($data['po_code'])){
+            $id = $data['po_code'];
+            $po = $pur->getPurchaseOrder($id);
+            return $this->redirect($this->generateUrl('cat_pur_del_index', array('id' => $po->getID())));
+        }
+        return $this->render('CatalystPurchasingBundle:Delivery:search.html.twig', $params);
+    }
+    
 }

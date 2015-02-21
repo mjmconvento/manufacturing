@@ -117,6 +117,16 @@ cat_pur_po_status_fulfill:
     defaults: { _controller: CatalystPurchasingBundle:PurchaseOrder:statusFulfill }
 
 
+cat_pur_del_search:
+    pattern: /deliveries
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:Delivery:search }
+
+cat_pur_del_post:
+    pattern: /deliveries
+    methods: [POST]
+    defaults: { _controller: CatalystPurchasingBundle:Delivery:search }
+
 
 cat_pur_del_index:
     pattern: /po/{id}/deliveries

@@ -158,9 +158,14 @@ class Loader
             ->from($this->repository, 'o');
 
         // joins
-        foreach ($this->joins as $alias => $join)
-            $qb->innerJoin('o.' . $join->getField(), $alias);
-
+        foreach ($this->joins as $alias => $join){
+            switch($join->getType()){
+                case 'inner': $qb->innerJoin('o.' . $join->getField(), $alias);
+                    break;
+                case 'left': $qb->leftJoin('o.' . $join->getField(), $alias);
+                    break;
+            }
+        }
         // total count
         if (!$this->count_filter)
             $total = $qb->getQuery()->getSingleScalarResult();
@@ -212,9 +217,14 @@ class Loader
 
 
         // joins
-        foreach ($this->joins as $alias => $join)
-            $qb->innerJoin('o.' . $join->getField(), $alias);
-
+        foreach ($this->joins as $alias => $join){
+            switch($join->getType()){
+                case 'inner': $qb->innerJoin('o.' . $join->getField(), $alias);
+                    break;
+                case 'left': $qb->leftJoin('o.' . $join->getField(), $alias);
+                    break;
+            }
+        }
         // filter
         if ($this->qb_filter_group != null)
             $this->qb_filter_group->apply($qb);
@@ -277,9 +287,14 @@ class Loader
 
 
         // joins
-        foreach ($this->joins as $alias => $join)
-            $qb->innerJoin('o.' . $join->getField(), $alias);
-
+        foreach ($this->joins as $alias => $join){
+            switch($join->getType()){
+                case 'inner': $qb->innerJoin('o.' . $join->getField(), $alias);
+                    break;
+                case 'left': $qb->leftJoin('o.' . $join->getField(), $alias);
+                    break;
+            }
+        }
         // filter
         if ($this->qb_filter_group != null)
             $this->qb_filter_group->apply($qb);
@@ -352,8 +367,14 @@ class Loader
 
         // joins
         foreach ($this->joins as $alias => $join)
-            $qb->innerJoin('o.' . $join->getField(), $alias);
-
+        {
+            switch($join->getType()){
+                case 'inner': $qb->innerJoin('o.' . $join->getField(), $alias);
+                    break;
+                case 'left': $qb->leftJoin('o.' . $join->getField(), $alias);
+                    break;
+            }
+        }
         // filter
         if ($this->qb_filter_group != null)
             $this->qb_filter_group->apply($qb);

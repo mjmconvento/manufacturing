@@ -35,7 +35,7 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label">Supplier</label>
                             <div class ="col-md-5">
-                                <input type="text" class="form-control" name="supplier" placeholder="Supplier" value="{{ object.getSupplier.getName }}" readonly>
+                                <input type="text" class="form-control" name="supplier" placeholder="Supplier" value="{{ object.getSupplier.getDisplayName }}" readonly>
                             </div>
                         </div>
 
@@ -79,23 +79,68 @@
                                     <thead>
                                         <tr>
                                             <th rowspan="2">Product</th>
-                                            <th colspan="2">Quantity</th>
+                                            <th colspan="3">Quantity</th>
                                         </tr>
                                         <tr>
                                             <th style="width: 200px">Ordered</th>
+                                            <th style="width: 200px">Past Delivery</th>
                                             <th style="width: 200px">Delivered</th>
                                         </tr>
                                     </thead>
                                     <tbody id="en_table">
                                     {% for ent in object.getEntries %}
                                         <tr>
-                                            <td>{{ ent.getProduct.getCode }} - {{ ent.getProduct.getName }}</td>
+                                            <td>{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }}</td>
+                                            <td>{{ ent.getQuantity }}</td>
                                             <td>{{ ent.getQuantity }}</td>
                                             <td><input type="text" class="form-control" name="qty[{{ ent.getProduct.getID }}]"></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>
+                                    
+                                    <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>                                            
+                                        <th style="width:50%">Description</th>
+                                        <th style="width:20%">Ordered Quantity</th>
+                                        <th style="width:20%">Delivered Quantity</th>  
+                                        <th style="width:10%"></th>                                         
+                                    </thead>
+                                    
+                                    <tr>
+                                        <td colspan="5">
+                                            {% for ent in object.getEntries %}
+                                            <div class="accordion" >
+                                                <div class="accordion-group">
+                                                    <div class="accordion-heading">                                        
+                                                        <table class="table content-heading">
+                                                            <tr>
+                                                                <td style="width:50%" align="left">{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }}</td>
+                                                                <td style="width:20%" align="right">{{ ent.getQuantity }}</td>
+                                                                <td style="width:20%"align="right">3</td>
+                                                                <td style="width:10%" align="right"><a class="accordion-toggle" data-toggle="collapse" data-parent=".accordion" href="#collapse"><i class="glyphicon glyphicon-chevron-down"></i></td>
+                                                                <td><a href="javascript: void(0)" class="add-field"><i class="glyphicon glyphicon-plus"></i></td>
+                                                            </tr>
+                                                        </table>                            
+                                                    </div>
+                                            
+                                                    <div id="collapse" class="accordion-body collapse out">
+                                                        <div class="accordion-inner" align="center">
+                                                            <table class="table accordion-content">                                                  
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>  
                             </div>
                         </div>
 
@@ -210,7 +255,41 @@ $(document).ready(function() {
     $('#en_table').on('change', '.en_qty, .en_price', function() {
         update_totals();
     });
+    
+     // var max_fields = 10;
+    var wrapper = $(".accordion-content");
+    var add_button = $(".add-field");
+
+    var x = 0;
+
+    $('.add-field').click(function() {
+        $(wrapper).append('<tr><td>Internal Lot: </td><td><input type="text" class="form-control" value="A0001" readonly></td><td>External Lot: </td><td><input type="text" class="form-control"></td><td>Quantity: </td><td><input type="number" class="form-control" min="0"></td><td>Exp Date: </td><td><input type="date" class="form-control"></td><td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td><tr>'); 
+    });
+
+
+    $(add_button).click(function(e){
+        e.preventDefault();
+        if( x < max_fields )
+        {
+            x++;
+
+        }
+    });
+
+    $(wrapperone).on("click",".remove_field", function(e){
+        e.preventDefault();            
+        var tr = $(this).closest('tr');
+
+        tr.fadeOut(function(){
+            tr.remove();
+            x--;
+        });
+        return false;
+    });
+
 });
+
+
 </script>
 {% endblock %}
 
