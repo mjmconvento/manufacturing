@@ -4,7 +4,11 @@ th {
 }
 
 .page-header.navbar{
-	background: url(/bundles/sereniteatemplate/images/greengrass.jpg);
+	background: url(/bundles/sereniteatemplate/images/g.jpg);
+}
+
+.clearfix{
+  background: url(/bundles/sereniteatemplate/images/g.jpg); 
 }
 
 .page-content-wrapper{
@@ -77,8 +81,7 @@ th {
   background-color:#71ceea !important;
 }
 
-.page-header.navbar .page-logo .logo-default{
-	width:70% !important;
+.page-header.navbar .page-logo .logo-default{	
 	margin-top: 0px;
 }
 

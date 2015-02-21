@@ -7,7 +7,7 @@ menu_items:
       acl: cat_user_group.menu
       label: Role
       parent: menu_admin
-    - id: ser_branch_index
-      acl: ser_branch.menu
+    - id: ser_inv_wh_index
+      acl: ser_inv_wh.menu
       label: Branch Management
       parent: menu_admin

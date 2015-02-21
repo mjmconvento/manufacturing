@@ -33,14 +33,15 @@ class Warehouse
     /** @ORM\Column(type="boolean") */
     protected $flag_shopfront;
 
+    /** @ORM\Column(type="integer") */
+    protected $pm_terms;
+
     public function __construct()
     {
-        $this->initHasGeneratedID();
-        $this->initHasName();
-        $this->initTrackCreate();
         $this->initHasAddress();
         $this->initHasAccount();
         $this->initHasPhones();
+        $this->initTrackCreate();
 
         $this->flag_threshold = true;
         $this->flag_shopfront = false;
@@ -65,9 +66,20 @@ class Warehouse
         return $this;
     }
 
+    public function setPaymentTerm($pm)
+    {
+        $this->pm_terms = $pm;
+        return $this;
+    }
+
     public function getInternalCode()
     {
         return $this->internal_code;
+    }
+
+    public function getPaymentTerm()
+    {
+        return $this->pm_terms;
     }
 
     public function canTrackThreshold()
@@ -87,18 +99,12 @@ class Warehouse
 
     public function toData()
     {
-        $data = new \stdClass();
-
-        $this->dataHasGeneratedID($data);
-        $this->dataHasName($data);
-        $this->dataTrackCreate($data);
-        $this->dataHasAddress($data);
-        $this->dataHasAccount($data);
-        $this->dataHasPhones($data);
+        $data = new \stdClass();        
 
         $data->internal_code = $this->internal_code;
         $data->flag_threshold = $this->flag_threshold;
         $data->flag_shopfront = $this->flag_shopfront;
+        $data->pm_terms = $this->pm_terms;
 
         return $data;
     }
