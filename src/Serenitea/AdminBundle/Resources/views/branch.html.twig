@@ -1,18 +1,19 @@
 {% import "CatalystTemplateBundle::form.html.twig" as f %}
 
 <h4 class="form-section">Information</h4>
-{{ f.group_text('Name','','',3,4)}}
-{{ f.group_text('Code','','',3,4)}}
-{{ f.group_number('Payment Terms (no.of days)','','',3,2)}} 
+{{ f.group_text('Name','name',object.getName,3,4)}}
+{{ f.group_text('Code','internal_code',object.getInternalCode,3,4)}}
+{{ f.group_number('Payment Terms (no.of days)','pm_terms',object.getPaymentTerm,3,2)}} 
 
 <h4 class="form-section">Address</h4>
-{{ f.group_text('Unit / Number', 'name', '', 3, 4, false, prefix) }}
+{{ f.group_text('Unit / Number', '','', 3, 4, false, prefix) }}
 {{ f.group_text('Street Address', 'street', '', 3, 4, false, prefix) }}
 {{ f.group_text('City', 'city', '', 3, 4, false, prefix) }}
-{{ f.group_text('State', 'state', '', 3, 4, false, prefix) }}
+{{ f.group_text('Province', 'state', '', 3, 4, false, prefix) }}
 {{ f.group_text('Country', 'country', '', 3, 4, false, prefix) }}
 {{ f.group_text('Latitude', 'latitude', '', 3, 4, false, prefix) }}
 {{ f.group_text('Longitude', 'longitude', '', 3, 4, false, prefix) }}
+
 
 {% include "CatalystContactBundle::form.has_phones.html.twig" %}
 

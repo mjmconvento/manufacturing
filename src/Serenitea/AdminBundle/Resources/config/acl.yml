@@ -25,13 +25,13 @@ acl:
           label: "Delete"
     - category: Branch Management
       entries:
-        - id: ser_branch.menu
+        - id: ser_inv_wh.menu
           label: "Menu"
-        - id: ser_branch.view
+        - id: ser_inv_wh.view
           label: "View"
-        - id: ser_branch.add
+        - id: ser_inv_wh.add
           label: "Add"
-        - id: ser_branch.edit
+        - id: ser_inv_wh.edit
           label: "Edit"
-        - id: ser_branch.delete
+        - id: ser_inv_wh.delete
           label: "Delete"

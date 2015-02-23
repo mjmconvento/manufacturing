@@ -10,7 +10,7 @@ ser_purchasing:
     resource: "@SereniteaPurchasingBundle/Resources/config/routing.yml"
     prefix:   /purchasing
 
-ser_inventory:
+serenitea_inventory:
     resource: "@SereniteaInventoryBundle/Resources/config/child_routing.yml"
     prefix:   /inventory
 

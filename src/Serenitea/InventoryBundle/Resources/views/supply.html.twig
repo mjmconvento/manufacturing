@@ -1,14 +1,15 @@
 {% import "CatalystTemplateBundle::form.html.twig" as f %}
 
 <h4 class="form-section">Information</h4>
-{{ f.group_text('Description','','',3,4)}}
-{{ f.group_select('Category','','', '',3,4)}}
-{{ f.group_select('Supplier','','', '',3,4)}} 
-{{ f.group_text('Supplier\'s Code','','',3,4)}}
-{{ f.group_text_readonly('User Created','','',3,4)}}
-{{ f.group_text_readonly('Date Created','','',3,4)}}
-{{ f.group_text_readonly('Update User','','',3,4)}}
-{{ f.group_text_readonly('Update Date','','',3,4)}}
+{{ f.group_text('Description','name',object.getName ,3 ,4 )}}
+{{ f.group_select('Category','prodgroup_id', pg_opts, object.getProductGroup.getID|default(''),3 ,4)}}
+{{ f.group_select('Supplier','supplier_id',supp_opts, object.getSupplier.getID|default(''),3,4)}} 
+{{ f.group_text('Supplier\'s Code','supp_code',object.getSupplierCode ,3,4)}}
+{{ f.group_text('Specs','uom',object.getUnitOfMeasure,3,4)}}
+{{ f.group_text_readonly('User Created','user_create',object.getUserCreate,3,4)}}
+{{ f.group_text_readonly('Date Created','date_create',object.getDateCreate|date(),3,4)}}
+{{ f.group_text_readonly('Update User','user_update',object.getUserUpdate,3,4)}}
+{{ f.group_text_readonly('Update Date','date_update',object.getDateUpdate|date(),3,4)}}
 
 
 {% set view_sell_price = app.user.hasAccess(prefix ~ '.view_sell_price') %}
@@ -23,6 +24,4 @@
 {% if view_cost_price %}
 {{ f.group_number('Selling Price', 'price_sale', object.getPriceSale|number_format(2, '.', ''), 3, 4, readonly) }}
 {% endif %}
-
-
 

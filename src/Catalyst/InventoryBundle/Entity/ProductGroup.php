@@ -23,6 +23,9 @@ class ProductGroup
      */
     protected $name;
 
+    /** @ORM\Column(type="string", length=50) */
+    protected $code;
+
     public function __construct()
     {
     }
@@ -31,6 +34,17 @@ class ProductGroup
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
     }
 
     public function getID()
@@ -48,6 +62,7 @@ class ProductGroup
         $data = new stdClass();
         $data->id = $this->id;
         $data->name = $this->name;
+        $data->code = $this->code;
 
         return $data;
     }

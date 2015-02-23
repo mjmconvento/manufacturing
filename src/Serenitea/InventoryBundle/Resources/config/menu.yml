@@ -11,7 +11,7 @@ menu_items:
       acl: ser_inv_pg.menu
       label: Product Category
       parent: menu_inventory
-    - id: ser_begin_index
+    - id: ser_inv_begin_index
       acl: ser_begin.menu
       label: Beginning Inventory
       parent: menu_inventory
