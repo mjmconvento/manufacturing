@@ -36,18 +36,6 @@ class LoadInventoryData implements FixtureInterface
             $x++;   
         }
         $em->flush();
-
-        $cat_id = $em->getRepository('CatalystInventoryBundle:ProductGroup')->findAll();
-        $last_insert = 0;
-
-        foreach($cat_id as $type)
-        {
-            $cat = new ProductCodeReference();
-            $cat->setCategory($type);
-            $cat->setLastInserted(sprintf("%03d", 0));
-            $em->persist($cat);
-        }
-        $em->flush();
     }
     
     public function getOrder()
