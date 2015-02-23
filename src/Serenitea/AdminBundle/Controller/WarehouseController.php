@@ -4,19 +4,22 @@ namespace Serenitea\AdminBundle\Controller;
 
 use Catalyst\InventoryBundle\Controller\WarehouseController as Controller;
 use Catalyst\InventoryBundle\Entity\Warehouse;
+use Catalyst\ContactBundle\Entity\Address;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\ContactBundle\Template\Controller\HasPhones;
 use Catalyst\ValidationException;
 
 class WarehouseController extends Controller
 {  
     use TrackCreate;
+    use HasPhones;
     
 	public function __construct()
 	{
         $this->repo = 'CatalystInventoryBundle:Warehouse';
         parent::__construct();
-		$this->route_prefix = 'ser_inv_wh';
         $this->title = 'Branch';
+        $this->route_prefix = 'ser_inv_wh';
 
         $this->list_title = 'Branches';
         $this->list_type = 'dynamic';		
@@ -44,15 +47,33 @@ class WarehouseController extends Controller
     protected function update($o, $data, $is_new = false)
     {
         // validate name
-        if (empty($data['name']))
+        if (empty($data['branch_name']))
             throw new ValidationException('Cannot leave name blank');
             
-        $o->setName($data['name'])
+        $o->setName($data['branch_name'])
             // ->setType($data['type_id'])
             // ->setContactNumber($data['contact_num'])
             ->setPaymentTerm($data['pm_terms'])
             ->setInternalCode($data['internal_code']);
-            // ->setAddress($data['address']);
+
+        $em = $this->getDoctrine()->getManager();
+        $address = new Address();
+        $address->setName($data['name'])
+                ->setStreet($data['street'])
+                ->setCity($data['city'])
+                ->setState($data['state'])
+                ->setCountry($data['country'])
+                ->setLatitude($data['latitude'])
+                ->setLongitude($data['longitude']);
+        $address->setUserCreate($this->getUser());
+        $em->persist($address);
+        $em->flush();
+
+        $o->setAddress($address);
+
+        $this->updateTrackCreate($o, $data, $is_new);
+        $this->updateHasPhones($o, $data, $is_new);
+        print_r($o->toData());
 
         // if (isset($data['flag_threshold']) && $data['flag_threshold'])
         //     $o->setFlagThreshold();
@@ -141,8 +162,8 @@ class WarehouseController extends Controller
     {
         $data = array(
             'id' => $o->getID(),
-            'name' => $o->getName(),
-            'pm_terms' =>$o->getPaymentTerm(),
+            'branch_name' => $o->getName(),
+            'pm_terms' =>$o->getPaymentTerm(),            
         );
 
         return $data;
