@@ -52,6 +52,10 @@ class UserController extends CrudController
             0 => 'Disabled'
         );
 
+        //branch opts
+        $inv = $this->get('catalyst_inventory');
+        $params['wh_opts'] = $inv->getWarehouseOptions();
+
         // groups
         $params['group_opts'] = $um->getGroupOptions();
 
@@ -99,6 +103,12 @@ class UserController extends CrudController
                     $o->addGroup($group);
             }
         }
+
+        //branch options
+        $wh = $inv->findWarehouse($data['warehouse_id']);
+        if($wh == null)
+            throw new ValidationException('Could not find branch specified.');
+        $o->setWarehouse($wh);
 
         // check if we need to have password
         if ($is_new)

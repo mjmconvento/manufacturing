@@ -6,6 +6,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
+use Catalyst\InventoryBundle\Entity\Warehouse;
 use stdClass;
 
 /**
@@ -28,6 +29,9 @@ class User extends BaseUser
      */
     protected $groups;
 
+    /** @ORM\ManyToOne(targetEntity="\Catalyst\InventoryBundle\Entity\Warehouse") */
+    protected $warehouse;
+
 
     /** @ORM\Column(type="string", length=50, nullable=true) */
     protected $name;
@@ -47,6 +51,12 @@ class User extends BaseUser
     {
         $this->name = $name;
         return $this;
+    }
+
+    public function setWarehouse(Warehouse $wh)
+    {
+        $this->warehouse = $wh;
+        $this->type_id = $wh->getID();
     }
     
     public function addGroup(GroupInterface $role)
@@ -73,6 +83,11 @@ class User extends BaseUser
     public function getGroups()
     {
         return $this->groups;
+    }
+
+    public function getWarehouse()
+    {
+        return $this->warehouse;
     }
 
 
@@ -135,6 +150,7 @@ class User extends BaseUser
         $data->email = $this->email;
         $data->enabled = $this->enabled;
         $data->groups = $groups;
+        $data->warehouse_id = $this->getWarehouse()->getID();
 
         return $data;
     }
