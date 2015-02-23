@@ -23,7 +23,7 @@ class Product
     use TrackCreate;
     use TrackUpdate;
     
-    /** @ORM\Column(type="string", length=25, nullable=true) */
+    /** @ORM\Column(type="string", length=25, nullable=false) */
     protected $sku;
 
     /** @ORM\Column(type="string", length=20) */
