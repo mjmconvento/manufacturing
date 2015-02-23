@@ -28,7 +28,7 @@ class ProductGroupController extends Controller
             $grid->newColumn('Code','getCode','code'),
             $grid->newColumn('Name','getName','name'),            
         );        
-    }
+    }    
 
     protected function update($o, $data, $is_new = false )
     {            
@@ -39,7 +39,7 @@ class ProductGroupController extends Controller
             if ($dupe != null)
                 throw new ValidationException('Category name already exists.');
             // if (strlen($data['name']) > 0)
-            $o->setName($data['name']);
+            $o->setName($data['name']);            
         }
 
         if ($o->getCode() != $data['code'])
@@ -50,6 +50,7 @@ class ProductGroupController extends Controller
                 throw new ValidationException('Category code already exists.');
         // if (strlen($data['code']) > 0)
             $o->setCode($data['code']);
-        }
+        }      
     }
+
 }

@@ -2,6 +2,9 @@
 
 namespace Catalyst\InventoryBundle\Entity;
 
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\HasName;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,15 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductAttribute
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use HasGeneratedID;
+    use HasName;
 
-    /** @ORM\Column(type="string", length=80, nullable=false) */
-    protected $name;
 
     /** @ORM\Column(type="string", length=200) */
     protected $value;
@@ -28,22 +25,6 @@ class ProductAttribute
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
     protected $product;
-
-    public function getID()
-    {
-        return $this->id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
 
     public function setValue($value)
     {
