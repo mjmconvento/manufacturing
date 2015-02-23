@@ -2,28 +2,55 @@
 
 namespace Catalyst\PurchasingBundle\Controller;
 
-use Catalyst\TemplateBundle\Model\BaseController;
+use Catalyst\TemplateBundle\Model\CrudController;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
 use Catalyst\PurchasingBundle\Entity\POEntry;
 use Catalyst\PurchasingBundle\Entity\PODelivery;
 use Catalyst\PurchasingBundle\Entity\PODeliveryEntry;
 use Catalyst\InventoryBundle\Entity\Product;
+use Catalyst\InventoryBundle\Entity\ProductAttribute;
 
-use Catalyst\InventoryBundle\Entity\InventoryStock;
-use Catalyst\InventoryBundle\Entity\InventoryEntry;
-use Catalyst\InventoryBundle\Entity\InventoryTransaction;
 
 use Catalyst\ValidationException;
 use DateTime;
 
-class DeliveryController extends BaseController
+class DeliveryController extends CrudController
 {
-    
+    use TrackCreate;
     public function __construct() {
         $this->title = 'Deliveries';
         $this->list_title = 'Deliveries';
         $this->list_type = 'static';
+        $this->route_prefix = 'cat_pur_del';
+        $this->repo = 'CatalystPurchasingBundle:PODelivery';
+        
     }
+    
+    protected function newBaseClass()
+    {
+        return new PODelivery();
+    }
+    
+    protected function getObjectLabel($obj)
+    {
+        if ($obj == null)
+            return '';
+        return $obj->getCode();
+    }
+    
+    public function indexAction()
+    {
+        $id = $this->getRequest()->get('id');
+        $this->title = 'Purchase Order';
+        $pur = $this->get('catalyst_purchasing');
+        $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
+
+        $params['object'] = $pur->getPurchaseOrder($id);
+
+        return $this->render('CatalystPurchasingBundle:Delivery:index.html.twig', $params);
+    }
+    
 
     protected function findDelivery($id)
     {
@@ -35,179 +62,76 @@ class DeliveryController extends BaseController
 
         return $deli;
     }
-
-    public function indexAction($id)
-    {
-        $this->title = 'Purchase Order';
-        $pur = $this->get('catalyst_purchasing');
-        $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
-
-        $params['object'] = $pur->getPurchaseOrder($id);
-
-        return $this->render('CatalystPurchasingBundle:Delivery:index.html.twig', $params);
+    
+    protected function padFormParams(&$params, $object = null) {
+        $po_id = $this->getRequest()->get('po_id');
+        if($po_id != '')
+        {
+            $pur = $this->get('catalyst_purchasing');
+            $po = $pur->getPurchaseOrder($po_id);
+            $object->setPurchaseOrder($po);
+        }
     }
 
-    public function addFormAction($po_id)
-    {
-        $inv = $this->get('catalyst_inventory');
-        $pur = $this->get('catalyst_purchasing');
-        $this->title = 'Purchase Order';
-        $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
-
-        $po = $pur->getPurchaseOrder($po_id);
-
-        $delivery = new PODelivery();
-        $delivery->setPurchaseOrder($po);
-
-        $params['object'] = $po;
-        $params['delivery'] = $delivery;
-        $params['wh_opts'] = $inv->getWarehouseOptions();
-
-        return $this->render('CatalystPurchasingBundle:Delivery:add.html.twig', $params);
-    }
-
-    protected function update($delivery, $data, $update_entries = true)
+    protected function update($delivery, $data, $is_new = true)
     {
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
-
-        $delivery->setDateDeliver(new DateTime($data['date_deliver']))
-            ->setCode($data['code']);
-
-        if ($update_entries)
+        
+        $po_id = $this->getRequest()->get('po_id');
+        if($po_id != '')
         {
+            $pur = $this->get('catalyst_purchasing');
+            $po = $pur->getPurchaseOrder($po_id);
+            $delivery->setPurchaseOrder($po);
+        }
+        $delivery->setDateDeliver(new DateTime($data['date_deliver']));
+        $delivery->setExternalCode($data['external_code']);
+        if ($is_new)
+        {
+            $this->updateTrackCreate($delivery, $data, $is_new);
+            $delivery->setCode('');
             // clear all entries
             foreach ($delivery->getEntries() as $ent)
                 $em->remove($ent);
             $delivery->clearEntries();
 
             // add entries
-            foreach ($data['qty'] as $prod_id => $qty)
+            foreach ($data['delivery_qty'] as $prod_id => $items)
             {
-                // no quantity, skip this product
-                if ($qty <= 0)
-                    continue;
+                $parentProd = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+                foreach($items as $index => $item){
+                    $expiry =  $data['delivery_expiry'][$prod_id][$index];
+                    $qty = $item;
+                    
+                    if($expiry != ''){
+                        $variant = $parentProd->getVariantsByAttribute('expiry', $expiry);
+                        if(count($variant) > 0){
+                            $prodDelivery = $variant[0];
+                        }else {
+                            $attribute = new ProductAttribute();
+                            $attribute->setName('expiry');
+                            $attribute->setValue($expiry);
+                            $prodDelivery = $inv->newVariant($parentProd,$attribute);
+                        }
+                    }else {
+                        $prodDelivery = $parentProd;
+                    }
+                    $em->persist($prodDelivery);
+                    $em->flush();
+                    
+                    $pode = new PODeliveryEntry();
+                    $pode->setQuantity($qty)
+                        ->setProduct($prodDelivery);
 
-                $prod = $inv->findProduct($prod_id);
-                if ($prod == null)
-                    throw new ValidationError('Could not find product.');
-
-                $pode = new PODeliveryEntry();
-                $pode->setQuantity($qty)
-                    ->setProduct($prod);
-
-                $delivery->addEntry($pode);
+                    $delivery->addEntry($pode);
+                }
+                
             }
         }
 
         $em->persist($delivery);
         $em->flush();
-    }
-
-    public function addSubmitAction($po_id)
-    {
-        $data = $this->getRequest()->request->all();
-        $inv = $this->get('catalyst_inventory');
-        $log = $this->get('catalyst_log');
-        $po = $this->findPO($po_id);
-
-        // find destination warehouse
-        $dest_wh = $inv->findWarehouse($data['wh_id']);
-        if ($dest_wh == null)
-            throw new ValidationException('Could not find warehouse.');
-
-        // get source warehouse
-        $source_wh = $po->getSupplier()->getWarehouse();
-
-        // setup inventory transaction
-        $trans = $inv->newTransaction();
-        $trans->setDescription('Delivery ' . $data['code'] . ' for PO ' . $po->getCode() . '.');
-        $trans->setUser($this->getUser());
-
-        // go through the product entries
-        foreach ($data['qty'] as $prod_id => $qty)
-        {
-            // no quantity, skip this product
-            if ($qty <= 0)
-                continue;
-
-            // find product
-            $prod = $inv->findProduct($prod_id);
-            if ($prod == null)
-                throw new ValidationException('Could not find product.');
-
-            // make source / supplier entry
-            $source_entry = $inv->newEntry();
-            $source_entry->setCredit($qty)
-                ->setWarehouse($source_wh)
-                ->setProduct($prod);
-            $trans->addEntry($source_entry);
-
-            // make destination entry
-            $dest_entry = $inv->newEntry();
-            $dest_entry->setDebit($qty)
-                ->setWarehouse($dest_wh)
-                ->setProduct($prod);
-            $trans->addEntry($dest_entry);
-        }
-
-        // persist transaction
-        $inv->persistTransaction($trans);
-
-        // po delivery
-        $delivery = new PODelivery();
-        $delivery->setPurchaseOrder($po);
-        $this->update($delivery, $data);
-
-        // log
-        $log->log('cat_inv_trans_add', 'added Inventory Transaction ' . $trans->getID() . '.', $trans->toData());
-        $log->log('cat_pur_del_add', 'added Purchase Delivery ' . $delivery->getID() . '.', $delivery->toData());
-
-        // flash
-        $this->addFlash('success', 'Delivery successfuly added.');
-
-        return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $po_id)));
-    }
-
-    public function editFormAction($id)
-    {
-        $this->title = 'Purchase Order';
-        $params = $this->getViewParams('Deliveries', 'cat_pur_del_index');
-
-        $delivery = $this->findDelivery($id);
-        $po = $delivery->getPurchaseOrder();
-
-        $inv = $this->get('catalyst_inventory');
-
-        // build entries index
-        $ent_index = array();
-        foreach ($po->getEntries() as $entry)
-            $ent_index[$entry->getProduct()->getID()]['delivered'] = 0.00;
-        foreach ($delivery->getEntries() as $d_entry)
-            $ent_index[$d_entry->getProduct()->getID()]['delivered'] = $d_entry->getQuantity();
-
-        $params['object'] = $po;
-        $params['delivery'] = $delivery;
-        $params['ent_index'] = $ent_index;
-        $params['wh_opts'] = $inv->getWarehouseOptions();
-
-        return $this->render('CatalystPurchasingBundle:Delivery:edit.html.twig', $params);
-    }
-
-    public function editSubmitAction($id)
-    {
-        $log = $this->get('catalyst_log');
-        $data = $this->getRequest()->request->all();
-        $delivery = $this->findDelivery($id);
-        $po_id = $delivery->getPurchaseOrder()->getID();
-
-        $this->update($delivery, $data, false);
-
-        $log->log('cat_pur_del_update', 'updated Purchase Delivery ' . $delivery->getID() . '.', $delivery->toData());
-
-        $this->addFlash('success', 'Delivery successfuly edited.');
-
-        return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $po_id)));
     }
 
     public function deleteAction($id)
@@ -225,6 +149,32 @@ class DeliveryController extends BaseController
         return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $po_id)));
     }
     
+    public function receiveAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+        $pur = $this->get('catalyst_purchasing');
+        $delivery = $pur->getDelivery($id);
+        
+        $trans = $inv->newTransaction();
+        $trans->setDescription('Delivery for'.$delivery->getCode());
+        $trans->setUserCreate($this->getUser());
+
+        foreach ($delivery->getEntries() as $entry){
+            $entries = $inv->itemsIn($entry->getProduct(),$entry->getQuantity());
+        
+            foreach ($entries as $ientry){
+                $trans->addEntry($ientry);
+            }
+        }
+        $inv->persistTransaction($trans);
+        
+        $delivery->setReceived();
+        $em->persist($delivery);
+        $em->flush();
+        return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
+    }
+    
     public function searchAction(){
         $data = $this->getRequest()->request->all();
         $pur = $this->get('catalyst_purchasing');
@@ -237,6 +187,42 @@ class DeliveryController extends BaseController
             return $this->redirect($this->generateUrl('cat_pur_del_index', array('id' => $po->getID())));
         }
         return $this->render('CatalystPurchasingBundle:Delivery:search.html.twig', $params);
+    }
+    
+    public function addSubmitAction()
+    {
+        $this->checkAccess($this->route_prefix . '.add');
+        $id = $this->getRequest()->get('po_id');
+        $this->hookPreAction();
+        try
+        {
+            $obj = $this->add();
+
+            $this->addFlash('success', $this->title . ' added successfully.');
+            return $this->redirect($this->generateUrl('cat_pur_del_index', array('id' => $id)));
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
+    }
+    
+    protected function hookPostSave($obj, $is_new = false) {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->generateCode();
+            $obj->setUserCreate($this->getUser());
+            $em->persist($obj);
+            $em->flush();
+        }
     }
     
 }

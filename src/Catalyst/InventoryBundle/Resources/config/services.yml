@@ -6,6 +6,7 @@ services:
         class: Catalyst\InventoryBundle\Model\InventoryManager
         arguments:
             em: "@doctrine.orm.entity_manager"
+            container: "@service_container"
 
 #    catalyst_inventory.example:
 #        class: %catalyst_inventory.example.class%

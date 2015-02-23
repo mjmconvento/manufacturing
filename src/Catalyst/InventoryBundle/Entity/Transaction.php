@@ -19,20 +19,10 @@ class Transaction
     use TrackCreate;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    protected $date_in;
-
-    /**
      * @ORM\Column(type="string")
      */
     protected $description;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="\Catalyst\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected $user;
 
     /**
      * @ORM\OneToMany(targetEntity="Entry", mappedBy="transaction", cascade={"persist"})
@@ -41,7 +31,8 @@ class Transaction
 
     public function __construct()
     {
-        $this->date_in = new DateTime();
+        $this->initHasGeneratedID();
+        $this->initTrackCreate();
         $this->entries = new ArrayCollection();
     }
 
@@ -102,10 +93,9 @@ class Transaction
         $entries = array();
 
         $data = new \stdClass();
-        $data->id = $this->id;
-        $data->date_create = $this->date_create;
+        $this->dataHasGeneratedID($data);
+        $this->dataTrackCreate($data);
         $data->description = $this->description;
-        $data->user = $this->getUserCreate()->getID();
 
         foreach ($this->getEntries() as $entry)
             $entries[] = $entry->toData();

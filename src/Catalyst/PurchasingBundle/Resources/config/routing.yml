@@ -159,6 +159,13 @@ cat_pur_del_delete:
     defaults: { _controller: CatalystPurchasingBundle:Delivery:delete }
 
 
+cat_pur_del_receive:
+    pattern: /delivery/{id}/receive
+    methods: [GET]
+    defaults: { _controller: CatalystPurchasingBundle:Delivery:receive }
+
+
+
 cat_pur_pr_index:
     pattern: /prs
     methods: [GET]

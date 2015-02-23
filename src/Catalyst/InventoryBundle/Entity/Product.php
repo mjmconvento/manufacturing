@@ -80,7 +80,7 @@ class Product
     /** @ORM\OneToMany(targetEntity="Product", mappedBy="parent") */
     protected $variants;
 
-    /** @ORM\OneToMany(targetEntity="ProductAttribute", mappedBy="product") */
+    /** @ORM\OneToMany(targetEntity="ProductAttribute", mappedBy="product", cascade={"persist"}) */
     protected $attributes;
 
     /** @ORM\Column(type="json_array") */
@@ -272,22 +272,49 @@ class Product
         $this->variants->add($prod);
         return $this;
     }
-
+    
     public function getVariants()
     {
         return $this->variants;
     }
 
-    public function addVariantAttribute($attr)
+    public function addVariantAttribute(ProductAttribute $attr)
     {
-        $this->attribute_hash[$attr] = $attr;
+        $this->attributes->add($attr);
         return $this;
     }
 
     public function getVariantAttributes()
     {
-        return $this->attribute_hash;
+        return $this->attributes;
     }
+    
+    public function getRootProduct(){
+        if($this->parent != null){
+            return $this->parent->getRootProduct();
+        }
+        return $this;
+    }
+    
+    public function getAttributeValue($name){
+        foreach($this->attributes as $attribute){
+            if($attribute->getName() == $name){
+                return $attribute->getValue();
+            }
+        }
+        return null;
+    }
+    
+    public function getVariantsByAttribute($attribute, $value){
+        $variants = $this->getVariants();
+        $filtered = array();
+        foreach($variants as $variant){
+            if($variant->getAttributeValue($attribute) == $value){
+                $filtered[] = $variant;
+            }
+        }
+        return $filtered;
+    }      
 
     public function toData()
     {

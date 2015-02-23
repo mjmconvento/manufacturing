@@ -4,6 +4,9 @@ namespace Catalyst\PurchasingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\HasCode;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use DateTime;
 
 /**
@@ -12,22 +15,21 @@ use DateTime;
  */
 class PODelivery
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use HasGeneratedID;
+    use HasCode;
+    use TrackCreate;
 
-    /** @ORM\Column(type="string") */
-    protected $code;
-
-    /** @ORM\Column(type="datetime") */
-    protected $date_in;
-
+    const STATUS_DRAFT = 'Draft';
+    const STATUS_RECEIVED = 'Received';
     /** @ORM\Column(type="date") */
     protected $date_deliver;
 
+    /** @ORM\Column(type="string", length=80) */
+    protected $external_code;
+    
+    /** @ORM\Column(type="string", length=20) */
+    protected $status;
+    
     /**
      * @ORM\ManyToOne(targetEntity="PurchaseOrder")
      * @ORM\JoinColumn(name="po_id", referencedColumnName="id")
@@ -41,16 +43,12 @@ class PODelivery
 
     public function __construct()
     {
-        $this->date_in = new DateTime();
+        $this->initTrackCreate();
         $this->date_delivery = new DateTime();
         $this->entries = new ArrayCollection();
+        $this->status = self::STATUS_DRAFT;
     }
 
-    public function setCode($code)
-    {
-        $this->code = $code;
-        return $this;
-    }
 
     public function setDateDeliver(DateTime $date)
     {
@@ -62,6 +60,17 @@ class PODelivery
     {
         $this->purchase_order = $po;
         return $this;
+    }
+    
+    public function setExternalCode($code)
+    {
+        $this->external_code = $code;
+        return $this;
+    }
+
+    public function getExternalCode()
+    {
+        return $this->external_code;
     }
 
     public function addEntry(PODeliveryEntry $entry)
@@ -75,21 +84,6 @@ class PODelivery
     {
         $this->entries->clear();
         return $this;
-    }
-
-    public function getID()
-    {
-        return $this->id;
-    }
-
-    public function getCode()
-    {
-        return $this->code;
-    }
-
-    public function getDateCreate()
-    {
-        return $this->date_in;
     }
 
     public function getDateDeliver()
@@ -106,14 +100,27 @@ class PODelivery
     {
         return $this->entries;
     }
+    
+    public function generateCode()
+    {
+        $year = date('Y');
+        $this->code = "DRS-".$year.'-'.str_pad($this->id,5, "0", STR_PAD_LEFT);
+    }
+    
+    public function setReceived()
+    {
+        $this->status = self::STATUS_RECEIVED;
+    }
 
     public function toData()
     {
         $data = new \stdClass();
 
-        $data->id = $this->id;
-        $data->code = $this->code;
-        $data->date_in = $this->date_in;
+        $this->dataHasGeneratedID($data);
+        $this->dataHasCode($data);
+        $this->dataTrackCreate($data);
+        
+        $data->external_code = $this->external_code;
         $data->date_deliver = $this->date_deliver;
         $data->po_id = $this->getPurchaseOrder()->getID();
 

@@ -2,18 +2,23 @@
 
 namespace Catalyst\InventoryBundle\Model;
 
+use Catalyst\InventoryBundle\Entity\Product;
+use Catalyst\InventoryBundle\Entity\ProductAttribute;
 use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
+use Catalyst\ConfigurationBundle\Model\ConfigurationManager;
 use Doctrine\ORM\EntityManager;
 
 class InventoryManager
 {
     protected $em;
+    protected $container;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, $container = null)
     {
         $this->em = $em;
+        $this->container = $container;
     }
 
     public function newEntry()
@@ -173,4 +178,47 @@ class InventoryManager
 
         // TODO: unlock table
     }
+    
+    public function newVariant(Product $parent, ProductAttribute $attribute)
+    {
+        $new = clone $parent;
+        $new->addVariantAttribute($attribute);
+        $code = str_replace('/','',$attribute->getValue());
+        $new->setSku($parent->getSKU().$code);
+        $attribute->setProduct($new);
+        $parent->addVariant($new);
+        
+        $this->em->persist($new);
+        $this->em->persist($parent);
+        $this->em->flush();
+                
+        return $new;
+    }
+    
+    public function itemsIn($product, $quantity){
+        $conf = new ConfigurationManager($this->container);
+        $main_wh = $this->findWarehouse($conf->get('catalyst_warehouse_main'));
+        $supplier_wh = $this->findWarehouse($conf->get('catalyst_warehouse_supplier_default'));
+        
+        return $this->itemTransfer($product, $quantity, $supplier_wh, $main_wh);
+        
+    }
+    
+    public function itemTransfer($product,$quantity,$from,$to){
+        $entryDebit = $this->newEntry();
+        $entryCredit = $this->newEntry();
+        
+        $entryCredit->setProduct($product)
+                    ->setWarehouse($from)
+                    ->setCredit($quantity)
+                    ->setDebit(0);
+        
+        $entryDebit->setProduct($product)
+                    ->setWarehouse($to)
+                    ->setDebit($quantity)
+                    ->setCredit(0);
+        
+        return [$entryCredit, $entryDebit];
+    }
+    
 }

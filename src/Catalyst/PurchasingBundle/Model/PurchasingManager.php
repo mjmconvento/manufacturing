@@ -65,6 +65,14 @@ class PurchasingManager
             throw new ValidationException('Cannot find purchase order.');
         return $po;
     }
+   
+    public function getDelivery($id)
+    {
+        $po = $this->em->getRepository('CatalystPurchasingBundle:PODelivery')->find($id);
+        if ($po == null)
+            throw new ValidationException('Cannot find delivery.');
+        return $po;
+    }
     
     public function findPurchaseOrderOptions($filter)
     {

@@ -1,0 +1,248 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12" style="padding-bottom: 10px">
+        <a href="{{ path('cat_pur_del_index', {'id': object.getPurchaseOrder.getID}) }}" class="btn green">Back to Purchase Order Deliveries</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Purchase Order Delivery</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Purchase Order Information</h4>
+                            
+                        {{ form.group_text('Date Issued','date_isse',object.getPurchaseOrder.getDateIssue|date('m/d/Y'),3,3,true)}}
+                        {{ form.group_text('Code','code',object.getPurchaseOrder.getCode,3,3,true)}}
+                        {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getDisplayName,3,5,true)}}
+
+
+                        <h4 class="form-section">Delivery Information</h4>
+
+                        {{ form.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3)}}
+                        {{ form.group_text('Delivery Code','code',object.getCode,3,3,true)}}
+                        {{ form.group_text('Supplier DR Code','external_code',object.getExternalCode,3,3)}}
+
+                        <h4 class="form-section">Delivery Entries</h4>
+
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-11">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%" rowspan="2">Product</th>
+                                            <th colspan="3">Quantity</th>
+                                            <th style="width: 10%"  rowspan="2">&nbsp;</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 200px">Ordered</th>
+                                            <th style="width: 200px">Past Delivery</th>
+                                            <th style="width: 200px">Delivered</th>
+                                        </tr>
+                                    </thead>
+                                   
+                                    {% for ent in object.getPurchaseOrder.getEntries %}
+                                    <tbody data-id="{{ent.getProduct.getID}}" class="prod_parent_body" >
+                                        <tr class="prod_parent">
+                                            <td>{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }}</td>
+                                            <td align="right" >{{ ent.getQuantity }}</td>
+                                            <td align="right">{{ ent.getQuantity }}</td>
+                                            <td align="right"><span class="delivered_qty">0.00</span></td>
+                                            <td style="width: 10%"  align="right">
+                                                <a href="javascript: void(0)" class="add-field"><i class="glyphicon glyphicon-plus"></i>
+                                            </td>
+                                        </tr>
+                                        {% for delivery in object.getEntries %}
+                                        {% if delivery.getProduct.getRootProduct.getID == ent.getProduct.getID  %}
+                                            <tr>
+                                                <td align="right">Exp Date: </td><td><input type="date" value="{{ delivery.getExpiry }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry"></td>
+                                                <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" value="{{delivery.getQuantity|default('0.00') }}" min="0"></td>
+                                                <td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td>
+                                            <tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                    {% endfor %}
+                                   
+                                </table>
+                                    
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Save</button>
+                            <a href="{{ path('cat_pur_del_receive', {'id': object.getID}) }}" class="btn red">Receive</a>
+                            <a href="{{ path('cat_pur_po_edit_form', {'id': object.getPurchaseOrder.getID}) }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+
+
+
+<script>
+function escape_attr(s) {
+    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function escape_html(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function update_totals() {
+    var total_qty = 0.00;
+    var total_price = 0.00;
+    var total_total = 0.00;
+
+    $('#en_table tr').each(function() {
+        var qty = $(this).find('.en_qty').val();
+        var price = $(this).find('.en_price').val();
+        var total = qty * price;
+
+        total_qty += parseFloat(qty);
+        total_price += parseFloat(price);
+        total_total += parseFloat(total);
+        
+        $(this).find('.en_total').html(total.toFixed(2));
+    });
+
+    $('#total_qty').html(total_qty.toFixed(2));
+    $('#total_price').html(total_price.toFixed(2));
+    $('#total_total').html(total_total.toFixed(2));
+}
+
+$(document).ready(function() {
+    ComponentsPickers.init();
+
+    // selects
+    $('.select_2').select2();
+
+    update_totals();
+    
+    // button
+    $('#btn_en_add').click(function() {
+        $('#en_qty').val('0.00');
+        $('#en_price').val('0.00');
+    });
+
+    // form - update table
+    $('#btn_en_submit').click(function() {
+        var prod_id = $('#en_product_id').val();
+        var prod_name = $('#en_product_id option:selected').text();
+
+        var qty = $('#en_qty').val();
+        var price = $('#en_price').val();
+        var total = qty * price;
+
+        var row = '<tr>';
+        row += '<td><input type="hidden" name="en_prod_id[]" value="' + escape_attr(prod_id) + '">' + escape_html(prod_name) + '</td>';
+        row += '<td><input class="form-control en_qty" type="text" name="en_qty[]" value="' + qty + '"></td>';
+        row += '<td><input class="form-control en_price" type="text" name="en_price[]" value="' + price + '"></td>';
+        row += '<td class="en_total"></td>';
+        row += '<td><a href="#" class="btn default btn-xs red-sunglo"><i class="btn_en_del fa fa-minus-circle"></i></a></td>';
+        row += '</tr>';
+
+        $('#en_table').append(row);
+
+        update_totals();
+
+
+        $('#en_form').modal('hide');
+    });
+
+    // delete
+    $('#en_table').on('click', '.btn_en_del', function() {
+        $(this).closest('tr').remove();
+        update_totals();
+    });
+
+    // change values
+    $('#en_table').on('change', '.en_qty, .en_price', function() {
+        update_totals();
+    });
+    
+     // var max_fields = 10;
+    var wrapper = $(".accordion-content");
+    var add_button = $(".add-field");
+
+    var x = 0;
+
+    $('.add-field').click(function() {
+        $(wrapper).append('<tr><td>Quantity: </td><td><input type="number" class="form-control" min="0"></td><td>Exp Date: </td><td><input type="date" class="form-control"></td><td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td><tr>'); 
+    });
+
+
+    $(add_button).click(function(e){
+        var parent = $(this).parents('tr');
+        var body = $(this).parents('tbody');
+        var parent_id = body.data('id');
+        var qtyForm = '<tr>'+
+                        '<td align="right">Exp Date: </td><td><input type="date" name="delivery_expiry['+parent_id+'][]" class="form-control date-picker delivery_expiry"></td>'+
+                        '<td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty['+parent_id+'][]"  class="form-control delivery_qty" value="0.00" min="0"></td>'+
+                        '<td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td><tr>';
+        
+        parent.after(qtyForm); 
+        body.find('.delivery_expiry').each(function(){
+           $(this).datepicker(); 
+        });
+    });
+
+    $('.table-responsive').on("change",".delivery_qty", function(e){
+        var qty = 0;
+       
+        var body = $(this).parents('tbody');
+        var prod_parent = body.find('.prod_parent');
+       
+        var deliveries = body.find('.delivery_qty');
+        deliveries.each(function(e){
+            qty+= parseInt($(this).val());
+        });
+        
+        var delivered_qty = prod_parent.find('.delivered_qty');
+        delivered_qty.empty().html(qty);
+        
+    });
+    $(document).on("click",".remove_field", function(e){
+        e.preventDefault();            
+        var tr = $(this).closest('tr');
+        tr.remove();
+        return false;
+    });
+
+});
+
+
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}
