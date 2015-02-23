@@ -15,7 +15,7 @@ menu_items:
       acl: cat_pur_pr.menu
       label: Purchase Request
       parent: menu_purchasing
-    - id: cat_pur_del_index
+    - id: cat_pur_del_search
       acl: cat_pur_del.menu
       label: Deliveries
       parent: menu_purchasing

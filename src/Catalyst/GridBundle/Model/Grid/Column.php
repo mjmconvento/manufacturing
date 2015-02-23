@@ -102,10 +102,13 @@ class Column
 
     public function getValue($object)
     {
-        $method = $this->get_method;
-        $value = $object->$method();
+        if($object != null){
+            $method = $this->get_method;
+            $value = $object->$method();
 
-        return $this->format($value);
+            return $this->format($value);
+        } 
+            return '';
     }
 
     public function format($value)

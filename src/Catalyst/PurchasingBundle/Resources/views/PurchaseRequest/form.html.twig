@@ -12,6 +12,7 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                        <h4 class="form-section">Purchase Request Information</h4>
+                        {{ form.group_text('Code', 'code', object.getCode, 3, 4, true) }}
                         {{ form.group_date('Date Issued', 'date_create', object.getDateCreate|date('m/d/Y'), 3, 4) }}
                         {{ form.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4) }}
                         {{ form.group_date('Date Needed', 'date_need', object.getDateNeeded|date('m/d/Y'), 3, 4) }}

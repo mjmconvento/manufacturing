@@ -106,7 +106,7 @@ class PurchaseOrderController extends CrudController
     {
         $grid = $this->get('catalyst_grid');
         return array(
-            $grid->newJoin('s', 'supplier', 'getSupplier'),
+            $grid->newJoin('s', 'supplier', 'getSupplier', 'left'),
         );
     }
 

@@ -37,9 +37,9 @@ class Factory
         return new Grid\Loader($this->em);
     }
 
-    public function newJoin($alias, $field, $getter)
+    public function newJoin($alias, $field, $getter,$type = 'inner')
     {
-        return new Grid\JoinRepo($alias, $field, $getter);
+        return new Grid\JoinRepo($alias, $field, $getter, $type);
     }
 
     public function newFilterGroup()

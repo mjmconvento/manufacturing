@@ -52,7 +52,36 @@ class PurchasingManager
     }
     public function getPurchaseRequest($id)
     {
-        return $this->em->getRepository('CatalystPurchasingBundle:PurchaseRequest')->find($id);
+        $pr = $this->em->getRepository('CatalystPurchasingBundle:PurchaseRequest')->find($id);
+        if ($pr == null)
+            throw new ValidationException('Cannot find purchase request.');
+        return $pr;
+    }
+    
+    public function getPurchaseOrder($id)
+    {
+        $po = $this->em->getRepository('CatalystPurchasingBundle:PurchaseOrder')->find($id);
+        if ($po == null)
+            throw new ValidationException('Cannot find purchase order.');
+        return $po;
+    }
+   
+    public function getDelivery($id)
+    {
+        $po = $this->em->getRepository('CatalystPurchasingBundle:PODelivery')->find($id);
+        if ($po == null)
+            throw new ValidationException('Cannot find delivery.');
+        return $po;
+    }
+    
+    public function findPurchaseOrderOptions($filter)
+    {
+        $po = $this->em->getRepository('CatalystPurchasingBundle:PurchaseOrder')
+                ->findBy($filter, array('code' => 'ASC'));
+        $po_opts = array();
+        foreach ($po as $pg)
+            $po_opts[$pg->getID()] = $pg->getCode();
+        return $po_opts;
     }
     
     public function copytoPurchaseOrder(PurchaseRequest $pr){
