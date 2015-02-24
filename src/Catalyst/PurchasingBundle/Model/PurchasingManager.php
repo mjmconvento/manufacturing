@@ -151,4 +151,5 @@ class PurchasingManager
             return $qty;
         }
     }
+    
 }

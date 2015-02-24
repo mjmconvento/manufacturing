@@ -101,6 +101,11 @@ class PODelivery
         return $this->entries;
     }
     
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    
     public function generateCode()
     {
         $year = date('Y');

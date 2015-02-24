@@ -199,7 +199,11 @@ class InventoryManager
     {
         $new = clone $parent;
         $new->addVariantAttribute($attribute);
-        $new->setSku($parent->getSKU().'-'.$attribute->getValue());
+        
+        // TODO  This part should be moved somewhere else
+        $value = str_replace('/', '', $attribute->getValue());
+        
+        $new->setSku($parent->getSKU().'-'.$value);
         $attribute->setProduct($new);
         $parent->addVariant($new);
         

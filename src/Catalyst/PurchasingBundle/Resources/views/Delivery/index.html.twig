@@ -61,11 +61,15 @@
                                             <td>{{ del.getDateDeliver|date('m/d/Y') }}</td>
                                             <td>{{ del.getCode }}</td>
                                             <td>
-                                                {% if app.user.hasAccess(prefix ~ '.view') %}
-                                                <a href="{{ path('cat_pur_del_edit_form', { 'id': del.getID }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> Edit</a>
-                                                {% endif %}
-                                                {% if app.user.hasAccess(prefix ~ '.delete') %}
-                                                <a href="{{ path('cat_pur_del_delete', { 'id': del.getID }) }}" class="btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Delete</a>
+                                                {% if del.getStatus == 'Draft' %}
+                                                    {% if app.user.hasAccess(prefix ~ '.view') %}
+                                                    <a href="{{ path('cat_pur_del_edit_form', { 'id': del.getID }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> Edit</a>
+                                                    {% endif %}
+                                                    {% if app.user.hasAccess(prefix ~ '.delete') %}
+                                                    <a href="{{ path('cat_pur_del_delete', { 'id': del.getID }) }}" class="btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Delete</a>
+                                                    {% endif %}
+                                                {% else %}
+                                                     <a href="{{ path('cat_pur_del_edit_form', { 'id': del.getID }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View</a>
                                                 {% endif %}
                                             </td>
                                         </tr>

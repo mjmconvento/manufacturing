@@ -178,6 +178,8 @@ class DeliveryController extends CrudController
         $delivery->setReceived();
         $em->persist($delivery);
         $em->flush();
+        
+        $this->addFlash('success', $delivery->getCode().' Received and locked.');
         return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
     }
     
@@ -187,6 +189,8 @@ class DeliveryController extends CrudController
         $params = $this->getViewParams('Deliveries', 'cat_pur_del_search');
         $params['list_title'] = $this->list_title;  
         $params['po_opts'] = $pur->findPurchaseOrderOptions(array('status_id' => 'Sent'));
+        
+        
         if(isset($data['po_code'])){
             $id = $data['po_code'];
             $po = $pur->getPurchaseOrder($id);

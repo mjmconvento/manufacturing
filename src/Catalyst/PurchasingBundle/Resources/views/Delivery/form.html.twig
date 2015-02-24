@@ -2,6 +2,9 @@
 {% import "CatalystTemplateBundle::form.html.twig" as form %}
 
 {% block content %}
+{% if object.getStatus == 'Received' %}
+{% set readonly = true %}
+{% endif %}
 <div class="row">
     <div class="col-md-12" style="padding-bottom: 10px">
         <a href="{{ path('cat_pur_del_index', {'id': object.getPurchaseOrder.getID}) }}" class="btn green">Back to Purchase Order Deliveries</a>
@@ -22,17 +25,17 @@
                         {{ form.group_text('Code','code',object.getPurchaseOrder.getCode,3,3,true)}}
                         {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getDisplayName,3,5,true)}}
 
-
                         <h4 class="form-section">Delivery Information</h4>
 
                         {{ form.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3)}}
                         {{ form.group_text('Delivery Code','code',object.getCode,3,3,true)}}
-                        {{ form.group_text('Supplier DR Code','external_code',object.getExternalCode,3,3)}}
+                        {{ form.group_text('Supplier DR Code','external_code',object.getExternalCode,3,3,readonly)}}
+                        {{ form.group_text('Status','status',object.getStatus,3,3,true)}}
 
                         <h4 class="form-section">Delivery Entries</h4>
 
                         <div class="row table-responsive" style="padding-top:10px">
-                            <div class="col-md-11">
+                            <div class="col-md-12">
                                 <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
                                     <thead>
                                         <tr>
@@ -52,12 +55,12 @@
                                         <tr class="prod_parent">
                                             <td>{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }} ({{ent.getProduct.getUnitOfMeasure}})</td>
                                             <td align="right" >{{ ent.getQuantity }}</td>
-                                            <td align="right">{{ ent.getQuantity }}</td>
+                                            <td align="right">{{ ent.getDeliveredQuantity|number_format(2) }}</td>
                                             <td align="right">
                                                 <span class="delivered_qty">0.00</span>
                                             </td>
                                             <td style="width: 10%"  align="right">
-                                                {% if ent.getProduct.isPerishable %}
+                                                {% if ent.getProduct.isPerishable and not readonly %}
                                                     <a href="javascript: void(0)" class="add-field"><i class="glyphicon glyphicon-plus"></i>
                                                 {% endif %}
                                             </td>
@@ -74,10 +77,12 @@
                                         {% if delivery.getProduct.getRootProduct.getID == ent.getProduct.getID  %}
                                             <tr>
                                                 <td align="right">Exp Date: </td><td><input type="date" value="{{  ent.getProduct.isPerishable?delivery.getExpiry|date('m/d/Y'):'' }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
-                                                                                            {{ ent.getProduct.isPerishable?'':'disabled' }} ></td>
-                                                <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" value="{{delivery.getQuantity|default('0.00') }}" min="0"></td>
+                                                                                {{ ent.getProduct.isPerishable?'':'disabled' }} {{ readonly?'disabled':''}} ></td>
+                                                <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" 
+                                                                                value="{{delivery.getQuantity|default('0.00') }}" min="0" 
+                                                                                {{ readonly?'readonly':''}}></td>
                                                 <td>
-                                                    {% if ent.getProduct.isPerishable %}
+                                                    {% if ent.getProduct.isPerishable and not readonly %}
                                                         <a href="#" class="remove_field"><i class="icon-close font-red"></i></a>
                                                     {% endif %}</td>
                                             <tr>
@@ -96,7 +101,7 @@
                     <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Save</button>
-                            {% if object.getID != null  %}
+                            {% if object.getID != null and object.getStatus == 'Draft' %}
                                 <a href="{{ path('cat_pur_del_receive', {'id': object.getID|default(0)}) }}" class="btn red">Receive</a>
                             {% endif %}
                             <a href="{{ path('cat_pur_po_edit_form', {'id': object.getPurchaseOrder.getID}) }}" class="btn default">Cancel</a>
@@ -232,16 +237,28 @@ $(document).ready(function() {
         });
     });
 
-    $('.table-responsive').on("change",".delivery_qty", function(e){
+    function count_delivered(body){
         var qty = 0;
-       
-        var body = $(this).parents('tbody');
-        var prod_parent = body.find('.prod_parent');
-       
         var deliveries = body.find('.delivery_qty');
         deliveries.each(function(e){
             qty+= parseInt($(this).val());
         });
+        return qty;
+    }
+    
+    $('.prod_parent_body').each(function(){
+        var body = $(this);
+        var prod_parent = body.find('.prod_parent');
+        var qty = count_delivered(body);
+        
+        var delivered_qty = prod_parent.find('.delivered_qty');
+        delivered_qty.empty().html(qty);
+    });
+    
+    $('.table-responsive').on("change",".delivery_qty", function(e){
+        var body = $(this).parents('tbody');
+        var prod_parent = body.find('.prod_parent');
+        var qty = count_delivered(body);
         
         var delivered_qty = prod_parent.find('.delivered_qty');
         delivered_qty.empty().html(qty);

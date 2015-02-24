@@ -111,3 +111,7 @@ th{
 .page-sidebar .page-sidebar-menu > li .sub-menu {
   background-color: #3E5316 !important;
 }
+
+.price {
+    text-align: right;
+}

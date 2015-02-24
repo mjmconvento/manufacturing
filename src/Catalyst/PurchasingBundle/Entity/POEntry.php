@@ -9,6 +9,7 @@ use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasQuantity;
 use Catalyst\CoreBundle\Template\Entity\HasProduct;
 use Catalyst\CoreBundle\Template\Entity\HasPrice;
+use Catalyst\PurchasingBundle\Entity\PODelivery;
 use DateTime;
 
 /**
@@ -47,6 +48,23 @@ class POEntry
     public function getPurchaseOrder()
     {
         return $this->purchase_order;
+    }
+    
+    public function getDeliveredQuantity()
+    {
+        $deliveries = $this->getPurchaseOrder()->getDeliveries();
+        $qty = 0;
+        foreach($deliveries as $delivery){
+            
+            if($delivery->getStatus() == PODelivery::STATUS_RECEIVED){
+                foreach($delivery->getEntries() as $delivery_entry){
+                    if($delivery_entry->getProduct()->getRootProduct() === $this->getProduct()){
+                        $qty += $delivery_entry->getQuantity();
+                    } 
+                }
+            }
+        }
+        return $qty;
     }
 
     public function toData()
