@@ -120,30 +120,13 @@ class ProductController extends Controller
         }
         
         $o->setName($data['name']);
+        $o->setFlagPerishable($data['flag_perishable']);
 
         // unit of measure
         if (!empty($data['uom']))
             $o->setUnitOfMeasure($data['uom']);
         else
             $o->setUnitOfMeasure('');
-
-        // service
-        // if (isset($data['flag_service']) && $data['flag_service'] == 1)
-        //     $o->setFlagService();
-        // else
-        //     $o->setFlagService(false);
-
-        // can sell
-        // if (isset($data['flag_sale']) && $data['flag_sale'] == 1)
-        //     $o->setFlagSale();
-        // else
-        //     $o->setFlagSale(false);
-
-        // can purchase
-        // if (isset($data['flag_purchase']) && $data['flag_purchase'] == 1)
-        //     $o->setFlagPurchase();
-        // else
-        //     $o->setFlagPurchase(false);
 
         // prices
         $o->setPriceSale($data['price_sale']);
@@ -195,36 +178,6 @@ class ProductController extends Controller
             $o->setSKU($o->getProductGroup()->getCode() . "-" . str_pad($o->getID(),10,"0",STR_PAD_LEFT));            
             $em->flush();
         }
-        /*
-        // clear service tasks
-        $tasks = $o->getTasks();
-        foreach ($tasks as $task)
-            $em->remove($task);
-        $o->clearTasks();
-
-        // service tasks
-        if ($o->isService())
-        {
-            if (isset($data['en_name']))
-            {
-                foreach ($data['en_name'] as $index => $name)
-                {
-                    // fields
-                    $sell_price = $data['en_sell_price'][$index];
-                    $cost_price = $data['en_cost_price'][$index];
-
-                    // instantiate
-                    $task = new ServiceTask();
-                    $task->setName($name)
-                        ->setSellPrice($sell_price)
-                        ->setCostPrice($cost_price);
-
-                    // add task
-                    $o->addTask($task);
-                }
-            }
-        }
-        */
     }
 
     protected function buildData($o)

@@ -11,6 +11,16 @@
 {{ f.group_text_readonly('Update User','user_update',object.getUserUpdate,3,4)}}
 {{ f.group_text_readonly('Update Date','date_update',object.getDateUpdate|date(),3,4)}}
 
+ <div class="form-group">
+    <label class="col-md-3 control-label">Characteristics</label>
+    <div class="col-md-4">
+        <div class="checkbox-list">
+            <div>
+            {{ f.checkbox('flag_perishable', 1, 'Is Perishable?', object.isPerishable, 'chars', readonly) }}
+            </div>
+        </div>
+    </div>
+</div>
 
 {% set view_sell_price = app.user.hasAccess(prefix ~ '.view_sell_price') %}
 {% set view_cost_price = app.user.hasAccess(prefix ~ '.view_cost_price') %}
