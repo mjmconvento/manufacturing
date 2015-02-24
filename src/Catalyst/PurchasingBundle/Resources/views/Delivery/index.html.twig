@@ -46,13 +46,13 @@
                         </div>
 
                         <div class="row table-responsive" style="padding-top:10px">
-                            <div class="col-md-11">
+                            <div class="col-md-12">
                                 <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
                                     <thead>
                                         <tr>
                                             <th>Date Delivered</th>
                                             <th>Code</th>
-                                            <th style="width: 50px"></th>
+                                            <th style="width: 150px"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="en_table">
@@ -60,7 +60,14 @@
                                         <tr>
                                             <td>{{ del.getDateDeliver|date('m/d/Y') }}</td>
                                             <td>{{ del.getCode }}</td>
-                                            <td><a href="#" class="btn default btn-edit red-sunglo"><i class="fa fa-minus-circle"></i></a></td>
+                                            <td>
+                                                {% if app.user.hasAccess(prefix ~ '.view') %}
+                                                <a href="{{ path('cat_pur_del_edit_form', { 'id': del.getID }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> Edit</a>
+                                                {% endif %}
+                                                {% if app.user.hasAccess(prefix ~ '.delete') %}
+                                                <a href="{{ path('cat_pur_del_delete', { 'id': del.getID }) }}" class="btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Delete</a>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     {% if object.getDeliveries|length == 0 %}

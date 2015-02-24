@@ -153,6 +153,7 @@ class ProductController extends CrudController
         // prices
         $o->setPriceSale($data['price_sale']);
         $o->setPricePurchase($data['price_purchase']);
+        $o->setFlagPerishable($data['flag_perishable']);
 
 
         // threshold values

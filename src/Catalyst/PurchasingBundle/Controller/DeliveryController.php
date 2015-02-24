@@ -71,17 +71,21 @@ class DeliveryController extends CrudController
             $po = $pur->getPurchaseOrder($po_id);
             $object->setPurchaseOrder($po);
         }
+        if($object == null){
+            $params['is_new'] = true;
+        }else {
+             $params['is_new'] = false;
+        }
     }
 
     protected function update($delivery, $data, $is_new = true)
     {
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
-        
+        $pur = $this->get('catalyst_purchasing');
         $po_id = $this->getRequest()->get('po_id');
         if($po_id != '')
         {
-            $pur = $this->get('catalyst_purchasing');
             $po = $pur->getPurchaseOrder($po_id);
             $delivery->setPurchaseOrder($po);
         }
@@ -92,31 +96,33 @@ class DeliveryController extends CrudController
             $this->updateTrackCreate($delivery, $data, $is_new);
             $delivery->setCode('');
             // clear all entries
-            foreach ($delivery->getEntries() as $ent)
-                $em->remove($ent);
-            $delivery->clearEntries();
+            $pur->clearDeliveryEntries($delivery);
 
             // add entries
             foreach ($data['delivery_qty'] as $prod_id => $items)
             {
                 $parentProd = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
                 foreach($items as $index => $item){
-                    $expiry =  $data['delivery_expiry'][$prod_id][$index];
+                    $expiry = '';
+                    if(isset($data['delivery_expiry'][$prod_id][$index])){
+                        $expiry =  $data['delivery_expiry'][$prod_id][$index];
+                    }
                     $qty = $item;
                     
                     if($expiry != ''){
                         $variant = $parentProd->getVariantsByAttribute('expiry', $expiry);
                         if(count($variant) > 0){
+                            //Variant found
                             $prodDelivery = $variant[0];
                         }else {
-                            $attribute = new ProductAttribute();
-                            $attribute->setName('expiry');
-                            $attribute->setValue($expiry);
-                            $prodDelivery = $inv->newVariant($parentProd,$attribute);
+                            // New Variant
+                            $prodDelivery = $pur->newProductWithExpiry($parentProd, $expiry);
                         }
                     }else {
+                        // No Variant
                         $prodDelivery = $parentProd;
                     }
+                    
                     $em->persist($prodDelivery);
                     $em->flush();
                     

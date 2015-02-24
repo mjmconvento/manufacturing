@@ -38,6 +38,9 @@ class Product
     /** @ORM\Column(type="boolean") */
     protected $flag_purchase;
 
+     /** @ORM\Column(type="boolean") */
+    protected $flag_perishable;
+    
     /** @ORM\Column(type="decimal", precision=13, scale=2) */
     protected $price_sale;
 
@@ -99,6 +102,7 @@ class Product
         $this->flag_service = false;
         $this->flag_sale = false;
         $this->flag_purchase = false;
+        $this->flag_perishable = false;
 
         $this->parent = null;
         $this->variants = new ArrayCollection();
@@ -138,6 +142,12 @@ class Product
     public function setFlagPurchase($flag = true)
     {
         $this->flag_purchase = $flag;
+        return $this;
+    }
+    
+    public function setFlagPerishable($flag = true)
+    {
+        $this->flag_perishable = $flag;
         return $this;
     }
 
@@ -213,6 +223,11 @@ class Product
     public function isService()
     {
         return $this->flag_service;
+    }
+    
+    public function isPerishable()
+    {
+        return $this->flag_perishable;
     }
 
     public function canSell()

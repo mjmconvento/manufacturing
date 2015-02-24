@@ -12,7 +12,7 @@ trait HasPrice
     public function setPrice($price)
     {
         if(is_numeric($price)){
-            $this->$price = $price;
+            $this->price = $price;
         }else {
             throw new ValidationException('Invalid value for price');
         }

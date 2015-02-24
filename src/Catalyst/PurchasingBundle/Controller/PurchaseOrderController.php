@@ -189,7 +189,6 @@ class PurchaseOrderController extends CrudController
 //        foreach($po->getEntries() as $e){
 //            print_r($e->getProduct());
 //        }
-        $po->toData();
         return $params;
     }
 

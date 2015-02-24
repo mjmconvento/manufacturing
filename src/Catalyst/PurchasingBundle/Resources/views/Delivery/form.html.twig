@@ -50,20 +50,36 @@
                                     {% for ent in object.getPurchaseOrder.getEntries %}
                                     <tbody data-id="{{ent.getProduct.getID}}" class="prod_parent_body" >
                                         <tr class="prod_parent">
-                                            <td>{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }}</td>
+                                            <td>{{ ent.getProduct.getSku }} - {{ ent.getProduct.getName }} ({{ent.getProduct.getUnitOfMeasure}})</td>
                                             <td align="right" >{{ ent.getQuantity }}</td>
                                             <td align="right">{{ ent.getQuantity }}</td>
-                                            <td align="right"><span class="delivered_qty">0.00</span></td>
+                                            <td align="right">
+                                                <span class="delivered_qty">0.00</span>
+                                            </td>
                                             <td style="width: 10%"  align="right">
-                                                <a href="javascript: void(0)" class="add-field"><i class="glyphicon glyphicon-plus"></i>
+                                                {% if ent.getProduct.isPerishable %}
+                                                    <a href="javascript: void(0)" class="add-field"><i class="glyphicon glyphicon-plus"></i>
+                                                {% endif %}
                                             </td>
                                         </tr>
+                                        {% if object.getID == null %}
+                                        <tr>
+                                            <td align="right">Exp Date: </td><td><input type="date" value="" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
+                                                                                        {{ ent.getProduct.isPerishable?'':'disabled' }} ></td>
+                                            <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" value="{{delivery.getQuantity|default('0.00') }}" min="0"></td>
+                                            <td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td>
+                                        </tr>
+                                        {% endif %}
                                         {% for delivery in object.getEntries %}
                                         {% if delivery.getProduct.getRootProduct.getID == ent.getProduct.getID  %}
                                             <tr>
-                                                <td align="right">Exp Date: </td><td><input type="date" value="{{ delivery.getExpiry }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry"></td>
+                                                <td align="right">Exp Date: </td><td><input type="date" value="{{  ent.getProduct.isPerishable?delivery.getExpiry|date('m/d/Y'):'' }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
+                                                                                            {{ ent.getProduct.isPerishable?'':'disabled' }} ></td>
                                                 <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" value="{{delivery.getQuantity|default('0.00') }}" min="0"></td>
-                                                <td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td>
+                                                <td>
+                                                    {% if ent.getProduct.isPerishable %}
+                                                        <a href="#" class="remove_field"><i class="icon-close font-red"></i></a>
+                                                    {% endif %}</td>
                                             <tr>
                                         {% endif %}
                                         {% endfor %}
@@ -80,7 +96,9 @@
                     <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Save</button>
-                            <a href="{{ path('cat_pur_del_receive', {'id': object.getID}) }}" class="btn red">Receive</a>
+                            {% if object.getID != null  %}
+                                <a href="{{ path('cat_pur_del_receive', {'id': object.getID|default(0)}) }}" class="btn red">Receive</a>
+                            {% endif %}
                             <a href="{{ path('cat_pur_po_edit_form', {'id': object.getPurchaseOrder.getID}) }}" class="btn default">Cancel</a>
                         </div>
                     </div>

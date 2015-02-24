@@ -100,9 +100,25 @@ class InventoryManager
 
         return $pg_opts;
     }
-
+    
+    public function getProductVariantsOption($product){
+        $products = $product->getVariants();
+        $prod_opts = array();
+        foreach ($products as $prod)
+            if($prod->getSku() == "")
+            {
+                $prod_opts[$prod->getID()] = $prod->getName();
+            }
+            else
+            {
+                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
+            }
+        return $prod_opts;
+    }
+    
     public function getProductOptions($filter = array())
     {
+        $filter = array_merge($filter, array('parent'=> null));
         $products = $this->em
             ->getRepository('CatalystInventoryBundle:Product')
             ->findBy(
@@ -183,8 +199,7 @@ class InventoryManager
     {
         $new = clone $parent;
         $new->addVariantAttribute($attribute);
-        $code = str_replace('/','',$attribute->getValue());
-        $new->setSku($parent->getSKU().$code);
+        $new->setSku($parent->getSKU().'-'.$attribute->getValue());
         $attribute->setProduct($new);
         $parent->addVariant($new);
         
@@ -220,5 +235,33 @@ class InventoryManager
         
         return [$entryCredit, $entryDebit];
     }
+    
+    public function getWarehouseStock($warehouse){
+        $stock = $this->em->getRepository('CatalystInventoryBundle:InventoryStock')
+                ->findByWarehouse($warehouse);
+        
+        return $stock;
+    }
+    
+    public function getStock( $warehouse, $product){
+        $stock = $this->em->getRepository('CatalystInventoryBundle:InventoryStock')
+                ->findOneBy(array('product' => $product,
+                            'warehouse' => $warehouse));
+
+        if($product->getVariants() == null){
+            if($stock == null || empty($stock)){
+                return 0;
+            }else {
+                    return $stock->getQuantity();
+            }
+        }else {
+            $qty = $stock->getQuantity();
+            foreach ($product->getVariants() as $variant){
+                $qty += $this->getStock($warehouse, $variant);
+            }
+            return $qty;
+        }
+    }
+    
     
 }

@@ -20,7 +20,7 @@ class PODeliveryEntry
     use HasProduct;
     /**
      * @ORM\ManyToOne(targetEntity="PODelivery")
-     * @ORM\JoinColumn(name="podel_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="podel_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $delivery;
 
@@ -43,7 +43,8 @@ class PODeliveryEntry
     
     public function getExpiry()
     {
-        return $this->product->getAttributeValue('expiry');
+        $date = new DateTime($this->product->getAttributeValue('expiry'));
+        return $date;
     }
 
     public function toData()

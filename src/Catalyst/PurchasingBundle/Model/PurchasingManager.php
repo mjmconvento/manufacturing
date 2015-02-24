@@ -7,6 +7,9 @@ use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
 use Catalyst\PurchasingBundle\Entity\POEntry;
 use Catalyst\PurchasingBundle\Entity\PurchaseRequest;
 use Catalyst\PurchasingBundle\Entity\PREntry;
+use Catalyst\InventoryBundle\Entity\Product;
+use Catalyst\InventoryBundle\Entity\ProductAttribute;
+use Catalyst\InventoryBundle\Model\InventoryManager;
 use DateTime;
 
 use Doctrine\ORM\EntityManager;
@@ -108,5 +111,44 @@ class PurchasingManager
         $this->em->flush();
     }
     
+    public function newProductWithExpiry($parentProd, $expiry){
+        $inv = new InventoryManager($this->em);
+        $attribute = new ProductAttribute();
+        $exp = new DateTime($expiry);
+        
+        $attribute->setName('expiry');
+        $attribute->setValue($expiry);
+        
+        return $inv->newVariant($parentProd,$attribute);
+    }
+    
+    public function clearDeliveryEntries($delivery){
+        foreach ($delivery->getEntries() as $ent){
+              $this->em->remove($ent);
+        }
+        $delivery->clearEntries();
+    }
+    
 
+     public function getQuantity($delivery, $product){
+         
+        $delivery->getEntries();
+        $stock = $this->em->getRepository('CatalystInventoryBundle:Delivery')
+                ->findOneBy(array('product' => $product,
+                            'warehouse' => $warehouse));
+
+        if($product->getVariants() == null){
+            if($stock == null || empty($stock)){
+                return 0;
+            }else {
+                    return $stock->getQuantity();
+            }
+        }else {
+            $qty = $stock->getQuantity();
+            foreach ($product->getVariants() as $variant){
+                $qty += $this->getStock($warehouse, $variant);
+            }
+            return $qty;
+        }
+    }
 }
