@@ -175,7 +175,7 @@ class ProductController extends Controller
             $em->persist($o);
             $em->flush();
 
-            $o->setSKU($o->getProductGroup()->getCode() . "-" . str_pad($o->getID(),10,"0",STR_PAD_LEFT));            
+            $o->setSKU($o->getProductGroup()->getCode() . "-" . str_pad($o->getID(),7,"0",STR_PAD_LEFT));            
             $em->flush();
         }
     }
