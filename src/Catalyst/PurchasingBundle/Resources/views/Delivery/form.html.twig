@@ -8,6 +8,7 @@
 <div class="row">
     <div class="col-md-12" style="padding-bottom: 10px">
         <a href="{{ path('cat_pur_del_index', {'id': object.getPurchaseOrder.getID}) }}" class="btn green">Back to Purchase Order Deliveries</a>
+        
     </div>
 </div>
 <div class="row">
@@ -27,7 +28,7 @@
 
                         <h4 class="form-section">Delivery Information</h4>
 
-                        {{ form.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3)}}
+                        {{ form.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3,readonly)}}
                         {{ form.group_text('Delivery Code','code',object.getCode,3,3,true)}}
                         {{ form.group_text('Supplier DR Code','external_code',object.getExternalCode,3,3,readonly)}}
                         {{ form.group_text('Status','status',object.getStatus,3,3,true)}}
@@ -101,6 +102,9 @@
                     <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Save</button>
+                            {% if object.getStatus == 'Received' %}
+                                <a data-toggle="modal" href="#print_tag" class="btn green">Print Tags</a>
+                            {% endif %}
                             {% if object.getID != null and object.getStatus == 'Draft' %}
                                 <a href="{{ path('cat_pur_del_receive', {'id': object.getID|default(0)}) }}" class="btn red">Receive</a>
                             {% endif %}
@@ -114,30 +118,31 @@
     </div>
 </div>
 
+<div id="print_tag" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Print Tags</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal form">
+                    <div class="form-body">
+                        By SKU
+                        By Item
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn default">Close</button>
+                <button id="btn_en_submit" type="button" class="btn green">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
-
 {% block js %}
-<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
-
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-
-
-
 <script>
-function escape_attr(s) {
-    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function escape_html(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
 
 function update_totals() {
     var total_qty = 0.00;
@@ -278,6 +283,4 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block css %}
-<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
 {% endblock %}

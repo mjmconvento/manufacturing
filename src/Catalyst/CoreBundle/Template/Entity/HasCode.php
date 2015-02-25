@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait HasCode
 {
-    /** @ORM\Column(type="string", length=80) */
+    /** @ORM\Column(type="string", length=80, nullable=true) */
     protected $code;
 
     public function setCode($code)

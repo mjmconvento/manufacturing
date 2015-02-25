@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait HasName
 {
-    /** @ORM\Column(type="string", length=80) */
+    /** @ORM\Column(type="string", length=80, nullable=true) */
     protected $name;
 
     public function setName($name)

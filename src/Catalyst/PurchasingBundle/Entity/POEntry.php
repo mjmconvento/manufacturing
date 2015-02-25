@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasQuantity;
-use Catalyst\CoreBundle\Template\Entity\HasProduct;
+use Catalyst\InventoryBundle\Template\Entity\HasProduct;
 use Catalyst\CoreBundle\Template\Entity\HasPrice;
 use Catalyst\PurchasingBundle\Entity\PODelivery;
 use DateTime;

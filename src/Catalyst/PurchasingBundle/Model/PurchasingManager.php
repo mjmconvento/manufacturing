@@ -141,7 +141,7 @@ class PurchasingManager
             if($stock == null || empty($stock)){
                 return 0;
             }else {
-                    return $stock->getQuantity();
+                return $stock->getQuantity();
             }
         }else {
             $qty = $stock->getQuantity();
@@ -150,6 +150,26 @@ class PurchasingManager
             }
             return $qty;
         }
+    }
+    
+    
+    //Create or find a product with the variant or return the parent if there is no variant
+    public function findProductWithExpiry($parentProd, $expiry){
+        if($expiry != ''){
+            $variant = $parentProd->getVariantsByAttribute('expiry', $expiry);
+            if(count($variant) > 0){
+                //Variant found
+                $prodDelivery = $variant[0];
+            }else {
+                // New Variant
+                $prodDelivery = $this->newProductWithExpiry($parentProd, $expiry);
+            }
+        }else {
+            // No Variant
+            $prodDelivery = $parentProd;
+        }
+        
+        return $prodDelivery;
     }
     
 }

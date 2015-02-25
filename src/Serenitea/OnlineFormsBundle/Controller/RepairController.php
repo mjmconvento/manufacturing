@@ -3,6 +3,7 @@
 namespace Serenitea\OnlineFormsBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
+use Serenitea\OnlineFormsBundle\Entity\Repair;
 use DateTime;
 
 class RepairController extends CrudController
@@ -21,71 +22,50 @@ class RepairController extends CrudController
         $grid = $this->get('catalyst_grid');
 
         return array(
-            $grid->newColumn('Job Order No.','',''),
-            $grid->newColumn('Date Created','',''),
-            $grid->newColumn('Created By','',''),
-            $grid->newColumn('Status','',''),
+            $grid->newColumn('Job Order No.','getCode','code'),
+            $grid->newColumn('Date Created','getDateCreateFormatted','date_create'),
+            $grid->newColumn('Created By','getName','name','u'),
+            $grid->newColumn('Status','getStatus','status'),
         );
     }
     
- 
-    // public function indexAction()
-    // {
-    //     $this->title = 'Job Order Forms';
-    //     $params = $this->getViewParams('', 'serenitea_repair_index');
-        
-    //     $this->csv = 'serenitea_repair_csv';
-        
-    //     $params['csv'] = $this->csv;
-        
-    //     return $this->render('SereniteaOnlineFormsBundle:Repair:index.html.twig', $params);
-    // }
-
-    public function headers()
+    protected function padFormParams(&$params, $object = null)
     {
-        // csv headers
-        $headers = [
-            'Job Order #',
-            'Date Created',            
-            'Created By',            
-        ];
-        return $headers;
+        $object->setWarehouse($this->getUser()->getWarehouse());
+    
+        $params['status_opts'] = array('Draft'=>'Draft',
+                                    'Sent'=>'Sent');
     }
     
-    public function csvAction(){
-
-        // filename generate
-        $date = new DateTime();
-        $filename = $date->format('Ymdis') . '.csv';
-
-        // redirect file to stdout, store in output buffer and place in $csv
-        $file = fopen('php://output', 'w');
-        ob_start();
-
-        $csv_headers = $this->headers();
-
-        fputcsv($file, $csv_headers);
-
-        fclose($file);
-
-
-        // csv header
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
-
-        return $response;
-    }      
+    
+    protected function getGridJoins()
+    {
+        $grid = $this->get('catalyst_grid');
+        return array(
+            $grid->newJoin('u', 'user_create', 'getUserCreate'),
+        );
+    }
+ 
 
     protected function getObjectLabel($obj) 
     {
-        
+        return $obj->getCode();
     }
 
     protected function newBaseClass() 
     {
-        
+        return new Repair();
     }
     
+    protected function hookPostSave($obj,$is_new = false) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->generateCode();
+            $em->persist($obj);
+            $em->flush();
+        }
+       
+    }
 
 }
