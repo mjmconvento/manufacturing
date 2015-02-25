@@ -18,7 +18,7 @@ class RepairEntry
     use HasNotes;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Pullout")
+     * @ORM\ManyToOne(targetEntity="Repair")
      * @ORM\JoinColumn(name="repair_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $repair;

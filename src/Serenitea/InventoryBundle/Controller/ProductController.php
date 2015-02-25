@@ -82,7 +82,7 @@ class ProductController extends Controller
         $supps = $em->getRepository('CatalystPurchasingBundle:Supplier')->findAll();
         $supp_opts = array();
         foreach ($supps as $supp)
-            $supp_opts[$supp->getID()] = $supp->getDisplayName();
+            $supp_opts[$supp->getID()] = $supp->getName();
 
         $params['supp_opts'] = $supp_opts;
 
