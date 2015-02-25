@@ -1,26 +1,47 @@
 ser_pullout_index:
     path:     /pullout
     methods: [GET]
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:index }
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:index }
 
 ser_pullout_grid:
-    path:    /grid
+    path:    /pullout/grid
     methods: [GET]
-    defaults: { _controller:SereniteaOnlineFormsBundle:PullOut:grid }
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:grid }
 
 ser_pullout_add_form:
     path:     /pullout/form
     methods: [GET]
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:addForm }
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:addForm }
+
+ser_pullout_add_submit:
+    path:     /pullout/form
+    methods: [POST]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:addSubmit }
+
+ser_pullout_edit_form:
+    path:     /pullout/form/{id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:editForm }
+
+ser_pullout_edit_submit:
+    path:     /pullout/form/{id}
+    methods: [POST]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:editSubmit }
+
+ser_pullout_delete:
+    path:     /pullout/form/{id}/delete
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:delete }
+
 
 serenitea_pullout_csv:
     path: /pullout/csv
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:csv }
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:csv }
 
 serenitea_pullout_view:
     path:     /pullout/preview
     methods: [GET]
-    defaults: { _controller: SereniteaOnlineFormsBundle:PullOut:view }
+    defaults: { _controller: SereniteaOnlineFormsBundle:Pullout:view }
 
 
 ser_repair_index:
@@ -33,8 +54,37 @@ ser_repair_add_form:
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addForm }
 
+
+ser_repair_add_form:
+    path:     /pullout/form
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addForm }
+
+ser_repair_add_submit:
+    path:     /pullout/form
+    methods: [POST]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addSubmit }
+
+ser_repair_edit_form:
+    path:     /pullout/form/{id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:editForm }
+
+ser_repair_edit_submit:
+    path:     /pullout/form/{id}
+    methods: [POST]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:editSubmit }
+
+ser_repair_delete:
+    path:     /pullout/form/{id}/delete
+    methods: [GET]
+    defaults: { _controller: SereniteaOnlineFormsBundle:Repair:delete }
+
+
+
+
 ser_repair_grid:
-    path:    /grid
+    path:    /repair/grid
     methods: [GET]
     defaults: { _controller:SereniteaOnlineFormsBundle:Repair:grid }
 

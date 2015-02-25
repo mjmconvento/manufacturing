@@ -3,6 +3,10 @@
 namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\InventoryBundle\Template\Entity\HasProduct;
+use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -11,12 +15,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Entry
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use HasGeneratedID;
+    use HasWarehouse;
+    use HasProduct;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
@@ -34,17 +35,6 @@ class Entry
      */
     protected $transaction;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Warehouse")
-     * @ORM\JoinColumn(name="warehouse_id", referencedColumnName="id")
-     */
-    protected $warehouse;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     */
-    protected $product;
 
     public function __construct()
     {
@@ -70,23 +60,6 @@ class Entry
         return $this;
     }
 
-    public function setWarehouse(Warehouse $wh)
-    {
-        $this->warehouse = $wh;
-        return $this;
-    }
-
-    public function setProduct(Product $prod)
-    {
-        $this->product = $prod;
-        return $this;
-    }
-
-    public function getID()
-    {
-        return $this->id;
-    }
-
     public function getCredit()
     {
         return $this->credit;
@@ -102,26 +75,16 @@ class Entry
         return $this->transaction;
     }
 
-    public function getWarehouse()
-    {
-        return $this->warehouse;
-    }
-
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
     public function toData()
     {
         $data = new \stdClass();
 
-        $data->id = $this->id;
+        $this->dataHasGeneratedID($data);
+        $this->dataHasProduct($data);
+        $this->dataHasWarehouse($data);
         $data->credit = $this->credit;
         $data->debit = $this->debit;
         $data->transaction_id = $this->getTransaction()->getID();
-        $data->warehouse_id = $this->getWarehouse()->getID();
-        $data->product_id = $this->getProduct()->getID();
 
         return $data;
     }

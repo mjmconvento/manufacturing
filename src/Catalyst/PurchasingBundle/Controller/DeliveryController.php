@@ -91,10 +91,10 @@ class DeliveryController extends CrudController
         }
         $delivery->setDateDeliver(new DateTime($data['date_deliver']));
         $delivery->setExternalCode($data['external_code']);
+        $delivery->setCode($data['code']);
         if ($is_new)
         {
             $this->updateTrackCreate($delivery, $data, $is_new);
-            $delivery->setCode('');
             // clear all entries
             $pur->clearDeliveryEntries($delivery);
 
@@ -109,19 +109,7 @@ class DeliveryController extends CrudController
                     }
                     $qty = $item;
                     
-                    if($expiry != ''){
-                        $variant = $parentProd->getVariantsByAttribute('expiry', $expiry);
-                        if(count($variant) > 0){
-                            //Variant found
-                            $prodDelivery = $variant[0];
-                        }else {
-                            // New Variant
-                            $prodDelivery = $pur->newProductWithExpiry($parentProd, $expiry);
-                        }
-                    }else {
-                        // No Variant
-                        $prodDelivery = $parentProd;
-                    }
+                    $prodDelivery = $pur->findProductWithExpiry($parentProd,$expiry);
                     
                     $em->persist($prodDelivery);
                     $em->flush();

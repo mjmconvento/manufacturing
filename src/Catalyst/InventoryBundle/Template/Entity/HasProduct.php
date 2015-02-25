@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\CoreBundle\Template\Entity;
+namespace Catalyst\InventoryBundle\Template\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Catalyst\InventoryBundle\Entity\Product;
