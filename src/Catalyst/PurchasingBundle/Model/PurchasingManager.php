@@ -4,6 +4,8 @@ namespace Catalyst\PurchasingBundle\Model;
 
 use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
+use Serenitea\OrderBundle\Entity\RequestOrder;
+use Serenitea\OrderBundle\Entity\ROEntry;
 use Catalyst\PurchasingBundle\Entity\POEntry;
 use Catalyst\PurchasingBundle\Entity\PurchaseRequest;
 use Catalyst\PurchasingBundle\Entity\PREntry;
@@ -31,6 +33,14 @@ class PurchasingManager
     
     public function newPOEntry(){
         return new POEntry();
+    }
+
+    public function newRequestOrder(){
+        return new RequestOrder();
+    }
+
+    public function newROEntry(){
+        return new ROEntry();
     }
 
     public function getSupplierOptions($filter = array())
@@ -68,6 +78,14 @@ class PurchasingManager
             throw new ValidationException('Cannot find purchase order.');
         return $po;
     }
+
+    public function getRequestOrder($id)
+    {
+        $ro = $this->em->getRepository('SereniteaOrderBundle:RequestOrder')->find($id);
+        if($ro == null)
+            throw new  ValidationException("Cannot find request order.");
+        return $ro;         
+    }
    
     public function getDelivery($id)
     {
@@ -75,6 +93,14 @@ class PurchasingManager
         if ($po == null)
             throw new ValidationException('Cannot find delivery.');
         return $po;
+    }
+
+    public function getRequestDelivery($id)
+    {
+        $ro = $this->em->getRepository('SereniteaOrderBundle:RODelivery')->fing($id);
+        if($ro == null)
+            throw new ValidationException('cannot find delivery');
+        return $ro;
     }
     
     public function findPurchaseOrderOptions($filter)
