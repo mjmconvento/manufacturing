@@ -33,7 +33,6 @@ class PurchaseOrderController extends CrudController
 
         $params = $this->getViewParams('Add');
 
-        // $inv = $this->get('catalyst_inventory');
         $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($entry_id);
 
         $params['prod'] = array(
@@ -53,42 +52,6 @@ class PurchaseOrderController extends CrudController
         return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);
     }
 
-    public function addEntrySubmitAction()
-    {
-        $this->checkAccess($this->route_prefix . '.add');
-
-        $this->hookPreAction();
-        try
-        {
-            $em = $this->getDoctrine()->getManager();
-            $data = $this->getRequest()->request->all();
-
-            $obj = $this->newBaseClass();
-
-            $this->update($obj, $data, true);
-
-            $em->persist($obj);
-            $em->flush();
-
-            $odata = $obj->toData();
-            $this->logAdd($odata);
-
-            $this->addFlash('success', $this->title . ' added successfully.');
-
-            return $this->redirect($this->generateUrl($this->getRouteGen()->getList()));
-        }
-        catch (ValidationException $e)
-        {
-            $this->addFlash('error', $e->getMessage());
-            return $this->addError($obj);
-        }
-        catch (DBALException $e)
-        {
-            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
-            error_log($e->getMessage());
-            return $this->addError($obj);
-        }
-    }
 
     protected function newBaseClass()
     {
@@ -131,13 +94,14 @@ class PurchaseOrderController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
         $pur = $this->get('catalyst_purchasing');
+        $this->updateTrackCreate($o,$data,$is_new);
         
         $o->setDateIssue(new DateTime($data['date_issue']));
         $o->setDateNeeded(new DateTime($data['date_need']));
         $o->setReferenceCode($data['reference_code']);
         $o->setSupplier($pur->getSupplier($data['supplier_id']));
         $o->setStatus($data['status_id']);            
-        $this->updateTrackCreate($o,$data,$is_new);
+        
         // clear entries
         $ents = $o->getEntries();
         foreach ($ents as $ent)
@@ -186,9 +150,6 @@ class PurchaseOrderController extends CrudController
         );
         
         $params['prod_opts'] = $inv->getProductOptions();
-//        foreach($po->getEntries() as $e){
-//            print_r($e->getProduct());
-//        }
         return $params;
     }
 
@@ -235,7 +196,6 @@ class PurchaseOrderController extends CrudController
         $em = $this->getDoctrine()->getManager();
         if($is_new){
             $obj->generateCode();
-            $obj->setUserCreate($this->getUser());
             $em->persist($obj);
             $em->flush();
         }

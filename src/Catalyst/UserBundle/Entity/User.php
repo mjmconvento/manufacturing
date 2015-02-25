@@ -135,7 +135,6 @@ class User extends BaseUser
 
         $data = new stdClass();
         $data->id = $this->id;
-        $this->dataHasWarehouse($data);
         $data->username = $this->username;
         $data->email = $this->email;
         $data->enabled = $this->enabled;
