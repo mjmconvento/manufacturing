@@ -1,5 +1,5 @@
 config:
-    - category: "Inventory"
+    - category: "Order"
       entries:
         - id: catalyst_supplier_warehouse_default
           label: "Default Supplier Warehouse"

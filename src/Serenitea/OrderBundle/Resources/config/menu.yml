@@ -3,8 +3,8 @@ menu_items:
       acl: ser_order.menu
       label: Requisitions
       icon: fa-truck
-    - id: ser_request_index
-      acl: ser_request.menu
+    - id: ser_pur_pr_index
+      acl: ser_pur_pr.menu
       label: Requested Items
       parent: ser_order
     - id: ser_receive_index

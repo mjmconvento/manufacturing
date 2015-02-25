@@ -1,17 +1,123 @@
-ser_request_index:
-    pattern: /orders
+ser_pur_pr_index:
+    pattern: /prs
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:index }
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:index }
 
-ser_request_grid:
-    pattern: /grid
+ser_pur_pr_add_form:
+    pattern: /pr
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:grid }
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:addForm }
 
-ser_request_add_form:
-    pattern: /order
+ser_pur_pr_add_submit:
+    pattern: /pr
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:addSubmit }
+
+ser_pur_pr_add_entry:
+    pattern: /pr/add/{entry_id}
     methods: [GET]
-    defaults: { _controller: SereniteaOrderBundle:Request:addForm }
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:addEntry }
+
+ser_pur_pr_add_entry_submit:
+    pattern: /pr/add/{entry_id}
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:addEntrySubmit }
+
+ser_pur_pr_edit_form:
+    pattern: /pr/{id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:editForm }
+
+ser_pur_pr_edit_submit:
+    pattern: /pr/{id}
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:editSubmit }
+
+ser_pur_pr_delete:
+    pattern: /pr/{id}/delete
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:delete }
+
+ser_pur_pr_grid:
+    pattern: /prs/grid
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:grid }
+
+ser_pur_pr_ajax_get:
+    pattern: /ajax/pr/{id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:ajaxGet }
+
+ser_pur_pr_status_approve:
+    pattern: /pr/{id}/status/approve
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:statusApprove }
+
+ser_pur_pr_status_send:
+    pattern: /po/{id}/status/send
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:statusSend }
+
+ser_pur_pr_status_cancel:
+    pattern: /pr/{id}/status/cancel
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:statusCancel }
+
+ser_pur_pr_status_fulfill:
+    pattern: /po/{id}/status/fulfill
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:RequestOrder:statusFulfill }
+
+
+ser_pur_del_search:
+    pattern: /deliveries
+    methods: [GET]
+    defaults: { _controller: SereniteaBundle:Delivery:search }
+
+ser_pur_del_post:
+    pattern: /deliveries
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:search }
+
+ser_pur_del_index:
+    pattern: /pr/{id}/deliveries
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:index }
+
+ser_pur_del_post:
+    pattern: /deliveries
+    methods: [POST]
+    defaults: { _controller: SereniteaBundle:Delivery:search }
+
+ser_pur_del_add_form:
+    pattern: /pr/{req_id}/delivery
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:addForm }
+
+ser_pur_del_add_submit:
+    pattern: /pr/{req_id}/delivery
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:addSubmit }
+
+ser_pur_del_edit_form:
+    pattern: /delivery/{id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:editForm }
+
+ser_pur_del_edit_submit:
+    pattern: /delivery/{id}
+    methods: [POST]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:editSubmit }
+
+ser_pur_del_delete:
+    pattern: /delivery/{id}/delete
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:delete }
+
+ser_pur_del_check:
+    pattern: /pr/mj/mj/delivery/{var_id}
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Delivery:check }
 
 ser_receive_index:
     pattern: /incomplete
@@ -46,6 +152,11 @@ ser_rlist_index:
     path:     /requestlist
     methods: [GET]
     defaults: { _controller: SereniteaOrderBundle:Requested:index }
+
+ser_rlist_add_form:
+    path:     /add
+    methods: [GET]
+    defaults: { _controller: SereniteaOrderBundle:Requested:addForm }
 
 ser_rlist_grid:
     pattern: /grid
