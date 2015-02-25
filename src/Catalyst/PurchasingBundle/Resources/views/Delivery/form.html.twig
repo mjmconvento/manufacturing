@@ -24,7 +24,7 @@
                             
                         {{ form.group_text('Date Issued','date_isse',object.getPurchaseOrder.getDateIssue|date('m/d/Y'),3,3,true)}}
                         {{ form.group_text('Code','code',object.getPurchaseOrder.getCode,3,3,true)}}
-                        {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getDisplayName,3,5,true)}}
+                        {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getName,3,5,true)}}
 
                         <h4 class="form-section">Delivery Information</h4>
 

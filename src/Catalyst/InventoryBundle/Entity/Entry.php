@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\InventoryBundle\Template\Entity\HasProduct;
-use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
+use Catalyst\InventoryBundle\Template\Entity\HasAccount;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Entry
 {
     use HasGeneratedID;
-    use HasWarehouse;
+    use HasAccount;
     use HasProduct;
 
     /**
@@ -81,7 +81,7 @@ class Entry
 
         $this->dataHasGeneratedID($data);
         $this->dataHasProduct($data);
-        $this->dataHasWarehouse($data);
+        $this->dataHasAccount($data);
         $data->credit = $this->credit;
         $data->debit = $this->debit;
         $data->transaction_id = $this->getTransaction()->getID();

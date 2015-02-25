@@ -7,6 +7,7 @@ use Catalyst\InventoryBundle\Entity\ProductAttribute;
 use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
+use Catalyst\InventoryBundle\Entity\Account;
 use Catalyst\ConfigurationBundle\Model\ConfigurationManager;
 use Doctrine\ORM\EntityManager;
 
@@ -68,7 +69,7 @@ class InventoryManager
     {
         return $this->em->getRepository('CatalystInventoryBundle:Product')->find($id);
     }
-
+    
     public function getWarehouseOptions($filter = array())
     {
         $whs = $this->em
@@ -143,18 +144,18 @@ class InventoryManager
     {
         // TODO: db row locking
 
-        $wh = $entry->getWarehouse();
+        $account = $entry->getAccount();
         $prod = $entry->getProduct();
 
         $qty = bcsub($entry->getDebit(), $entry->getCredit(), 2);
 
         // get stock
         $stock_repo = $this->em->getRepository('CatalystInventoryBundle:Stock');
-        $stock = $stock_repo->findOneBy(array('warehouse' => $wh, 'product' => $prod));
+        $stock = $stock_repo->findOneBy(array('account' => $account, 'product' => $prod));
         if ($stock == null)
         {
             $stock = new Stock();
-            $stock->setWarehouse($wh)
+            $stock->setAccount($account)
                 ->setProduct($prod)
                 ->setQuantity($qty);
 
@@ -201,9 +202,7 @@ class InventoryManager
         $new->addVariantAttribute($attribute);
         
         // TODO  This part should be moved somewhere else
-        $value = str_replace('/', '', $attribute->getValue());
-        
-        $new->setSku($parent->getSKU().'-'.$value);
+        $new->generateSku();
         $attribute->setProduct($new);
         $parent->addVariant($new);
         
@@ -214,13 +213,12 @@ class InventoryManager
         return $new;
     }
     
-    public function itemsIn($product, $quantity){
+    public function itemsIn($product, $quantity,$supplier){
         $conf = new ConfigurationManager($this->container);
-        $main_wh = $this->findWarehouse($conf->get('catalyst_warehouse_main'));
-        $supplier_wh = $this->findWarehouse($conf->get('catalyst_warehouse_supplier_default'));
+        $to = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getAccount();
+        $from = $supplier->getAccount();
         
-        return $this->itemTransfer($product, $quantity, $supplier_wh, $main_wh);
-        
+        return $this->itemTransfer($product, $quantity, $from, $to);
     }
     
     public function itemTransfer($product,$quantity,$from,$to){
@@ -228,12 +226,12 @@ class InventoryManager
         $entryCredit = $this->newEntry();
         
         $entryCredit->setProduct($product)
-                    ->setWarehouse($from)
+                    ->setAccount($from)
                     ->setCredit($quantity)
                     ->setDebit(0);
         
         $entryDebit->setProduct($product)
-                    ->setWarehouse($to)
+                    ->setAccount($to)
                     ->setDebit($quantity)
                     ->setCredit(0);
         

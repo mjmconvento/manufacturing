@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\TemplateBundle\DataFixtures\ORM;
+namespace Catalyst\TemplateBundle\DataFixtures\ORM\Test;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -24,14 +24,21 @@ class LoadProducts implements FixtureInterface
             $brand = array_rand($brands, 1);
             $group = array_rand($groups, 1);
             $product->setName($name)
-                    ->setSKU(strtoupper(substr($name,0,3)).rand(100,999))
+                    ->setSku('')
                     ->setStockMin(5)
                     ->setStockMax(10)
                     ->setUnitOfMeasure('pcs')
                     ->setBrand($brands[$brand])
                     ->setProductGroup($groups[$group]);
+            
+            
             $em->persist($product);
+            $em->flush();
+            $product->generateSku();
+            $em->persist($product);
+            $em->flush();
         }
+        
         $em->flush();
     }
     

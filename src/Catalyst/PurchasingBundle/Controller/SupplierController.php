@@ -7,12 +7,14 @@ use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\ValidationException;
 
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\InventoryBundle\Template\Controller\HasAccount;
 use Catalyst\ContactBundle\Template\Controller\HasContactInfo;
 
 class SupplierController extends CrudController
 {
     use TrackCreate;
     use HasContactInfo;
+    use HasAccount;
 
     public function __construct()
     {
@@ -40,7 +42,7 @@ class SupplierController extends CrudController
     {
         $grid = $this->get('catalyst_grid');
         return array(
-            $grid->newColumn('Name', 'getDisplayName', 'last_name'),
+            $grid->newColumn('Name', 'getName', 'last_name'),
             $grid->newColumn('Email', 'getEmail', 'email'),
         );
     }
@@ -59,6 +61,7 @@ class SupplierController extends CrudController
     {
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateContact($o, $data, $is_new);
+        $this->updateHasAccount($o, $data, $is_new);
     }
     
     protected function buildData($o)

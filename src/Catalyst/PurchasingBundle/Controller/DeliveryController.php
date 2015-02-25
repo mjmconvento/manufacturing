@@ -155,7 +155,7 @@ class DeliveryController extends CrudController
         $trans->setUserCreate($this->getUser());
 
         foreach ($delivery->getEntries() as $entry){
-            $entries = $inv->itemsIn($entry->getProduct(),$entry->getQuantity());
+            $entries = $inv->itemsIn($entry->getProduct(),$entry->getQuantity(),$delivery->getPurchaseOrder()->getSupplier());
         
             foreach ($entries as $ientry){
                 $trans->addEntry($ientry);

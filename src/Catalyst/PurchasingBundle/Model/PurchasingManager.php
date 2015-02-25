@@ -44,7 +44,7 @@ class PurchasingManager
 
         $pg_opts = array();
         foreach ($pgs as $pg)
-            $pg_opts[$pg->getID()] = $pg->getDisplayName();
+            $pg_opts[$pg->getID()] = $pg->getName();
 
         return $pg_opts;
     }

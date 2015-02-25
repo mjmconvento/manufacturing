@@ -320,6 +320,29 @@ class Product
         return null;
     }
     
+    public function isVariant(){
+        if($this->parent == null){
+            return false;
+        }
+        return true;
+    }
+    
+    // Generate SKU depending on the variants
+    public function generateSku()
+    {
+        if(!$this->isVariant()){
+            $sku = $this->prodgroup->getCode() . "-" . str_pad($this->id,7,"0",STR_PAD_LEFT);            
+        }else {
+            $sku = $this->sku;
+            
+            foreach($this->attributes as $attribute){
+                $value = str_replace('/', '', $attribute->getValue());
+                $sku .= '-'.$value;
+            }
+        }
+        $this->setSKU($sku);
+    }
+    
     public function getVariantsByAttribute($attribute, $value){
         $variants = $this->getVariants();
         $filtered = array();

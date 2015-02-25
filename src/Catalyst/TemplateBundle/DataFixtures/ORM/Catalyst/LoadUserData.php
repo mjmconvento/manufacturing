@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\TemplateBundle\DataFixtures\ORM;
+namespace Catalyst\TemplateBundle\DataFixtures\ORM\Catalyst;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -20,5 +20,10 @@ class LoadUserData implements FixtureInterface
         $userAdmin->setEnabled(true);
         $em->persist($userAdmin);
         $em->flush();
+    }
+    
+    public function getOrder()
+    {
+        return 1;
     }
 }

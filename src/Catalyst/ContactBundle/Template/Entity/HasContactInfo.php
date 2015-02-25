@@ -104,7 +104,7 @@ trait HasContactInfo
         return $this->contact_type;
     }
 
-    public function getDisplayName()
+    public function getName()
     {
         // TODO: figure out if company vs individual
         if($this->getContactType()->getName() === 'Individual'){
@@ -113,7 +113,7 @@ trait HasContactInfo
             return $this->first_name;
         }
     }
-
+    
     public function dataHasContactInfo($data)
     {
         $data->first_name = $this->first_name;
