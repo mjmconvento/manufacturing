@@ -5,6 +5,7 @@ namespace Serenitea\OnlineFormsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\HasCode;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
 
@@ -22,6 +23,8 @@ class Repair
     
     use HasGeneratedID;
     use HasWarehouse;
+    use HasCode;
+    
     use TrackCreate;
     
     /** @ORM\Column(type="string", length=80, nullable=true) */
