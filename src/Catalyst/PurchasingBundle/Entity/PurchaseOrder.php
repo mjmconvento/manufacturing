@@ -294,7 +294,6 @@ class PurchaseOrder
     public function toData()
     {
         $data = new \stdClass();
-        
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
         $data->code = $this->code;
@@ -304,7 +303,6 @@ class PurchaseOrder
         $data->total_price = $this->total_price;
         $data->status_id = $this->status_id;
         $data->supplier = $this->supplier != null? $this->supplier->getDisplayName():'';
-        
         $entries = array();
         foreach ($this->entries as $entry){
             $entries[] = $entry->toData();
