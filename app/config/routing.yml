@@ -26,6 +26,10 @@ serenitea_admin:
     resource: "@SereniteaAdminBundle/Resources/config/child_routing.yml"
     prefix:   /
 
+serenitea_report:
+    resource: "@SereniteaReportBundle/Resources/config/routing.yml"
+    prefix:   /report
+
 catalyst_accounting:
     resource: "@CatalystAccountingBundle/Resources/config/routing.yml"
     prefix:   /accounting

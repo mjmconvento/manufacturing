@@ -5,15 +5,19 @@ acl:
           label: "Menu"
     - category: Requested Items
       entries:
-        - id: ser_request.menu
+        - id: ser_pur_pr.menu
           label: "Menu"
-        - id: ser_request.view
+        - id: ser_pur_pr.view
           label: "View"
-        - id: ser_request.add
+        - id: ser_pur_pr.add
           label: "Add"
-        - id: ser_request.edit
+        - id: ser_pur_pr.edit
           label: "Edit"
-        - id: ser_request.delete
+        - id: ser_pur_pr.approve
+          label: "Approve"
+        - id: ser_pur_pr.cancel
+          label: "Cancel"
+        - id: ser_pur_pr.delete
           label: "Delete"
     - category: Incomplete Deliveries
       entries:
