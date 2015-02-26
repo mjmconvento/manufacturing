@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +24,7 @@ class InsufficientController extends CrudController
         $params = $this->getViewParams('', 'catalyst_report_insufficient_summary');
         $inv = $this->get('catalyst_inventory');
 
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();
 
         $date_from = new DateTime();
@@ -39,7 +39,7 @@ class InsufficientController extends CrudController
         $params['date_to'] = $date_to;
 
         
-        return $this->render('CatalystReportBundle:Insufficient:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:Insufficient:index.html.twig', $params);
 	}
 
 	protected function getObjectLabel($object) {

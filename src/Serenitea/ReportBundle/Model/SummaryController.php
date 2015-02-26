@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Model;
+namespace Serenitea\ReportBundle\Model;
 
 use Symfony\Component\HttpFoundation\Response;
 use Catalyst\TemplateBundle\Model\BaseController;

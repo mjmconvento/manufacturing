@@ -1,9 +1,9 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Catalyst\ReportBundle\Model\ReportPDF;
+use Serenitea\ReportBundle\Model\ReportPDF;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use DateTime;
@@ -39,7 +39,7 @@ class PoController extends CrudController{
         $params['title'] = $this->title;
         $params['print'] = $this->print;
         $params['csv'] = $this->csv;
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();
 //        $params['filter'] = $this->filter;
         

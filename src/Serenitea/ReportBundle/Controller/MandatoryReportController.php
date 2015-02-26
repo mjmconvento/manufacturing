@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\BaseController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +50,7 @@ class MandatoryReportController extends BaseController
             '3' => 'Above Normal Visit'
         ];
 
-        return $this->render('CatalystReportBundle:MandatoryReport:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:MandatoryReport:index.html.twig', $params);
     }
 
 
@@ -108,7 +108,7 @@ class MandatoryReportController extends BaseController
         $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:MandatoryReport:print.html.twig', $params);
+            'SereniteaReportBundle:MandatoryReport:print.html.twig', $params);
     }   
 
     public function csvAction($date_from, $date_to ,$visit)

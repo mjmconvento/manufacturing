@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\BaseController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +36,7 @@ class PendingSchedulesController extends BaseController
         $params['csv'] = $this->csv;
         $params['filter'] = $this->filter;
 
-        return $this->render('CatalystReportBundle:ServiceReports:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:ServiceReports:index.html.twig', $params);
     }
 
 
@@ -95,7 +95,7 @@ class PendingSchedulesController extends BaseController
         $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:ServiceReports:print.html.twig', $params);
+            'SereniteaReportBundle:ServiceReports:print.html.twig', $params);
     }   
 
     public function csvAction($date_from, $date_to)

@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Model;
+namespace Serenitea\ReportBundle\Model;
 
 use FPDF\FPDF;
 use DateTime;

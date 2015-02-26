@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,11 +29,11 @@ class InventoryStockController extends CrudController{
         $params['title'] = $this->title;
         $params['print'] = $this->print;
         $params['csv'] = $this->csv;
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['item_opts'] = $inv->getProductOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();
         
-        return $this->render('CatalystReportBundle:InventoryStock:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:InventoryStock:index.html.twig', $params);
     }
     
     public function headers()
@@ -88,7 +88,7 @@ class InventoryStockController extends CrudController{
 //        $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:InventoryStock:print.html.twig', $params);
+            'SereniteaReportBundle:InventoryStock:print.html.twig', $params);
     }
 
     protected function getObjectLabel($object) {

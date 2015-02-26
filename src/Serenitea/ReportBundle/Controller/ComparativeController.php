@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,10 +38,10 @@ class ComparativeController extends CrudController{
         $params['title'] = $this->title;
         $params['print'] = $this->print;
         $params['csv'] = $this->csv;
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();
         
-        return $this->render('CatalystReportBundle:Comparative:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:Comparative:index.html.twig', $params);
     }
     
     public function headers()
@@ -98,7 +98,7 @@ class ComparativeController extends CrudController{
 //        $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:Adjust:print.html.twig', $params);
+            'SereniteaReportBundle:Adjust:print.html.twig', $params);
     }
 
     protected function getObjectLabel($object) {

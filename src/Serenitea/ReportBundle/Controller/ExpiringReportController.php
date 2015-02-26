@@ -36,7 +36,7 @@ class ExpiringReportController extends BaseController
         $params['csv'] = $this->csv;
         $params['filter'] = $this->filter;
 
-        return $this->render('CatalystReportBundle:ServiceReports:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:ServiceReports:index.html.twig', $params);
     }
 
 
@@ -95,7 +95,7 @@ class ExpiringReportController extends BaseController
         $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:ServiceReports:print.html.twig', $params);
+            'SereniteaReportBundle:ServiceReports:print.html.twig', $params);
     }   
 
     public function csvAction($date_from, $date_to)

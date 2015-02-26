@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\BaseController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +36,7 @@ class ConsumablesReportController extends BaseController
         $params['csv'] = $this->csv;
         $params['filter'] = $this->filter;
 
-        return $this->render('CatalystReportBundle:ProductGroupsReport:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:ProductGroupsReport:index.html.twig', $params);
     }
 
 
@@ -93,7 +93,7 @@ class ConsumablesReportController extends BaseController
         $params['data'] = $data;
 
         return $this->render(
-            'CatalystReportBundle:ProductGroupsReport:print.html.twig', $params);
+            'SereniteaReportBundle:ProductGroupsReport:print.html.twig', $params);
     }   
 
     public function csvAction($date_from, $date_to)

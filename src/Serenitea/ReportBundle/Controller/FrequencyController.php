@@ -34,11 +34,11 @@ class FrequencyController extends CrudController
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
 
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['item_opts'] = $inv->getProductOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();        
 
-        return $this->render('CatalystReportBundle:Frequency:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:Frequency:index.html.twig', $params);
     }
 
     protected function getObjectLabel($object) {

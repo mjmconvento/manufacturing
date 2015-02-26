@@ -1,127 +1,127 @@
 catalyst_report_stock_summary:
     path: /stock
-    defaults: { _controller: CatalystReportBundle:InventoryStock:index }
+    defaults: { _controller: SereniteaReportBundle:InventoryStock:index }
 
 catalyst_report_stock_csv:
     path: /stock/csv
-    defaults: { _controller: CatalystReportBundle:InventoryStock:csv }
+    defaults: { _controller: SereniteaReportBundle:InventoryStock:csv }
     
 catalyst_report_stock_print:
     path: /stock/print
-    defaults: { _controller: CatalystReportBundle:InventoryStock:print }  
+    defaults: { _controller: SereniteaReportBundle:InventoryStock:print }  
     
         
 catalyst_report_compare_summary:
     path: /comparative
-    defaults: { _controller: CatalystReportBundle:Comparative:index }
+    defaults: { _controller: SereniteaReportBundle:Comparative:index }
 
 catalyst_report_compare_csv:
     path: /comparative/csv
-    defaults: { _controller: CatalystReportBundle:Comparative:csv }
+    defaults: { _controller: SereniteaReportBundle:Comparative:csv }
     
 catalyst_report_compare_print:
     path: /comparative/print
-    defaults: { _controller: CatalystReportBundle:Comparative:print }    
+    defaults: { _controller: SereniteaReportBundle:Comparative:print }    
     
     
 catalyst_report_damaged_summary:
     path: /damaged
-    defaults: { _controller: CatalystReportBundle:Damaged:index }
+    defaults: { _controller: SereniteaReportBundle:Damaged:index }
     
 catalyst_report_damaged_csv:
     path: /damaged/csv
-    defaults: { _controller: CatalystReportBundle:Damaged:csv }
+    defaults: { _controller: SereniteaReportBundle:Damaged:csv }
     
 catalyst_report_damaged_print:
     path: /damaged/print
-    defaults: { _controller: CatalystReportBundle:Damaged:print }       
+    defaults: { _controller: SereniteaReportBundle:Damaged:print }       
     
     
 catalyst_report_po_summary:
     path: /posummary
-    defaults: { _controller: CatalystReportBundle:Po:index }
+    defaults: { _controller: SereniteaReportBundle:Po:index }
 
 catalyst_report_po_csv:
     path: /posummary/csv
-    defaults: { _controller: CatalystReportBundle:Po:csv }
+    defaults: { _controller: SereniteaReportBundle:Po:csv }
     
 catalyst_report_po_print:
     path: /posummary/print
-    defaults: { _controller: CatalystReportBundle:Po:print }    
+    defaults: { _controller: SereniteaReportBundle:Po:print }    
     
     
 catalyst_report_prcadjust_summary:
     path: /prcadjust
-    defaults: { _controller: CatalystReportBundle:Adjust:index }
+    defaults: { _controller: SereniteaReportBundle:Adjust:index }
     
 catalyst_report_prcadjust_csv:
     path: /prcadjust/csv
-    defaults: { _controller: CatalystReportBundle:Adjust:csv }
+    defaults: { _controller: SereniteaReportBundle:Adjust:csv }
     
 catalyst_report_prcadjust_print:
     path: /prcadjust/print
-    defaults: { _controller: CatalystReportBundle:Adjust:print }    
+    defaults: { _controller: SereniteaReportBundle:Adjust:print }    
     
     
 catalyst_report_dr_summary:
     path: /drsummary
-    defaults: { _controller: CatalystReportBundle:Dr:index }
+    defaults: { _controller: SereniteaReportBundle:Dr:index }
     
 catalyst_report_dr_print:
     path: /drsummary/print
-    defaults: { _controller: CatalystReportBundle:Dr:print }
+    defaults: { _controller: SereniteaReportBundle:Dr:print }
 
 catalyst_report_dr_csv:
     path: /drsummary/csv
-    defaults: { _controller: CatalystReportBundle:Dr:csv }   
+    defaults: { _controller: SereniteaReportBundle:Dr:csv }   
     
     
 catalyst_report_returned_summary:
     path: /returnedsummary
-    defaults: { _controller: CatalystReportBundle:Returned:index }
+    defaults: { _controller: SereniteaReportBundle:Returned:index }
     
 catalyst_report_returned_print:
     path: /returnedsummary/print
-    defaults: { _controller: CatalystReportBundle:Returned:print }
+    defaults: { _controller: SereniteaReportBundle:Returned:print }
 
 catalyst_report_returned_csv:
     path: /returnedsummary/csv
-    defaults: { _controller: CatalystReportBundle:Returned:csv }
+    defaults: { _controller: SereniteaReportBundle:Returned:csv }
 
 
 catalyst_report_balance_summary:
     path: /balancesummary
-    defaults: { _controller: CatalystReportBundle:Balance:index }
+    defaults: { _controller: SereniteaReportBundle:Balance:index }
 
 catalyst_report_balance_print:
     path: /balancesummary/print
-    defaults: { _controller: CatalystReportBundle:Balance:print }
+    defaults: { _controller: SereniteaReportBundle:Balance:print }
 
 
 catalyst_report_balance_csv:
     path: /balancesummary/csv
-    defaults: { _controller: CatalystReportBundle:Balance:csv }
+    defaults: { _controller: SereniteaReportBundle:Balance:csv }
 
 
 catalyst_report_insufficient_summary:
     path: /insufficient
-    defaults: { _controller: CatalystReportBundle:Insufficient:index }
+    defaults: { _controller: SereniteaReportBundle:Insufficient:index }
 
 
 catalyst_report_prodfreq_summary:
     path: /prodfrequency
-    defaults: { _controller: CatalystReportBundle:Frequency:index }
+    defaults: { _controller: SereniteaReportBundle:Frequency:index }
 
 
 catalyst_report_po_pdf:
     path: /pdf
-    defaults: { _controller: CatalystReportBundle:Po:report }
+    defaults: { _controller: SereniteaReportBundle:Po:report }
 
 
 catalyst_report_invlot_summary:
     path: /inventorylot
-    defaults: { _controller: CatalystReportBundle:InventoryLot:index }
+    defaults: { _controller: SereniteaReportBundle:InventoryLot:index }
 
 catalyst_report_invlot_print:
     path: /inventorylot/print
-    defaults: { _controller: CatalystReportBundle:InventoryLot:print }
+    defaults: { _controller: SereniteaReportBundle:InventoryLot:print }

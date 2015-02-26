@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Controller;
+namespace Serenitea\ReportBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -38,11 +38,11 @@ class DamagedController extends CrudController{
         $params['title'] = $this->title;
         $params['print'] = $this->print;
         $params['csv'] = $this->csv;
-        $params['br_opts'] = $inv->getBranchOptions();
+        $params['br_opts'] = $inv->getWarehouseOptions();
         $params['prod_opts'] = $inv->getProductGroupOptions();
         
         
-        return $this->render('CatalystReportBundle:Damaged:index.html.twig', $params);
+        return $this->render('SereniteaReportBundle:Damaged:index.html.twig', $params);
     }
     
     public function headers()
@@ -95,7 +95,7 @@ class DamagedController extends CrudController{
 //        $params['grid_cols'] = $this->headers();
 //        $params['data'] = $data;
 
-        return $this->render('CatalystReportBundle:Damaged:print.html.twig', $params);
+        return $this->render('SereniteaReportBundle:Damaged:print.html.twig', $params);
     }
 
     protected function getObjectLabel($object) {

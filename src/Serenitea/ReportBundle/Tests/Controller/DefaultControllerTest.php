@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ReportBundle\Tests\Controller;
+namespace Serenitea\ReportBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

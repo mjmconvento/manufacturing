@@ -1,5 +1,5 @@
 parameters:
-#    catalyst_report.example.class: Catalyst\ReportBundle\Example
+#    catalyst_report.example.class: Serenitea\ReportBundle\Example
 
 services:
 #    catalyst_report.example:
