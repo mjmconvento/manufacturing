@@ -35,3 +35,7 @@
 {{ f.group_number('Selling Price', 'price_sale', object.getPriceSale|number_format(2, '.', ''), 3, 4, readonly) }}
 {% endif %}
 
+<h4 class="form-section">Threshold</h4>
+{{ f.group_number('Minimum Stock', 'stock_min', object.getStockMin|number_format(2, '.', ''), 3, 4, readonly) }}
+{{ f.group_number('MAximum Stock', 'stock_max', object.getStockMax|number_format(2, '.', ''), 3, 4, readonly) }}
+

@@ -65,7 +65,7 @@
 <div id="{{ prefix }}group-{{ name }}" class="form-group">
     <label class="col-md-{{ label_size }} control-label">{{ label }}</label>
     <div class="col-md-{{ body_size }}">
-        <input type="number" id="{{ prefix }}form-{{ name }}" name="{{ name }}" class="form-control" placeholder="{{ label }}" value="{{ value }}" {{ readonly ? 'readonly ' : '' }}>
+        <input type="number" id="{{ prefix }}form-{{ name }}" name="{{ name }}" class="form-control price" placeholder="{{ label }}" value="{{ value }}" {{ readonly ? 'readonly ' : '' }}>
     </div>
 </div>
 {% endmacro %}

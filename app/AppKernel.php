@@ -21,6 +21,9 @@ class AppKernel extends Kernel
             // fos user bundle
             new FOS\UserBundle\FOSUserBundle(),
 
+            // pdf bundle
+            new Ensepar\Html2pdfBundle\EnseparHtml2pdfBundle(),
+            
             // utility bundles
             new Catalyst\GridBundle\CatalystGridBundle(),
             new Catalyst\LogBundle\CatalystLogBundle(),
@@ -34,6 +37,7 @@ class AppKernel extends Kernel
             new Catalyst\AdminBundle\CatalystAdminBundle(),
             new Catalyst\TemplateBundle\CatalystTemplateBundle(),
             new Catalyst\DashboardBundle\CatalystDashboardBundle(),
+            new Catalyst\PdfBundle\CatalystPdfBundle(),
 
 
             // erp modules

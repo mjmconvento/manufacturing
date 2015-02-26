@@ -4,26 +4,17 @@
 
 {% block content %}
 <div class="row">	
-	{# for s in sample #}
-		{# if s.name == 'User' #}
-			{{ dboard.statbox('Unfulfilled Request', 0, 'ser_dashboard_unfulfilled', '', '', 'blue-madison', 'fa-file-text-o','fa-user') }}
-			{{ dboard.statbox('About to Expire', 0, 'ser_dashboard_aboutexpire', '', '', 'red', 'fa-clock-o', 'fa-warning') }}
-    		{{ dboard.statbox('Already Expired', 0, 'ser_dashboard_expired', '', '', 'red', 'fa-clock-o', 'fa-warning') }}
-    		{{ dboard.statbox('Product Below Threshold', 0, 'ser_dashboard_below', '', '', 'purple-plum', 'fa-dashboard', 'fa-angle-down') }}
-    		{{ dboard.statbox('Product Above Threshold', 0, 'ser_dashboard_above', '', '', 'purple-plum', 'fa-dashboard', 'fa-angle-down') }}
-    	{# elseif s.name == 'Administrator' #}	
-    		{{ dboard.statbox('Unfulfilled PO', 0, 'ser_dashboard_unfulfilled', '', '', 'blue-madison', 'fa-file-text-o', 'fa-user') }}	
-			{{ dboard.statbox('Pending Deliveries', 0, 'ser_dashboard_pending', '', '', 'green-haze', 'fa-truck', 'fa-archive') }}	
-    		{{ dboard.statbox('Already Expired', 0, 'ser_dashboard_expired', '', '', 'red','icon-clock', 'fa-warning') }}             		
+            {{ dboard.statbox('Unfulfilled Request', 0, 'ser_dashboard_unfulfilled', '', '', 'blue-madison', 'fa-file-text-o','fa-user') }}
+            {{ dboard.statbox('About to Expire', 0, 'ser_dashboard_aboutexpire', '', '', 'red', 'fa-clock-o', 'fa-warning') }}
+            {{ dboard.statbox('Already Expired', 0, 'ser_dashboard_expired', '', '', 'red', 'fa-clock-o', 'fa-warning') }}
+            {{ dboard.statbox('Product Below Threshold', 0, 'ser_dashboard_below', '', '', 'purple-plum', 'fa-dashboard', 'fa-angle-down') }}
+            {{ dboard.statbox('Product Above Threshold', 0, 'ser_dashboard_above', '', '', 'purple-plum', 'fa-dashboard', 'fa-angle-down') }}
+            {{ dboard.statbox('Unfulfilled PO', 0, 'ser_dashboard_unfulfilled', '', '', 'blue-madison', 'fa-file-text-o', 'fa-user') }}	
+            {{ dboard.statbox('Pending Deliveries', 0, 'ser_dashboard_pending', '', '', 'green-haze', 'fa-truck', 'fa-archive') }}	
             {{ dboard.statbox('Damaged Items', 0, 'ser_dashboard_damaged', '', '', 'red-intense', 'icon-bag', 'fa-flash') }}
             {{ dboard.statbox('Unpaid PO', 0, 'ser_dashboard_unpaid', '', '', 'blue-madison', 'fa-file-text-o', 'fa-user') }}
             {{ dboard.statbox('Excess Deliveries', 0, 'ser_dashboard_excessive', '', '', 'green-haze', 'fa-truck', 'fa-archive') }}
-            {{ dboard.statbox('Product Below Threshold', 0, 'ser_dashboard_below', '', '', 'purple-plum', 'fa-dashboard', 'icon-basket-loaded') }}
             {{ dboard.statbox('Returned Items', 0, 'ser_dashboard_returned', '', '', 'red-intense', 'icon-bag', 'fa-refresh') }}  
             {{ dboard.statbox('Incomplete Requisitions', 0, 'ser_dashboard_incomplete', '', '', 'blue-madison', 'fa-file-text-o', 'fa-user') }}    		
-            {{ dboard.statbox('About to Expire', 0, 'ser_dashboard_aboutexpire', '', '', 'red','icon-clock', 'fa-warning') }}				
-            {{ dboard.statbox('Product Above Threshold', 0, 'ser_dashboard_above', '', '', 'purple-plum', 'fa-dashboard', 'icon-basket-loaded') }}  
-		{# endif #}
-	{# endfor #}	
 </div>
 {% endblock %}

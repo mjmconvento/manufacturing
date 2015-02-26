@@ -149,6 +149,11 @@ class ProductController extends CrudController
 
         $view_cost_price = $this->getUser()->hasAccess($this->route_prefix . '.view_cost_price');
         */
+        
+        //Monitor Price Change
+        if($is_new || $o->getPriceSale() != $data['price_sale'] || $o->getPriceSale() != $data['price_purchase']){
+            $inv->newPrices($o, $data['price_sale'],$data['price_purchase']);
+        }
 
         // prices
         $o->setPriceSale($data['price_sale']);
@@ -156,6 +161,7 @@ class ProductController extends CrudController
         $o->setFlagPerishable($data['flag_perishable']);
 
 
+        
         // threshold values
         $o->setStockMin($data['stock_min']);
         $o->setStockMax($data['stock_max']);
@@ -184,36 +190,6 @@ class ProductController extends CrudController
         }
 
 
-        /*
-        // clear service tasks
-        $tasks = $o->getTasks();
-        foreach ($tasks as $task)
-            $em->remove($task);
-        $o->clearTasks();
-
-        // service tasks
-        if ($o->isService())
-        {
-            if (isset($data['en_name']))
-            {
-                foreach ($data['en_name'] as $index => $name)
-                {
-                    // fields
-                    $sell_price = $data['en_sell_price'][$index];
-                    $cost_price = $data['en_cost_price'][$index];
-
-                    // instantiate
-                    $task = new ServiceTask();
-                    $task->setName($name)
-                        ->setSellPrice($sell_price)
-                        ->setCostPrice($cost_price);
-
-                    // add task
-                    $o->addTask($task);
-                }
-            }
-        }
-        */
     }
 
     protected function buildData($o)

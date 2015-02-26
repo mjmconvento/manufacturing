@@ -8,6 +8,7 @@ use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
 use Catalyst\InventoryBundle\Entity\Account;
+use Catalyst\InventoryBundle\Entity\PriceHistory;
 use Catalyst\ConfigurationBundle\Model\ConfigurationManager;
 use Doctrine\ORM\EntityManager;
 
@@ -15,11 +16,13 @@ class InventoryManager
 {
     protected $em;
     protected $container;
+    protected $user;
 
-    public function __construct(EntityManager $em, $container = null)
+    public function __construct(EntityManager $em, $container = null, $security = null)
     {
         $this->em = $em;
         $this->container = $container;
+        $this->user = $security->getToken()->getUser();
     }
 
     public function newEntry()
@@ -263,6 +266,18 @@ class InventoryManager
             }
             return $qty;
         }
+    }
+    
+    public function newPrices(Product $product, $price_sale, $price_purchase){
+        $history = new PriceHistory();
+        
+        $history->setProduct($product)
+                ->setPriceSale($price_sale)
+                ->setPricePurchase($price_purchase)
+                ->setUserCreate($this->user);
+                
+        $this->em->persist($history);
+        $this->em->flush();
     }
     
     

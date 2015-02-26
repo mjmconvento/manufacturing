@@ -77,63 +77,55 @@
 <script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
 <script src="{{ asset('bundles/catalystcontact/js/catalyst.has_addresses.js') }}"></script>
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     Portfolio.init();
     FormDropzone.init();
     FormValidation.init(); // init form validation
 
-    // handle price toggles
-    update_price();
-    $('#cform-flag_sale').change(function() {
-        update_price();
-    });
-    $('#cform-flag_purchase').change(function() {
-        update_price();
-    });
 
-    // set default error and success elements
-    jQuery.validator.setDefaults({
-        errorClass: 'help-block',
-        errorElement: 'span',
-        errorPlacement: function(error, element) {
-            if(element.parent().parent().hasClass('form-group'))
-            {
-                error.appendTo(element.parent().last());
-                element.parent().parent().addClass('has-error');
-            }
-            else if(element.parent().parent().hasClass('checker'))
-            {   
-                error.appendTo(element.parent().parent().parent().parent().last());
-                element.parent().parent().parent().parent().addClass('has-error');
-            }
-            else
-            {
-                error.appendTo(element.parent().parent().last());
-                element.parent().parent().parent().addClass('has-error');
-            }
-        },
-        success: function(element) {
-            if(element.parent().parent().hasClass('form-group'))
-            {  
-                element.parent().parent().removeClass('has-error');
-                element.parent().parent().addClass('has-success');
-            }
-            else if(element.parent().parent().hasClass('checker'))
-            {   
-                element.parent().parent().parent().parent().addClass('has-error');
-                element.parent().parent().parent().parent().addClass('has-success');
-            }
-            else
-            {  
-                element.parent().parent().parent().removeClass('has-error');
-                element.parent().parent().parent().addClass('has-success');
-            }
-
-            element.remove();
+// set default error and success elements
+jQuery.validator.setDefaults({
+    errorClass: 'help-block',
+    errorElement: 'span',
+    errorPlacement: function(error, element) {
+        if(element.parent().parent().hasClass('form-group'))
+        {
+            error.appendTo(element.parent().last());
+            element.parent().parent().addClass('has-error');
         }
-    });
+        else if(element.parent().parent().hasClass('checker'))
+        {   
+            error.appendTo(element.parent().parent().parent().parent().last());
+            element.parent().parent().parent().parent().addClass('has-error');
+        }
+        else
+        {
+            error.appendTo(element.parent().parent().last());
+            element.parent().parent().parent().addClass('has-error');
+        }
+    },
+    success: function(element) {
+        if(element.parent().parent().hasClass('form-group'))
+        {  
+            element.parent().parent().removeClass('has-error');
+            element.parent().parent().addClass('has-success');
+        }
+        else if(element.parent().parent().hasClass('checker'))
+        {   
+            element.parent().parent().parent().parent().addClass('has-error');
+            element.parent().parent().parent().parent().addClass('has-success');
+        }
+        else
+        {  
+            element.parent().parent().parent().removeClass('has-error');
+            element.parent().parent().parent().addClass('has-success');
+        }
 
+        element.remove();
+    }
+});
+    
+});
 </script>
-<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_phones.js') }}"></script>
 {% endblock %}
 

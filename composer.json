@@ -1,8 +1,8 @@
 {
-    "name": "quadrant/far-east",
+    "name": "quadrant/serenitea",
     "license": "closed",
     "type": "project",
-    "description": "Far East Project",
+    "description": "Serenitea Project",
     "autoload": {
         "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
@@ -20,7 +20,8 @@
         "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "ensepar/html2pdf-bundle" : "~2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

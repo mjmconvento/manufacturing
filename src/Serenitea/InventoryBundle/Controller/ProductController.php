@@ -128,13 +128,20 @@ class ProductController extends Controller
         else
             $o->setUnitOfMeasure('');
 
+        
+         //Monitor Price Change
+        if($is_new || $o->getPriceSale() != $data['price_sale'] || $o->getPriceSale() != $data['price_purchase']){
+            $inv->newPrices($o, $data['price_sale'],$data['price_purchase']);
+        }
+
+        
         // prices
         $o->setPriceSale($data['price_sale']);
         $o->setPricePurchase($data['price_purchase']);       
 
         // threshold values
-        // $o->setStockMin($data['stock_min']);
-        // $o->setStockMax($data['stock_max']);
+        $o->setStockMin($data['stock_min']);
+        $o->setStockMax($data['stock_max']);
 
 
         // product group

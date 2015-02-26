@@ -1,0 +1,8 @@
+parameters:
+#    catalyst_purchasing.example.class: Catalyst\PdfBundle\Example
+
+services:
+    catalyst_pdf:
+        class: Catalyst\PdfBundle\Model\PdfManager
+        arguments: 
+            em: "@doctrine.orm.entity_manager"

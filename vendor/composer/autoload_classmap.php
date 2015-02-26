@@ -10,6 +10,10 @@ return array(
     'IntlDateFormatter' => $vendorDir . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/IntlDateFormatter.php',
     'Locale' => $vendorDir . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/Locale.php',
     'NumberFormatter' => $vendorDir . '/symfony/symfony/src/Symfony/Component/Intl/Resources/stubs/NumberFormatter.php',
+    'QRcode' => $vendorDir . '/ensepar/tcpdf/qrcode.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/symfony/src/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
     'SqlFormatter' => $vendorDir . '/jdorn/sql-formatter/lib/SqlFormatter.php',
+    'TCPDF' => $vendorDir . '/ensepar/tcpdf/tcpdf.php',
+    'TCPDF2DBarcode' => $vendorDir . '/ensepar/tcpdf/2dbarcodes.php',
+    'TCPDFBarcode' => $vendorDir . '/ensepar/tcpdf/barcodes.php',
 );
