@@ -1,0 +1,71 @@
+acl:
+    - category: Report
+      entries:
+        - id: cat_report.menu
+          label: Menu
+    - category: Purchase Order Report
+      entries:
+        - id: cat_report_po.menu
+          label: Menu
+        - id: cat_report_po.view
+          label: View   
+    - category: Delivery Receipt Report
+      entries:
+        - id: cat_report_dr.menu
+          label: Menu
+        - id: cat_report_dr.view
+          label: View   
+    - category: Damaged Report
+      entries:
+        - id: cat_report_damaged.menu
+          label: Menu
+        - id: cat_report_damaged.view
+          label: View   
+    - category: Returned Delivery Items
+      entries:
+        - id: cat_report_returned.menu
+          label: Menu
+        - id: cat_report_returned.view
+          label: View
+    - category: Inventory Stock Report
+      entries:
+        - id: cat_report_stock.menu
+          label: Menu
+        - id: cat_report_stock.view
+          label: View     
+    - category: Product Frequency Report
+      entries:
+        - id: cat_report_freq.menu
+          label: Menu
+        - id: cat_report_freq.view
+          label: View                       
+    - category: Balances Report
+      entries:
+        - id: cat_report_balance.menu
+          label: Menu
+        - id: cat_report_balance.view
+          label: View    
+    - category: Price Adjustment Report
+      entries:
+        - id: cat_report_prcadjust.menu
+          label: Menu
+        - id: cat_report_prcadjust.view
+          label: View
+    - category: Store Price vs. Selling Price
+      entries:
+        - id: cat_report_compare.menu
+          label: Menu
+        - id: cat_report_compare.view
+          label: View
+    - category: Insufficient Stock Report
+      entries:
+        - id: cat_report_insufficient.menu
+          label: Menu
+        - id: cat_report_insufficient.view
+          label: View
+    - category: Inventory Lot Report
+      entries:
+        - id: cat_report_invlot.menu
+          label: Menu
+        - id: cat_report_invlot.view
+          label: View

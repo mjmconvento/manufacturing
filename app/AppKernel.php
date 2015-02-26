@@ -56,6 +56,7 @@ class AppKernel extends Kernel
             new Serenitea\OrderBundle\SereniteaOrderBundle(),
             new Catalyst\NotesBundle\CatalystNotesBundle(),
             new Serenitea\TemplateBundle\SereniteaTemplateBundle(),
+            new Serenitea\ReportBundle\SereniteaReportBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
