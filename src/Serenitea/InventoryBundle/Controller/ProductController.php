@@ -82,7 +82,7 @@ class ProductController extends Controller
         $supps = $em->getRepository('CatalystPurchasingBundle:Supplier')->findAll();
         $supp_opts = array();
         foreach ($supps as $supp)
-            $supp_opts[$supp->getID()] = $supp->getDisplayName();
+            $supp_opts[$supp->getID()] = $supp->getName();
 
         $params['supp_opts'] = $supp_opts;
 
@@ -154,30 +154,6 @@ class ProductController extends Controller
 
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateTrackUpdate($o, $data);
-        
-        // product brand
-        // $pb = $inv->findBrand($data['brand_id']);
-        // if ($pb != null)
-        //     $o->setBrand($pb);        
-        
-        // sku check
-        // if ($o->getSKU() != $data['sku'])
-        // {
-        //     $em = $this->getDoctrine()->getManager();
-        //     $dupe = $em->getRepository('CatalystInventoryBundle:Product')->findOneBy(array('sku' => $data['sku']));
-        //     if ($dupe != null)
-        //         throw new ValidationException('Product with SKU ' . $data['sku'] . ' already exists.');
-        //     $o->setSKU($data['sku']);
-        // }              
-
-        if($is_new)
-        {
-            $em->persist($o);
-            $em->flush();
-
-            $o->setSKU($o->getProductGroup()->getCode() . "-" . str_pad($o->getID(),7,"0",STR_PAD_LEFT));            
-            $em->flush();
-        }
     }
 
     protected function buildData($o)
@@ -314,5 +290,14 @@ class ProductController extends Controller
   
         $params["id"] = $id;    
         return $this->redirect($this->generateUrl('cat_inv_prod_edit_form', $params));
+    }
+    
+    protected function hookPostSave($obj, $is_new = false) {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->generateSku();
+            $em->persist($obj);
+            $em->flush();
+        }
     }
 }

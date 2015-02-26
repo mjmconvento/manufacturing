@@ -56,27 +56,27 @@ ser_repair_add_form:
 
 
 ser_repair_add_form:
-    path:     /pullout/form
+    path:     /repair/form
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addForm }
 
 ser_repair_add_submit:
-    path:     /pullout/form
+    path:     /repair/form
     methods: [POST]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:addSubmit }
 
 ser_repair_edit_form:
-    path:     /pullout/form/{id}
+    path:     /repair/form/{id}
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:editForm }
 
 ser_repair_edit_submit:
-    path:     /pullout/form/{id}
+    path:     /repair/form/{id}
     methods: [POST]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:editSubmit }
 
 ser_repair_delete:
-    path:     /pullout/form/{id}/delete
+    path:     /repair/form/{id}/delete
     methods: [GET]
     defaults: { _controller: SereniteaOnlineFormsBundle:Repair:delete }
 

@@ -1,5 +1,5 @@
 menu_items:
-    - id: cat_pur_com_index
-      acl: cat_pur_com.menu
-      label: Completed PO
-      parent: menu_purchasing
+#    - id: cat_pur_com_index
+#      acl: cat_pur_com.menu
+#      label: Completed PO
+#      parent: menu_purchasing

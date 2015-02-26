@@ -24,7 +24,7 @@
                             
                         {{ form.group_text('Date Issued','date_isse',object.getPurchaseOrder.getDateIssue|date('m/d/Y'),3,3,true)}}
                         {{ form.group_text('Code','code',object.getPurchaseOrder.getCode,3,3,true)}}
-                        {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getDisplayName,3,5,true)}}
+                        {{ form.group_text('Supplier','supplier',object.getPurchaseOrder.getSupplier.getName,3,5,true)}}
 
                         <h4 class="form-section">Delivery Information</h4>
 
@@ -68,7 +68,7 @@
                                         </tr>
                                         {% if object.getID == null %}
                                         <tr>
-                                            <td align="right">Exp Date: </td><td><input type="date" value="" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
+                                            <td align="right">Exp Date: </td><td><input type="text" value="" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
                                                                                         {{ ent.getProduct.isPerishable?'':'disabled' }} ></td>
                                             <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" value="{{delivery.getQuantity|default('0.00') }}" min="0"></td>
                                             <td><a href="#" class="remove_field"><i class="icon-close font-red"></i></a></td>
@@ -77,7 +77,7 @@
                                         {% for delivery in object.getEntries %}
                                         {% if delivery.getProduct.getRootProduct.getID == ent.getProduct.getID  %}
                                             <tr>
-                                                <td align="right">Exp Date: </td><td><input type="date" value="{{  ent.getProduct.isPerishable?delivery.getExpiry|date('m/d/Y'):'' }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
+                                                <td align="right">Exp Date: </td><td><input type="text" value="{{  ent.getProduct.isPerishable?delivery.getExpiry|date('m/d/Y'):'' }}" name="delivery_expiry[{{ent.getProduct.getID}}][]" class="form-control date-picker delivery_expiry" 
                                                                                 {{ ent.getProduct.isPerishable?'':'disabled' }} {{ readonly?'disabled':''}} ></td>
                                                 <td align="right">Quantity: </td><td><input style="text-align:right" type="number" name="delivery_qty[{{ent.getProduct.getID}}][]"  class="form-control delivery_qty" 
                                                                                 value="{{delivery.getQuantity|default('0.00') }}" min="0" 

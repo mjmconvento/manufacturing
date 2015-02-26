@@ -8,7 +8,7 @@ use Catalyst\InventoryBundle\Entity\Warehouse;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\ContactBundle\Template\Entity\HasContactInfo;
-
+use Catalyst\InventoryBundle\Template\Entity\HasAccount;
 
 /**
  * @ORM\Entity
@@ -19,6 +19,7 @@ class Supplier
     use HasGeneratedID;
     use TrackCreate;
     use HasContactInfo;
+    use HasAccount;
 
     public function __construct()
     {
@@ -32,6 +33,7 @@ class Supplier
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
         $this->dataHasContactInfo($data);
+        $this->dataHasAccount($data);
 
         return $data;
     }

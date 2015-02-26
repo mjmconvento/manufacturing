@@ -302,7 +302,7 @@ class PurchaseOrder
         $data->date_need = $this->date_need;
         $data->total_price = $this->total_price;
         $data->status_id = $this->status_id;
-        $data->supplier = $this->supplier != null? $this->supplier->getDisplayName():'';
+        $data->supplier = $this->supplier != null? $this->supplier->getName():'';
         $entries = array();
         foreach ($this->entries as $entry){
             $entries[] = $entry->toData();

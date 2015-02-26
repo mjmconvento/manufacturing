@@ -73,22 +73,7 @@ class WarehouseController extends Controller
 
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateHasPhones($o, $data, $is_new);
-        print_r($o->toData());
-
-        // if (isset($data['flag_threshold']) && $data['flag_threshold'])
-        //     $o->setFlagThreshold();
-        // else
-        //     $o->setFlagThreshold(false);
-
-        // if (isset($data['flag_shopfront']) && $data['flag_shopfront'])
-        //     $o->setFlagShopfront();
-        // else
-        //     $o->setFlagShopfront(false);
-
-        // if (isset($data['flag_stocktrack']) && $data['flag_stocktrack'])
-        //     $o->setFlagStocktrack();
-        // else
-        //     $o->setFlagStocktrack(false);
+        $this->updateHasAccount($o,$data,$is_new);
     }
 
     protected function padFormParams(&$params, $o = null)

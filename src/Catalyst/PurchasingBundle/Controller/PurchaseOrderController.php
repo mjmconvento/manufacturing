@@ -84,7 +84,7 @@ class PurchaseOrderController extends CrudController
         return array(
             $grid->newColumn('Code', 'getCode', 'code'),
             $grid->newColumn('Date Issued', 'getDateIssue', 'date_issue', 'o', array($this, 'formatDate')),
-            $grid->newColumn('Supplier', 'getDisplayName', 'first_name', 's'),
+            $grid->newColumn('Supplier', 'getName', 'first_name', 's'),
             $grid->newColumn('Price', 'getTotalPrice', 'total_price'),
             $grid->newColumn('Status', 'getStatusFormatted', 'status_id'),
         );

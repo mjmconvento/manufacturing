@@ -25,7 +25,8 @@ class PulloutController extends CrudController
     protected function update($o, $data, $is_new = false)
     {
         $this->updateTrackCreate($o, $data, $is_new);
-        
+        $em = $this->getDoctrine()->getManager();
+
         if($is_new){
             $o->setWarehouse($this->getUser()->getWarehouse());
             $o->setCode('');

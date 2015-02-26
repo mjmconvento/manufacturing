@@ -139,7 +139,6 @@ class User extends BaseUser
         $data->email = $this->email;
         $data->enabled = $this->enabled;
         $data->groups = $groups;
-        $data->warehouse_id = $this->getWarehouse()->getID();
 
         return $data;
     }

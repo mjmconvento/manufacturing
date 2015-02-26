@@ -31,7 +31,7 @@ class Repair
     protected $status; 
     
     /**
-     * @ORM\OneToMany(targetEntity="RepairEntry", mappedBy="pullout", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="RepairEntry", mappedBy="repair", cascade={"persist"})
      */
     protected $entries;
     
@@ -47,10 +47,10 @@ class Repair
         return $this;
     }
     
-    public function addEntry(PulloutEntry $entry)
+    public function addEntry(RepairEntry $entry)
     {
         $this->entries->add($entry);
-        $entry->setPullout($this);
+        $entry->setRepair($this);
         return $this;
     }
     

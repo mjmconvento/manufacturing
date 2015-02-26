@@ -4,10 +4,14 @@ namespace Serenitea\OnlineFormsBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Serenitea\OnlineFormsBundle\Entity\Repair;
+use Serenitea\OnlineFormsBundle\Entity\RepairEntry;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+
 use DateTime;
 
 class RepairController extends CrudController
 {
+    use TrackCreate;
      public function __construct()
     {
         $this->route_prefix = 'ser_repair';
@@ -29,10 +33,45 @@ class RepairController extends CrudController
         );
     }
     
+    protected function update($o, $data, $is_new = false)
+    {
+        $this->updateTrackCreate($o, $data, $is_new);
+        $em = $this->getDoctrine()->getManager();
+
+        if($is_new){
+            $o->setWarehouse($this->getUser()->getWarehouse());
+            $o->setCode('');
+        }
+        
+        $o->setStatus($data['status']);
+        
+        $ents = $o->getEntries();
+        foreach ($ents as $ent)
+            $em->remove($ent);
+        $o->clearEntries();
+        
+        if (isset($data['en_report_date']))
+        {
+        foreach ($data['en_report_date'] as $index => $entry){
+            $report_date = new DateTime($data['en_report_date'][$index]);
+            $item = $data['en_item'][$index];
+            $findings = $data['en_findings'][$index];
+            $remarks = $data['en_remarks'][$index];
+            
+            $entry = new RepairEntry();
+            $entry->setItem($item)
+                ->setNotes($remarks)
+                ->setReportDate($report_date)
+                ->setFindings($findings);
+            
+            $o->addEntry($entry);
+        }
+        }
+    }
+    
     protected function padFormParams(&$params, $object = null)
     {
         $object->setWarehouse($this->getUser()->getWarehouse());
-    
         $params['status_opts'] = array('Draft'=>'Draft',
                                     'Sent'=>'Sent');
     }
