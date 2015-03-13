@@ -16,11 +16,6 @@
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
-                        {# <div class="table-toolbar">
-                                                    <a href="{{ path('feac_pur_po_add') }}" class="btn green">Add New Purchase Order</a>
-                                                    <button type="button" class="btn green">Export to EXCEL</button>
-                                                </div> #}
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div id="datepaginator"></div>    
@@ -84,7 +79,7 @@
                                             </div>
 
                                             <div class="col-md-4" style="text-align: center;">
-                                                <a href="#" class="btn blue">Edit/View All</a><br><br>
+                                                <a href="{{ path('feac_mfg_daily_cons') }}" class="btn blue">Edit/View All</a><br><br>
                                                 <a href="#" class="btn green">Generate Daily Production Report</a>
                                             </div>
 
@@ -172,7 +167,7 @@
                                 <div class="thumbnail">
                                     <div class="caption">
                                         <div style="text-align: center;">
-                                            <a href="#" class="btn green">Create Shift Report</a>
+                                            <a href="{{ path('feac_mfg_shift_rep') }}" class="btn green">Create Shift Report</a>
                                         </div>
                                     </div>
                                 </div>

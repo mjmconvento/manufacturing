@@ -1,0 +1,156 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Daily Consumption</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Raw Materials</h4>
+                        <!-- Start Raw Mats accordion -->
+                        <div class="panel-group accordion" id="accordion1">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1">Mollases</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_1" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Mollases Beginning Balance', 'begin-mol', '', 3, 4) }}
+                                        {{ form_tools.group_text('Mollases Purchase', 'purchase', '', 3, 4) }}
+                                        {{ form_tools.group_text('Pumped to MDT', 'pumped', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance', 'run-mol', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Pondo', 'pondo', '', 3, 4) }}
+                                        <h4 class="bold">Mollases Working Balance</h4>
+                                        {{ form_tools.group_text('Mollases used in Production (Gal)', 'mol-gal', '', 3, 4) }}
+                                        {{ form_tools.group_text('Mollases used in Production (Ton)', 'mol-ton', '', 3, 4) }}
+                                        {{ form_tools.group_text('TSAI', 'tsai', '', 3, 4) }}
+                                        {{ form_tools.group_text('Brix', 'brix', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_2">Bunker</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_2" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Bunker Beginning Balance', 'begin-bunk', '', 3, 4) }}
+                                        {{ form_tools.group_text('Bunker Purchase', 'bunk-pur', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Production Consumption', 'consumed', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance (liters)', 'run-bunk', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_3">Sulfuric Acid</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_3" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Sulfuric Acid Beginning Balance', 'begin-acid', '', 3, 4) }}
+                                        {{ form_tools.group_text('Add: Purchase', 'acid-purchase', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Production Consumption', 'acid-consumed', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance (liters)', 'run-acid', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_4">Caustic Soda</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_4" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Caustic Soda Beginning Balance', 'begin-soda', '', 3, 4) }}
+                                        {{ form_tools.group_text('Add: Purchase', 'soda-purchase', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Production Consumption', 'soda-consumed', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance (liters)', 'run-soda', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_5">Urea</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_5" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Urea Balance', 'begin-urea', '', 3, 4) }}
+                                        {{ form_tools.group_text('Add: Purchase', 'urea-purchase', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Production Consumption', 'urea-consumed', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance (bags)', 'run-urea', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_6">Salt</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_6" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Salt Balance', 'begin-salt', '', 3, 4) }}
+                                        {{ form_tools.group_text('Add: Purchase', 'salt-purchase', '', 3, 4) }}
+                                        {{ form_tools.group_text('Less: Production Consumption', 'salt-consumed', '', 3, 4) }}
+                                        {{ form_tools.group_text('Running Balance (bags)', 'run-salt', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of accordion -->
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path('feac_mfg_prod_cal') }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+
+<script>
+jQuery(document).ready(function() {       
+    ComponentsPickers.init();
+});   
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}

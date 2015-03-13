@@ -37,4 +37,20 @@ class ProductionController extends CrudController
 
         return $this->render('FareastManufacturingBundle:Production:index.html.twig', $params);
     }
+
+    public function shiftReportAction()
+    {
+        $this->title = 'Create Shift Report';
+        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
+
+        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
+    }
+
+    public function dailyConsumptionAction()
+    {
+        $this->title = 'Daily Consumption';
+        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
+
+        return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
+    }
 }

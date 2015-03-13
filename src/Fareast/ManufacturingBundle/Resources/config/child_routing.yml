@@ -1,3 +1,11 @@
 feac_mfg_prod_cal:
-    path:     /production_calendar
+    path:     /production-calendar
     defaults: { _controller: FareastManufacturingBundle:Production:index }
+
+feac_mfg_shift_rep:
+    path:     /shift-report
+    defaults: { _controller: FareastManufacturingBundle:Production:shiftReport }
+
+feac_mfg_daily_cons:
+    path:     /daily-consumption
+    defaults: { _controller: FareastManufacturingBundle:Production:dailyConsumption }

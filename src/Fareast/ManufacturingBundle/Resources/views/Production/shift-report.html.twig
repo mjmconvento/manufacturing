@@ -1,0 +1,129 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Create Shift Report</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        {{ form_tools.group_text('Supervisor in charge', 'supervisor', '', 3, 4) }}
+                        {{ form_tools.group_text('Shift', 'shift', '', 3, 4) }}
+
+                        <h4 class="form-section">Production</h4>
+                        {{ form_tools.group_text('Fine Alcohol (IN)', 'fine-alcohol', '', 3, 4) }}
+                        {{ form_tools.group_text('Heads Alcohol', 'heads-alcohol', '', 3, 4) }}
+                        {{ form_tools.group_text('% H&T / Liters Alcohol Produced', 'produced', '', 3, 4) }}
+                        {{ form_tools.group_text('Alcohol Quality (PPT) Production', 'ppt', '', 3, 4) }}
+                        {{ form_tools.group_text('Alcohol Quality (PROOF) Production', 'proof', '', 3, 4) }}
+                        {{ form_tools.group_select('Column Operator', 'operator', '', '', 3, 4) }}
+
+                        <h4 class="form-section">Production Data</h4>
+                        <div class="panel-group accordion" id="accordion1">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1">Fermentation</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_1" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Average % Alcohol in Beer', 'beer-alcohol', '', 3, 4) }}
+                                        {{ form_tools.group_text('Fermentation', 'fermentation', '', 3, 4) }}
+                                        {{ form_tools.group_select('Mixer', 'mixer', '', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_2">Biogas</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_2" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Biogas Produced', 'biogas', '', 3, 4) }}
+                                        {{ form_tools.group_text('cu.m. Gas/Liter Alcohol', 'gpla', '', 3, 4) }}
+                                        {{ form_tools.group_text('Equivalent Bunker (L)', 'bunker', '', 3, 4) }}
+                                        {{ form_tools.group_text('Steam Produced (lbs)', 'steam', '', 3, 4) }}
+                                        {{ form_tools.group_text('VFA (sp3)', 'vfa', '', 3, 4) }}
+                                        {{ form_tools.group_text('COD Loading', 'cod', '', 3, 4) }}
+                                        {{ form_tools.group_text('Slops Feeding (m3)', 'slops', '', 3, 4) }}
+                                        {{ form_tools.group_text('Sampling Point', 'sampling', '', 3, 4) }}
+                                        {{ form_tools.group_text('Settling Volume', 'volume', '', 3, 4) }}
+                                        {{ form_tools.group_text('Temperature', 'temp', '', 3, 4) }}
+                                        {{ form_tools.group_text('pH', 'ph', '', 3, 4) }}
+                                        {{ form_tools.group_select('Biogas Operator', 'biogas-operator', '', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_3">Bunker Fuel/Steam</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_3" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Kilos of Rice Husk Used', 'husk', '', 3, 4) }}
+                                        {{ form_tools.group_text('Equivalent Bunker (L)', 'bunker', '', 3, 4) }}
+                                        {{ form_tools.group_text('Liter of Alcohol/Liter of Bunker', 'loa-lob', '', 3, 4) }}
+                                        {{ form_tools.group_text('Steam Produced in Rice Husk (lbs)', 'steam-produced', '', 3, 4) }}
+                                        {{ form_tools.group_text('Total Steam Produced (lbs)', 'produced-steam', '', 3, 4) }}
+                                        {{ form_tools.group_text('Liter of Alcohol/Kg of Rice in Husk', 'loa-husk', '', 3, 4) }}
+                                        {{ form_tools.group_text('Kr of Rice Husk/Liter of Alcohol', 'husk-loa', '', 3, 4) }}
+                                        {{ form_tools.group_text('Lbs of Steam/Liter of Alcohol', 'steam-loa', '', 3, 4) }}
+                                        {{ form_tools.group_text('Lbs of Steam/Kg of Rice Husk', 'steam-husk', '', 3, 4) }}
+                                        {{ form_tools.group_text('Boiler in Operation', 'boiler', '', 3, 4) }}
+                                        {{ form_tools.group_select('Boiler Operator', 'boiler-operator', '', '', 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path('feac_mfg_prod_cal') }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+
+<script>
+jQuery(document).ready(function() {       
+    ComponentsPickers.init();
+});   
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}
