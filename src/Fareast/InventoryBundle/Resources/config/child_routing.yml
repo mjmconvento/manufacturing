@@ -1,0 +1,27 @@
+feac_inv_begin:
+    path:     /beginning
+    defaults: { _controller: FareastInventoryBundle:BeginningInventory:index }
+
+feac_inv_borrowed:
+    path:     /borrowed
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:index }
+
+feac_inv_borrowed_add:
+    path:     /borrowed/add
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:add }
+
+feac_inv_returned:
+    path:     /returned
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:returned }
+
+feac_inv_adjust:
+    path:     /stock/adjust
+    defaults: { _controller: FareastInventoryBundle:Stock:adjust }
+
+feac_inv_transfer:
+    path:     /stock/transfer
+    defaults: { _controller: FareastInventoryBundle:Stock:transfer }
+
+feac_inv_warehouse:
+    path:     /stock/warehouse
+    defaults: { _controller: FareastInventoryBundle:Stock:warehouse }

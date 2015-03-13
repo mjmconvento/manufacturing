@@ -1,34 +1,38 @@
+fareast_manufacturing:
+    resource: "@FareastManufacturingBundle/Resources/config/child_routing.yml"
+    prefix:   /manufacturing
+
+fareast_settings:
+    resource: "@FareastSettingsBundle/Resources/config/routing.yml"
+    prefix:   /settings
+
+fareast_purchasing:
+    resource: "@FareastPurchasingBundle/Resources/config/child_routing.yml"
+    prefix:   /purchasing
+
+fareast_inventory:
+    resource: "@FareastInventoryBundle/Resources/config/child_routing.yml"
+    prefix:   /inventory
+
+fareast_receiving:
+    resource: "@FareastReceivingBundle/Resources/config/routing.yml"
+    prefix:   /receiving
+
+fareast_sales:
+    resource: "@FareastSalesBundle/Resources/config/child_routing.yml"
+    prefix:   /sales
+
+fareast_accounting:
+    resource: "@FareastAccountingBundle/Resources/config/routing.yml"
+    prefix:   /acctg
+
+fareast_template:
+    resource: "@FareastTemplateBundle/Resources/config/routing.yml"
+    prefix:   /
+
 catalyst_notes:
     resource: "@CatalystNotesBundle/Resources/config/routing.yml"
     prefix:   /notes
-
-ser_dashboard:
-    resource: "@SereniteaDashboardBundle/Resources/config/routing.yml"
-    prefix:   /
-
-ser_purchasing:
-    resource: "@SereniteaPurchasingBundle/Resources/config/routing.yml"
-    prefix:   /purchasing
-
-serenitea_inventory:
-    resource: "@SereniteaInventoryBundle/Resources/config/child_routing.yml"
-    prefix:   /inventory
-
-serenitea_online_forms:
-    resource: "@SereniteaOnlineFormsBundle/Resources/config/routing.yml"
-    prefix:   /onlineforms
-
-serenitea_order:
-    resource: "@SereniteaOrderBundle/Resources/config/routing.yml"
-    prefix:   /ordering
-
-serenitea_admin:
-    resource: "@SereniteaAdminBundle/Resources/config/child_routing.yml"
-    prefix:   /
-
-serenitea_report:
-    resource: "@SereniteaReportBundle/Resources/config/routing.yml"
-    prefix:   /report
 
 catalyst_accounting:
     resource: "@CatalystAccountingBundle/Resources/config/routing.yml"

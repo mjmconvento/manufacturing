@@ -1,0 +1,188 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    {# <div class="col-md-12" style="padding-bottom: 10px">
+        <a href="{{ path('cat_pur_po_edit_form', {'id': object.getID}) }}" class="btn green" data-toggle="modal">Back to Purchase Order</a>
+    </div> #}
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Add Voucher</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal" novalidate="novalidate">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        <div id="cgroup-sku" class="form-group">
+                            <label class="col-md-3 control-label">Voucher Type</label>
+                            <div class="col-md-4">
+                            <select name="foo" class="select2me form-control">
+                                <option value="1">[Select Voucher Type]</option>
+                                <option value="1">Voucher Type 1</option>
+                                <option value="1">Voucher Type 2</option>
+                                <option value="1">Voucher Type 3</option>
+                            </select>
+                        </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">Voucher Number</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="Voucher Number" value="" readonly>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-date" class="form-group">
+                            <label class="col-md-3 control-label">Date</label>
+                            <div class="col-md-4">
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-prodgroup_id" class="form-group">
+                            <label class="control-label col-md-3">Payee</label>
+                            <div class="col-md-4">
+                                <select name="foo" class="select2me form-control">
+                                    <option value="1">[Select Payee]</option>
+                                    <option value="1">Payee 1</option>
+                                    <option value="1">Payee 2</option>
+                                    <option value="1">Payee 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Explanation</label>
+                            <div class="col-md-4 row-md-5">
+                                <textarea class="form-control" rows="5" style="resize: none;"></textarea>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Amount</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Amount" value="">
+                            </div>
+                        </div>
+
+
+                        <h4 class="form-section">Total Amount in PHP</h4>
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Received from FEAC</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Amount Received" value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Cheque No.</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Cheque No." value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-date" class="form-group">
+                            <label class="col-md-3 control-label">Dated</label>
+                            <div class="col-md-4">
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Amount in words</label>
+                            <div class="col-md-4 row-md-5">
+                                <textarea class="form-control" rows="5" style="resize: none;"></textarea>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Amount in PHP</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Amount in PHP" value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-prodgroup_id" class="form-group">
+                            <label class="control-label col-md-3">Account</label>
+                            <div class="col-md-4">
+                                <select name="foo" class="select2me form-control">
+                                    <option value="1">[Select Account]</option>
+                                    <option value="1">Account 1</option>
+                                    <option value="1">Account 2</option>
+                                    <option value="1">Account 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Debit</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Debit" value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-uom" class="form-group">
+                            <label class="col-md-3 control-label">Credit</label>
+                            <div class="col-md-4">
+                                <input id="cform-uom" type="text" name="uom" class="form-control" placeholder="Credit" value="">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path('feac_actg_vouchers') }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+
+
+<script>
+jQuery(document).ready(function() {       
+    ComponentsPickers.init();
+});   
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}

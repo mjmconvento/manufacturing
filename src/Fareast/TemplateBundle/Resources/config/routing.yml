@@ -1,0 +1,3 @@
+fareast_template_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FareastTemplateBundle:Default:index }

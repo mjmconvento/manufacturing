@@ -1,0 +1,27 @@
+# fareast_accounting_homepage:
+#     path:     /hello/{name}
+#     defaults: { _controller: FareastAccountingBundle:Default:index }
+
+feac_acctg_gen_ledger:
+    path:     /ledger
+    defaults: { _controller: FareastAccountingBundle:Ledger:index }
+
+feac_actg_journal_entry:
+    path:     /journal
+    defaults: { _controller: FareastAccountingBundle:Journal:index }
+
+feac_actg_vouchers:
+    path:     /vouchers
+    defaults: { _controller: FareastAccountingBundle:Voucher:index }
+
+feac_actg_voucher_add:
+    path:     /vouchers/add
+    defaults: { _controller: FareastAccountingBundle:Voucher:add }
+
+feac_actg_adj_entry:
+    path:     /adjustment
+    defaults: { _controller: FareastAccountingBundle:Adjustment:index }
+
+feac_actg_chart_accts:
+    path:     /charts
+    defaults: { _controller: FareastAccountingBundle:Charts:index }

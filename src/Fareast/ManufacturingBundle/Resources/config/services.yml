@@ -1,0 +1,4 @@
+services:
+#    fareast_manufacturing.example:
+#        class: Fareast\ManufacturingBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

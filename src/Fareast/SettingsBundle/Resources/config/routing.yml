@@ -1,0 +1,51 @@
+feac_set_cust:
+    path:     /customers
+    defaults: { _controller: FareastSettingsBundle:Settings:customer }
+
+feac_set_cust_add:
+    path:     /customer/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addCustomer }
+
+feac_set_supp:
+    path:     /suppliers
+    defaults: { _controller: FareastSettingsBundle:Settings:supplier }
+
+feac_set_supp_add:
+    path:     /supplier/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addSupplier }
+
+feac_set_wh:
+    path:     /warehouses
+    defaults: { _controller: FareastSettingsBundle:Settings:warehouse }
+
+feac_set_wh_add:
+    path:     /warehouse/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addWarehouse }
+
+feac_set_prod:
+    path:     /products
+    defaults: { _controller: FareastSettingsBundle:Settings:product }
+
+feac_set_prod_add:
+    path:     /product/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addProduct }
+
+feac_set_raw:
+    path:     /raw_mats
+    defaults: { _controller: FareastSettingsBundle:Settings:rawMatls }
+
+feac_set_raw_add:
+    path:     /raw_mat/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addRawMatls }
+
+feac_set_cat:
+    path:     /categories
+    defaults: { _controller: FareastSettingsBundle:Settings:category }
+
+feac_set_assets:
+    path:     /assets
+    defaults: { _controller: FareastSettingsBundle:Settings:assets }
+
+feac_set_assets_add:
+    path:     /asset/add
+    defaults: { _controller: FareastSettingsBundle:Settings:addAssets }

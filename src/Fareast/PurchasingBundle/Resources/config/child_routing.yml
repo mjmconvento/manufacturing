@@ -1,0 +1,15 @@
+feac_pur_po:
+    path:     /po
+    defaults: { _controller: FareastPurchasingBundle:Purchase:index }
+
+feac_pur_po_add:
+    path:     /po/add
+    defaults: { _controller: FareastPurchasingBundle:Purchase:add }
+
+feac_pur_req:
+    path:     /requisition
+    defaults: { _controller: FareastPurchasingBundle:Requisition:index }
+
+feac_pur_req_add:
+    path:     /requisition/add
+    defaults: { _controller: FareastPurchasingBundle:Requisition:add }

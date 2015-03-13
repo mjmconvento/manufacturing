@@ -1,0 +1,23 @@
+feac_sales_del:
+    path:     /delivery
+    defaults: { _controller: FareastSalesBundle:Sales:delivery }
+
+feac_sales_del_add:
+    path:     /delivery/add
+    defaults: { _controller: FareastSalesBundle:Sales:addDelivery }
+
+feac_sales_invc:
+    path:     /invoice
+    defaults: { _controller: FareastSalesBundle:Sales:invoice }
+
+feac_sales_invc_add:
+    path:     /invoice/add
+    defaults: { _controller: FareastSalesBundle:Sales:addInvoice }
+
+feac_sales_order:
+    path:     /order
+    defaults: { _controller: FareastSalesBundle:Sales:order }
+
+feac_sales_order_add:
+    path:     /order/add
+    defaults: { _controller: FareastSalesBundle:Sales:addOrder }

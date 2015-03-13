@@ -1,0 +1,8 @@
+menu_items:
+    - id: menu_manufacturing
+      acl: cat_mfg.menu
+      label: Manufacturing
+      icon: fa-gears
+    - id: feac_mfg_prod_cal
+      label: Production Calendar
+      parent: menu_manufacturing

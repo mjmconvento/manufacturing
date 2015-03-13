@@ -1,0 +1,25 @@
+menu_items:
+    - id: feac_accounting
+      # acl: cat_dashboard.menu
+      label: Accounting
+      icon: fa-money
+    - id: feac_acctg_gen_ledger
+      # acl: cat_pur_supp.menu
+      label: General Ledger
+      parent: feac_accounting
+    - id: feac_actg_journal_entry
+      # acl: cat_pur_supp.menu
+      label: Journal Entry
+      parent: feac_accounting
+    - id: feac_actg_chart_accts
+      # acl: cat_pur_supp.menu
+      label: Chart of Accounts
+      parent: feac_accounting
+    - id: feac_actg_adj_entry
+      # acl: cat_pur_supp.menu
+      label: Adjusment Entries
+      parent: feac_accounting
+    - id: feac_actg_vouchers
+      # acl: cat_pur_supp.menu
+      label: Vouchers
+      parent: feac_accounting

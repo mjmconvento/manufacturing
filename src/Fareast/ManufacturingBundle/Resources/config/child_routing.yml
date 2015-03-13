@@ -1,0 +1,3 @@
+feac_mfg_prod_cal:
+    path:     /production_calendar
+    defaults: { _controller: FareastManufacturingBundle:Production:index }

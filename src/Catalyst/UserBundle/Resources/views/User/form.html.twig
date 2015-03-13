@@ -17,7 +17,7 @@
                         {{ form.group_text('Username', 'username', object.getUsername, 3, 4, readonly) }}
                         {{ form.group_text('Name', 'name', object.getName, 3, 4, readonly) }}
                         {{ form.group_email('Email', 'email', object.getEmail, 3, 4, readonly) }}
-                        {{ form.group_select('Branch','warehouse_id',wh_opts,object.getWarehouse.getID|default(''),3,4, readonly)}}                     
+                        {# form.group_select('Branch','warehouse_id',wh_opts,object.getWarehouse.getID|default(''),3,4, readonly)#}                     
                         {% if not readonly %}
                             {{ form.group_password('Password', 'pass1', 3, 4, readonly) }}
                             {{ form.group_password('Re-type Password', 'pass2', 3, 4, readonly) }}
@@ -42,9 +42,9 @@
 {% endblock %}
 
 {% block js %}
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/leathertemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
-<script src="{{ asset('bundles/leathertemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
 {% if object.getUsername == '' %}
 <script>
 $(document).ready(function() {
@@ -113,7 +113,7 @@ $(document).ready(function() {
             },
             pass2: {
                 required: true,
-                equalTo : "#pass1"
+                equalTo : "#cform-pass1"
             }
         },
         messages: {

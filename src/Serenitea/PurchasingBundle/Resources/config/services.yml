@@ -1,7 +1,0 @@
-parameters:
-#    serenitea_purchasing.example.class: Serenitea\PurchasingBundle\Example
-
-services:
-#    serenitea_purchasing.example:
-#        class: %serenitea_purchasing.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

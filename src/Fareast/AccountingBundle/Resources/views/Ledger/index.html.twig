@@ -1,0 +1,259 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    {# <div class="col-md-12" style="padding-bottom: 10px">
+        <a href="{{ path('cat_pur_po_edit_form', {'id': object.getID}) }}" class="btn green" data-toggle="modal">Back to Purchase Order</a>
+    </div> #}
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">General Ledger</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <div class="table-toolbar">
+                            <button type="button" class="btn green">Export to EXCEL</button>
+                            <button type="button" class="btn green">Print</button>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12">
+                                <div id="sample_1_length" class="dataTables_length">
+                                    <label>
+                                        <select size="1" name="sample_1_length" aria-controls="sample_1" class="form-control input-xsmall input-inline">
+                                            <option value="5" selected="selected">5</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                            <option value="-1">All</option>
+                                        </select>
+                                        records
+                                    </label>
+                                </div>
+                            </div>
+                                
+                            <div class="col-md-4">
+                                <label class="col-md-3 control-label">Date</label>
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                                                        
+                            <div class="col-md-4 col-sm-12">
+                                <div class="dataTables_filter" id="sample_1_filter">
+                                    <label style="float: right;">Search: <input type="text" aria-controls="sample_1" class="form-control input-medium input-inline"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable" id="list_table" aria-describedby="list_table_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Entries</th>
+                                    </tr>
+                                </thead>
+                                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                    <tr class="odd">
+                                        
+                                        <td valign="top" colspan="6" class="dataTables_empty" nowrap="nowrap">
+                                            <div class="panel-group accordion" id="accordion3" style="margin-bottom: 5px !important;">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion3" href="#collapse_3_1">
+                                                            <div style="min-height: 15px;"><span style="float: left">Account: 1005-Bank-Domestic</span>
+                                                            <span style="float: right">Opening Balance: 20,000.00</span></div>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse_3_1" class="panel-collapse collapse" style="height: 0px;">
+                                                    <div class="panel-body" style="padding: 0 !important;">
+                                                        <table class="table table-striped table-bordered table-hover dataTable" id="list_table" aria-describedby="list_table_info" style="margin: 0 !important;">
+                                                            <thead>
+                                                            <tr role="row">
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Date</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">REF #</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Accounts and Description</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Debit</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Credit</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Balance</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                                            <tr>
+                                                                <td colspan="1" align="left">2015/02/27</td>
+                                                                <td colspan="1" align="left">1015</td>
+                                                                <td colspan="1" align="left">To record AR payments</td>
+                                                                <td colspan="1" align="right">51,500.00</td>
+                                                                <td colspan="1" align="right"></td>
+                                                                <td colspan="1" align="right"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1" align="left">2015/02/27</td>
+                                                                <td colspan="1" align="left">1015</td>
+                                                                <td colspan="1" align="left">To record salary</td>
+                                                                <td colspan="1" align="right"></td>
+                                                                <td colspan="1" align="right">20,250.00</td>
+                                                                <td colspan="1" align="right"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"></td>
+                                                                <td colspan="1" align="left">Period Totals</td>
+                                                                <td colspan="1" align="right">51,500.00</td>
+                                                                <td colspan="1" align="right">20,250.00</td>
+                                                                <td colspan="1" align="right">31,250.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"></td>
+                                                                <td colspan="1" align="left">Closing Balance</td>
+                                                                <td colspan="3" align="right">51,250.00</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+
+
+                                            <div class="panel-group accordion" id="accordion4" style="margin-bottom: 5px !important;">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">
+                                                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion4" href="#collapse_3_2">
+                                                            <div style="min-height: 15px;"><span style="float: left">Account: 1005-Bank-Domestic</span>
+                                                            <span style="float: right">Opening Balance: 20,000.00</span></div>
+                                                        </a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse_3_2" class="panel-collapse collapse" style="height: 0px;">
+                                                    <div class="panel-body" style="padding: 0 !important;">
+                                                        <table class="table table-striped table-bordered table-hover dataTable" id="list_table" aria-describedby="list_table_info" style="margin: 0 !important;">
+                                                            <thead>
+                                                            <tr role="row">
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Date</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">REF #</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Accounts and Description</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Debit</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Credit</th>
+                                                                <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Balance</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                                            <tr>
+                                                                <td colspan="1" align="left">2015/02/27</td>
+                                                                <td colspan="1" align="left">1015</td>
+                                                                <td colspan="1" align="left">To record AR payments</td>
+                                                                <td colspan="1" align="right">51,500.00</td>
+                                                                <td colspan="1" align="right"></td>
+                                                                <td colspan="1" align="right"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="1" align="left">2015/02/27</td>
+                                                                <td colspan="1" align="left">1015</td>
+                                                                <td colspan="1" align="left">To record salary</td>
+                                                                <td colspan="1" align="right"></td>
+                                                                <td colspan="1" align="right">20,250.00</td>
+                                                                <td colspan="1" align="right"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"></td>
+                                                                <td colspan="1" align="left">Period Totals</td>
+                                                                <td colspan="1" align="right">51,500.00</td>
+                                                                <td colspan="1" align="right">20,250.00</td>
+                                                                <td colspan="1" align="right">31,250.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2"></td>
+                                                                <td colspan="1" align="left">Closing Balance</td>
+                                                                <td colspan="3" align="right">51,250.00</td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5 col-sm-12">
+                                <div class="dataTables_info" id="list_table_info">Showing 1 to 1 of 1 entry</div>
+                            </div>
+                            <div class="col-md-7 col-sm-12">
+                                <!-- <div class="dataTables_paginate paging_bootstrap">
+                                    <ul class="pagination" style="visibility: visible; float:right;">
+                                        <li class="prev disabled"><a href="#" title="Prev"><i class="fa fa-angle-left"></i></a></li>
+                                        <li class="next disabled"><a href="#" title="Next"><i class="fa fa-angle-right"></i></a></li>
+                                    </ul>
+                                </div> -->
+                                <div>
+                                <ul class="pagination" style="float: right;">
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        1 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                        <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+
+
+<script>
+jQuery(document).ready(function() {       
+    ComponentsPickers.init();
+});   
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}

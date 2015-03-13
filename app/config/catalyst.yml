@@ -5,13 +5,12 @@ catalyst_menu:
         - CatalystConfigurationBundle
         - CatalystUserBundle
         - CatalystInventoryBundle
-        # - CatalystManufacturingBundle
+        - CatalystManufacturingBundle
         - CatalystPurchasingBundle
-        # - CatalystSalesBundle
-        # - CatalystServiceBundle
-        - SereniteaPurchasingBundle
-        - SereniteaOrderBundle        
-        - SereniteaOnlineFormsBundle        
+        - CatalystSalesBundle
+        - FareastAccountingBundle
+        - FareastReceivingBundle
+        - FareastSettingsBundle
 
 catalyst_user:
     acl_entries:
@@ -25,22 +24,13 @@ catalyst_user:
           label: User
         - id: CatalystInventoryBundle
           label: Inventory
-        # - id: CatalystManufacturingBundle
-        #   label: Manufacturing
+        - id: CatalystManufacturingBundle
+          label: Manufacturing
         - id: CatalystPurchasingBundle
-          label: Purchasing
-        # - id: CatalystSalesBundle
-        #   label: Sales
-        # - id: CatalystServiceBundle
-        #   label: Service
-        - id: SereniteaOrderBundle
-          label: Requisition
-        - id: SereniteaOnlineFormsBundle
-          label: Online Forms        
+          label: Purchasing      
 
 catalyst_configuration:
     bundles:
         - CatalystPurchasingBundle
-        - SereniteaPurchasingBundle
         - CatalystSalesBundle
         - CatalystServiceBundle

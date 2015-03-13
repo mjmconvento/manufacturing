@@ -1,0 +1,11 @@
+menu_items:
+    - id: menu_purchasing
+      acl: cat_pur.menu
+      label: Purchasing
+      icon: fa-shopping-cart
+    - id: feac_pur_po
+      label: Purchase Order
+      parent: menu_purchasing
+    - id: feac_pur_req
+      label: Purchase Requisition
+      parent: menu_purchasing

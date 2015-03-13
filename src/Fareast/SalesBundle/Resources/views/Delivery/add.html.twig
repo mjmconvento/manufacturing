@@ -1,0 +1,231 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form_tools %}
+
+{% block content %}
+<div class="row">
+    {# <div class="col-md-12" style="padding-bottom: 10px">
+        <a href="{{ path('cat_pur_po_edit_form', {'id': object.getID}) }}" class="btn green" data-toggle="modal">Back to Purchase Order</a>
+    </div> #}
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Add Delivery</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal" novalidate="novalidate">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        <div id="cgroup-date" class="form-group">
+                            <label class="col-md-3 control-label">Date</label>
+                            <div class="col-md-4">
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-prodgroup_id" class="form-group">
+                            <label class="control-label col-md-3">DR Type</label>
+                            <div class="col-md-4">
+                                <select name="foo" class="select2me form-control">
+                                    <option value="1">[Select DR Type]</option>
+                                    <option value="1">DR Type 1</option>
+                                    <option value="1">DR Type 2</option>
+                                    <option value="1">DR Type 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-prodgroup_id" class="form-group">
+                            <label class="control-label col-md-3">Doc Type</label>
+                            <div class="col-md-4">
+                                <select name="foo" class="select2me form-control">
+                                    <option value="1">[Select Doc Type]</option>
+                                    <option value="1">Doc Type 1</option>
+                                    <option value="1">Doc Type 2</option>
+                                    <option value="1">Doc Type 3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">Client</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="Client" value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">Unit Division</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="Unit Division" value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">ETRD No.</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="ETRD No." value="">
+                            </div>
+                        </div>
+
+                        <div id="cgroup-date" class="form-group">
+                            <label class="col-md-3 control-label">Received Date</label>
+                            <div class="col-md-4">
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-date" class="form-group">
+                            <label class="col-md-3 control-label">Returned Date</label>
+                            <div class="col-md-4">
+                                <div class="input-group input-medium date date-picker" data-date="12-02-2012" data-date-format="mm/dd/yyyy" data-date-viewmode="years">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                    <button class="btn default" type="button"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">Invoice</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="Invoice" value="" >
+                            </div>
+                        </div>
+
+                        <div id="cgroup-name" class="form-group">
+                            <label class="col-md-3 control-label">Gatepass No.</label>
+                            <div class="col-md-4">
+                                <input id="cform-name" type="text" name="name" class="form-control" placeholder="Gatepass No." value="" >
+                            </div>
+                        </div>
+
+                        <h4 class="form-section">Entries</h4>
+                        <a href="#entry_form" class="btn green" data-toggle="modal" id="btn_new_entry">Add New Entry</a>
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover dataTable" id="list_table" aria-describedby="list_table_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Reference No.</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Product ID</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Product Description</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Warehouse</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Unit</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Quantity</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Price</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Amount</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1">Batch ID</th>
+                                        <th role="columnheader" tabindex="0" aria-controls="list_table" rowspan="1" colspan="1"></th>
+                                    </tr>
+                                </thead>
+                                <tbody role="alert" aria-live="polite" aria-relevant="all">
+                                    <tr class="odd">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <a href="#" class="btn red btn-xs"><i class="fa fa-times"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <a href="{{ path('feac_sales_del') }}" class="btn default"><i class="fa fa-angle-left"></i> Back</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="entry_form" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 id="form_title" class="modal-title">Add Item Entry</h4>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div id="cgroup-sku" class="form-group">
+                        <label class="col-md-4 control-label">Item Name</label>
+                        <div class="col-md-6">
+                        <select name="foo" class="select2me form-control">
+                            <option value="1">[Select Name]</option>
+                            <option value="1">Name 1</option>
+                            <option value="1">Name 2</option>
+                            <option value="1">Name 3</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div id="cgroup-sku" class="form-group">
+                        <label class="col-md-4 control-label">Quantity</label>
+                        <div class="col-md-6">
+                            <input type="number" id="quantity" name="quantity" class="form-control price" placeholder="Quantity" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn blue">Submit</button>
+                    <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/clockface/js/clockface.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/moment.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+
+
+<script>
+jQuery(document).ready(function() {       
+    ComponentsPickers.init();
+});   
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+{% endblock %}
