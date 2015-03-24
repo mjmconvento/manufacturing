@@ -1,3 +1,11 @@
+fareast_pdf:
+    resource: "@FareastPdfBundle/Resources/config/routing.yml"
+    prefix:   /
+
+fareast_report:
+    resource: "@FareastReportBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fareast_manufacturing:
     resource: "@FareastManufacturingBundle/Resources/config/child_routing.yml"
     prefix:   /manufacturing

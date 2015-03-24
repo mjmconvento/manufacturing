@@ -4,12 +4,13 @@ catalyst_menu:
         - CatalystAdminBundle
         - CatalystConfigurationBundle
         - CatalystUserBundle
+        - FareastAccountingBundle
         - CatalystInventoryBundle
         - CatalystManufacturingBundle
         - CatalystPurchasingBundle
-        - CatalystSalesBundle
-        - FareastAccountingBundle
         - FareastReceivingBundle
+        - FareastReportBundle
+        - CatalystSalesBundle
         - FareastSettingsBundle
 
 catalyst_user:
