@@ -1,0 +1,9 @@
+menu_items:
+    - id: feac_reports
+      # acl: cat_dashboard.menu
+      label: Reports
+      icon: fa-file-o
+    # - id: feac_rcvng_orders
+      # acl: cat_pur_supp.menu
+      # label: Receiving Orders
+      # parent: feac_receiving
