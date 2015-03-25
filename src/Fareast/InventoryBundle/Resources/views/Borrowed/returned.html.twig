@@ -15,29 +15,8 @@
                 <form method="post" class="form-horizontal" novalidate="novalidate">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-                        <div id="cgroup-prodgroup_id" class="form-group">
-                            <label class="control-label col-md-3">Source Warehouse</label>
-                            <div class="col-md-4">
-                                <select name="foo" class="select2me form-control">
-                                    <option value="1">[Select Warehouse]</option>
-                                    <option value="1">Warehouse 1</option>
-                                    <option value="1">Warehouse 2</option>
-                                    <option value="1">Warehouse 3</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div id="cgroup-prodgroup_id" class="form-group">
-                            <label class="control-label col-md-3">Worker</label>
-                            <div class="col-md-4">
-                                <select name="foo" class="select2me form-control">
-                                    <option value="1">[Select Worker]</option>
-                                    <option value="1">Worker 1</option>
-                                    <option value="1">Worker 2</option>
-                                    <option value="1">Worker 3</option>
-                                </select>
-                            </div>
-                        </div>
+                        {{ form_tools.group_text_readonly('Source Warehouse','warehouse','Apalit Warehouse 2',3,4) }}
+                        {{ form_tools.group_text_readonly('Worker','worker','Jerome Faranal',3,4) }}
 
                         <h4 class="form-section">Item Entries</h4>
                         <div class="table-scrollable">
@@ -86,20 +65,20 @@
                                                             <tr>
                                                                 <td colspan="1" align="left">
                                                                     <label class="col-md-5 control-label">Date Returned:</label>
-                                                                    <div class="col-md-5">
-                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="">
+                                                                    <div class="col-md-3">
+                                                                        <input class="form-control form-control-inline input-small date-picker" size="16" type="text" value="03/18/2015">
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="1" align="left">
                                                                     <label class="col-md-5 control-label">Returned Quantity:</label>
                                                                     <div class="col-md-5">
-                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="">
+                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="5">
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="1" align="left">
                                                                     <label class="col-md-5 control-label">Consumed:</label>
                                                                     <div class="col-md-5">
-                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="">
+                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="0">
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -107,8 +86,8 @@
                                                             <tr>
                                                                 <td colspan="1" align="left">
                                                                     <label class="col-md-5 control-label">Date Returned:</label>
-                                                                    <div class="col-md-5">
-                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="">
+                                                                    <div class="col-md-3">
+                                                                        <input class="form-control form-control-inline input-small date-picker" size="16" type="text" value="">
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="1" align="left">
@@ -165,8 +144,8 @@
                                                             <tr>
                                                                 <td colspan="1" align="left">
                                                                     <label class="col-md-5 control-label">Date Returned:</label>
-                                                                    <div class="col-md-5">
-                                                                        <input id="cform-name" type="text" name="name" class="form-control" placeholder="" value="">
+                                                                    <div class="col-md-3">
+                                                                        <input class="form-control form-control-inline input-small date-picker" size="16" type="text" value="">
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="1" align="left">
