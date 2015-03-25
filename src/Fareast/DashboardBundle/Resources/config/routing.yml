@@ -1,0 +1,3 @@
+feac_dashboard_index:
+    path:     /
+    defaults: { _controller: FareastDashboardBundle:Dashboard:index }

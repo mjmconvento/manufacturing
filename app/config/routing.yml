@@ -1,3 +1,7 @@
+fareast_dashboard:
+    resource: "@FareastDashboardBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fareast_pdf:
     resource: "@FareastPdfBundle/Resources/config/routing.yml"
     prefix:   /

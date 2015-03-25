@@ -1,0 +1,4 @@
+services:
+#    fareast_dashboard.example:
+#        class: Fareast\DashboardBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
