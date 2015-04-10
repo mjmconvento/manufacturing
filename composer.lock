@@ -4,8 +4,345 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2bed81138a213082617d9709389f296",
+    "hash": "fa84bb0799b297af11895236fcf726f5",
     "packages": [
+        {
+            "name": "catalyst/chart-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/chart-bundle",
+                "reference": "3f97b6b8c53b98e42fc03fb9c5100df3da421bff"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\ChartBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst ChartBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Chart Bundle"
+            ],
+            "time": "2015-04-07 03:56:50"
+        },
+        {
+            "name": "catalyst/configuration-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/configuration-bundle",
+                "reference": "d3cc469315dc17a4765b88f0231bbe5b4cd11cf2"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\ConfigurationBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst ConfigurationBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Configuration Bundle"
+            ],
+            "time": "2015-04-06 09:50:16"
+        },
+        {
+            "name": "catalyst/dashboard-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/dashboard-bundle",
+                "reference": "9186a701149d9731b1a9745fec5e1f8b3ddd13cc"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\DashboardBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst DashboardBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Dashboard Bundle"
+            ],
+            "time": "2015-04-06 09:55:07"
+        },
+        {
+            "name": "catalyst/gallery-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/gallery-bundle",
+                "reference": "328d7f9aa07a4484811ee4e1ddf0b807bf80be5a"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\GalleryBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst GalleryBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Gallery Bundle"
+            ],
+            "time": "2015-04-06 09:57:36"
+        },
+        {
+            "name": "catalyst/grid-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/grid-bundle",
+                "reference": "75deff58853f1687671d0c15b42ae68344cc287d"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\GridBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst GridBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Grid Bundle"
+            ],
+            "time": "2015-04-06 10:00:16"
+        },
+        {
+            "name": "catalyst/log-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/log-bundle",
+                "reference": "b42a7482bf4d8bf678f6851a9e72c04cf7a543ef"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\LogBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst LogBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Log Bundle"
+            ],
+            "time": "2015-04-06 10:02:29"
+        },
+        {
+            "name": "catalyst/menu-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/menu-bundle",
+                "reference": "e2863c9b5e2633f89c17e6fed8cfd7317319ef0d"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\MenuBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Kendrick Chan",
+                    "email": "kc@jankstudio.com"
+                }
+            ],
+            "description": "Catalyst MenuBundle",
+            "homepage": "http://jankstudio.com",
+            "keywords": [
+                "Catalyst Menu Bundle"
+            ],
+            "time": "2015-04-06 10:09:35"
+        },
+        {
+            "name": "catalyst/pdf-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@168.235.65.38:/catalyst/pdf-bundle",
+                "reference": "b2f0c01823f63e9146b021139491da00b33607f5"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "*",
+                "ensepar/html2pdf-bundle": "~2.0",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3",
+                "symfony/yaml": "~2.3"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Catalyst\\PdfBundle\\": ""
+                }
+            },
+            "license": [
+                "closed"
+            ],
+            "authors": [
+                {
+                    "name": "Wally Noveno",
+                    "email": "wally.noveno@gmail.com"
+                }
+            ],
+            "description": "Catalyst PdfBundle",
+            "homepage": "http://quadrantalpha.com",
+            "keywords": [
+                "Catalyst Pdf Bundle"
+            ],
+            "time": "2015-04-07 01:33:46"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.3",
@@ -1394,17 +1731,17 @@
         },
         {
             "name": "sensio/distribution-bundle",
-            "version": "v3.0.20",
+            "version": "v3.0.21",
             "target-dir": "Sensio/Bundle/DistributionBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "48c76189fb0a76a20a4a67a750b513ed06074b55"
+                "reference": "da23c78093676a823a1ff43a214987ea3fbf83c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/48c76189fb0a76a20a4a67a750b513ed06074b55",
-                "reference": "48c76189fb0a76a20a4a67a750b513ed06074b55",
+                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/da23c78093676a823a1ff43a214987ea3fbf83c8",
+                "reference": "da23c78093676a823a1ff43a214987ea3fbf83c8",
                 "shasum": ""
             },
             "require": {
@@ -1450,7 +1787,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2015-03-26 11:09:50"
+            "time": "2015-04-10 06:20:46"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -2061,7 +2398,15 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "friendsofsymfony/user-bundle": 20
+        "friendsofsymfony/user-bundle": 20,
+        "catalyst/configuration-bundle": 20,
+        "catalyst/menu-bundle": 20,
+        "catalyst/dashboard-bundle": 20,
+        "catalyst/gallery-bundle": 20,
+        "catalyst/grid-bundle": 20,
+        "catalyst/log-bundle": 20,
+        "catalyst/pdf-bundle": 20,
+        "catalyst/chart-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

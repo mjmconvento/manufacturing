@@ -1,5 +1,0 @@
-acl:
-    - category: Dashboard
-      entries:
-        - id: cat_dashboard.menu
-          label: "Menu"

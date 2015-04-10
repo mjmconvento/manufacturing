@@ -1,7 +1,0 @@
-parameters:
-#    catalyst_gallery.example.class: Catalyst\GalleryBundle\Example
-
-services:
-#    catalyst_gallery.example:
-#        class: %catalyst_gallery.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]

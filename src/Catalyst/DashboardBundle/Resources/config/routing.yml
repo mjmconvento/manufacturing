@@ -1,4 +1,0 @@
-cat_dashboard:
-    pattern: /
-    methods: [GET]
-    defaults: { _controller: CatalystDashboardBundle:Main:index }

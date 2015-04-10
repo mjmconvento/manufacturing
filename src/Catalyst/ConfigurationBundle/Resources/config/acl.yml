@@ -1,9 +1,0 @@
-acl:
-     - category: Settings
-       entries:
-         - id: cat_config.menu
-           label: "Menu"
-         - id: cat_config.view
-           label: "View"
-         - id: cat_config.edit
-           label: "Edit"

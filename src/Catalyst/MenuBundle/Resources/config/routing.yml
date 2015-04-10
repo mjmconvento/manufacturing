@@ -1,3 +1,0 @@
-catalyst_menu_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: CatalystMenuBundle:Default:index }

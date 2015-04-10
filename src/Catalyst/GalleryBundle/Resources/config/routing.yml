@@ -1,3 +1,0 @@
-catalyst_gallery_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: CatalystGalleryBundle:Default:index }
