@@ -11,18 +11,16 @@
             </div>
             <div class="portlet-body">
                 <div class="table-toolbar">
-                    <a href="{{ path('feac_inv_borrowed_add_form') }}" class="btn green">PullOut Item</a>
+                    <a href="{{ path('feac_inv_issued_add_form') }}" class="btn green">Issued Item</a>
                     <a href="{# path(ser_inv_prod_export) #}" class="btn green">Export To CSV</a>
                 </div>
                     <table class="table table-striped table-bordered table-hover" id="list_table">
                         <thead>
                             <tr>
-                                <th>Transaction Code</th>
-                                <th>Borrower's Name</th>
+                                <th>Transaction Code</th>                                
                                 <th>No. of Items</th>
                                 <th>Date Issued</th>
-                                <th>Issued By</th>
-                                <th>Status</th>
+                                <th>Issued By</th>                                
                                 <th></th>
                             </tr>
                         </thead>

@@ -3,31 +3,43 @@
 namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-// use Catalyst\CoreBundle\Template\Controller\TrackCreate;
-// use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
-// use Catalyst\PurchasingBundle\Entity\POEntry;
-// use Catalyst\PurchasingBundle\Entity\PODelivery;
-// use Catalyst\PurchasingBundle\Entity\PODeliveryEntry;
-// use Catalyst\InventoryBundle\Entity\Product;
-// use Catalyst\InventoryBundle\Entity\ProductAttribute;
 
-class StockController extends CrudController
+
+class StockAdjustmentController extends CrudController
 {
    public function __construct()
     {
-        $this->route_prefix = '';
-        $this->title = '';
+        $this->route_prefix = 'feac_inv_adjust';
+        $this->title = 'Stock Adjustment';
+
+        $this->list_title = 'Stock Adjustments';
         $this->list_type = 'static';
     }
 
     protected function newBaseClass()
     {
-        // return new Warehouse();
+        
     }
 
     protected function getObjectLabel($obj)
     {
-        // return $obj->getName();
+        
+    }
+
+    public function indexAction()
+    {
+        $this->hookPreAction();
+
+        $gl = $this->setupGridLoader();
+
+        $params = $this->getViewParams('List');
+
+        $twig_file = 'FareastInventoryBundle:StockAdjustment:index.html.twig';
+
+        $params['list_title'] = $this->list_title;
+        $params['grid_cols'] = $gl->getColumns();
+
+        return $this->render($twig_file, $params);
     }
 
     public function adjustAction()

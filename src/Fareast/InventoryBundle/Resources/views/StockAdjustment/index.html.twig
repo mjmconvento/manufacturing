@@ -1,0 +1,93 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">{{list_title}}</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Filters</h4>
+                        {{ f.group_select('Source Warehouse','wh',object.getCode|default(''),2,3,4)}}
+                        {{ f.group_select('Category','wh',object.getCode|default(''),2,3,4)}}
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-3">
+                                <button class="btn blue-madison">Apply Filters</button>
+                            </div>
+                        </div>
+
+                        <h4 class="form-section">Summary Details</h4>
+
+                        {{ f.group_text('Total Item Count','cnt', object.getCode|default(''), 3,4,true) }}
+                        {{ f.group_text('Total Quantity','qty', object.getCode|default(''), 3,4,true) }}
+
+                        <div class="table-toolbar">
+                            <a href="{# path('feac_inv_borrowed_add') #}" class="btn green">Export to CSV</a>
+                            <a href="{# path(ser_inv_prod_export) #}" class="btn green">Print</a>
+                        </div>
+
+                        <table class="table table-striped table-bordered table-hover" id="list_table">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit of Measurement</th>
+                                    <th>Category</th>
+                                    <th>Actual Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>                                        
+                            </tbody>
+                        </table>
+                    </div>
+
+                     <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('feac_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/DT_bootstrap.js') }}"></script>
+
+<script>
+$(document).ready(function() {
+    $('#list_table').dataTable({
+        "iDisplayLength": 10,
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sLengthMenu": "_MENU_ records",
+            "oPaginate": {
+                "sPrevious": "Prev",
+                "sNext": "Next"
+            }
+        }
+    });
+
+    $('#list_table_wrapper .dataTables_filter input').addClass("form-control input-small input-inline"); // modify table search input
+    $('#list_table_wrapper .dataTables_length select').addClass("form-control input-xsmall input-inline"); // modify table per page dropdown
+    $('#list_table_wrapper .dataTables_length select').select2(); // initialize select2 dropdown
+});
+</script>
+{% endblock %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/DT_bootstrap.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}

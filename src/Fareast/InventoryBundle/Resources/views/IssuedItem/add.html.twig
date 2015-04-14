@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="portlet box blue-hoki">
             <div class="portlet-title">
-                <div class="caption">Requisition/Borrowed Items</div>
+                <div class="caption">Issued Item</div>
             </div>
         
 
@@ -14,10 +14,9 @@
             <form method="post" class="form-horizontal">
                 <div class="form-body">
                     <h4 class="form-section"> Information </h4>                    
-                    {{ f.group_select('Borrower','borrower',object.getCode|default(''),2,3,4)}}
+                    {{ f.group_select('Issued To','issued_to',object.getCode|default(''),2,3,4)}}
                     {{ f.group_text('Department','type',object.getCode|default(''),3,4,true)}}
-                    {{ f.group_date('Date Issued', 'date_issue', object.getDateCreate|default(), 3, 4) }}                    
-                    {{ f.group_date('Date Returned', 'date_return', object.getDateCreate|default(), 3, 4) }}
+                    {{ f.group_date('Date Issued', 'date_issue', object.getDateCreate|default(), 3, 4) }}                                        
 
                     <h4 class="form-section"> Item Entries </h4>
 
@@ -43,21 +42,24 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>                    
-                </div>
+                    </div>
 
-                <div class="form-actions fluid">
+                    <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Submit</button>
-                            <a href="{{path('feac_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                            <a href="{{path('feac_inv_issued_index')}}" class="btn default">Cancel</a>
                         </div>
                     </div>
+                </div>
             </form>
         </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
+
+
 
 {% block js %}
 <script>

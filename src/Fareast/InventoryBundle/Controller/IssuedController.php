@@ -4,15 +4,14 @@ namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 
-
-class BorrowedItemsController extends CrudController
+class IssuedController extends CrudController
 {
-    public function __construct()
+	public function __construct()
     {        
-        $this->route_prefix = 'feac_inv_borrowed';
-        $this->title = 'Borrowed Item';
+        $this->route_prefix = 'feac_inv_issued';
+        $this->title = 'Issued Item';
 
-        $this->list_title = 'Borrowed Items';
+        $this->list_title = 'Issued Items';
         $this->list_type = 'dynamic';
     }
 
@@ -34,7 +33,7 @@ class BorrowedItemsController extends CrudController
 
         $params = $this->getViewParams('List');
 
-        $twig_file = 'FareastInventoryBundle:Borrowed:index.html.twig';
+        $twig_file = 'FareastInventoryBundle:IssuedItem:index.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();
@@ -56,7 +55,6 @@ class BorrowedItemsController extends CrudController
         $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
         $this->padFormParams($params, $obj);
 
-        return $this->render('FareastInventoryBundle:Borrowed:add.html.twig', $params);
+        return $this->render('FareastInventoryBundle:IssuedItem:add.html.twig', $params);
     }
-
 }
