@@ -23,7 +23,7 @@ class ProductGroup
      */
     protected $name;
 
-    /** @ORM\Column(type="string", length=50) */
+    /** @ORM\Column(type="string", length=50, nullable = true) */
     protected $code;
 
     public function __construct()

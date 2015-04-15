@@ -12,9 +12,9 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-                        {{ f.group_select('Department Source','dept_source',object.getCode|default(''),2,3,4)}}
-                        {{ f.group_select('Department Destination','dept_destn',object.getCode|default(''),2,3,4)}}
-                        {{ f.group_textarea('Description','desc', object.getCode|default(''), 4,3,4) }}  
+                        {{ f.group_select('Department Source','wh_opts',wh_opts,2,3,4)}}
+                        {{ f.group_select('Department Destination','wh_opts',wh_opts,2,3,4)}}
+                        {# f.group_textarea('Description','desc', object.getCode|default(''), 4,3,4) #}  
 
                         <h4 class="form-section">Item Entries</h4>
 
@@ -27,12 +27,12 @@
                                 <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
                                     <thead>
                                         <tr>
-                                            <th>Category</th>
-                                            <th>Type</th>
-                                            <th>Item Name</th>
-                                            <th>Unit of Measurement</th>
-                                            <th>Quantity</th>                                            
-                                            <th style="width: 60px"></th>
+                                            <th width="25%">Category</th>
+                                            <th width="25%">Item Name</th>                                            
+                                            <th width="18%">Type</th>
+                                            <th width="20%">Unit Of Measurement</th>
+                                            <th width="13%">Quantity</th>
+                                            <th width="10%"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="from_table">
@@ -55,31 +55,10 @@
     </div>
 </div>
 
-<div id="entry_form" class="modal fade" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" action="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 id="form_title" class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row form-horizontal form">
-                        <div class="form-body">
-                            {{ f.group_select('Item Category','name', object.getCode|default(''), 0,3,7) }}
-                            {{ f.group_select('Item Name','name', object.getCode|default(''), 0,3,7) }}
-                            {{ f.group_text('Unit of Measurement','uom', object.getCode|default(''), 3,7) }}
-                            {{ f.group_number('Quantity','qty', object.getCode|default(''), 3,7) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn default">Close</button>
-                    <button id="btn_entry" type="button" class="btn green">Add</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="hidden">
+    <select id="prodgroup_opts" class="form-control select2">
+        {{ f.options(prodgroup_opts,0)}}
+    </select>
 </div>
 {% endblock %}
 
@@ -90,20 +69,65 @@
 
         var add_button = $(".add-field");
         var wrapper = $("#from_table");
-        var field = '<tr>'+
-                    '<td> <select class="form-control select2"></select></td>' +
-                    '<td> <select class="form-control select2"></select></td>' +                    
-                    '<td> <input type="text" class="form-control"></td>' +
-                    '<td> <input type="number" class="form-control"></td>' +
-                    '<td> <input type="number" class="form-control"></td>' +
-                    '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Remove</a></td>' +
-                    '</tr>';
+                
+        var i=0;
 
         $(add_button).click(function(){
-            $(wrapper).append(field);
+        var row_parent = $(this).parents('tr');
+        var html = '<tr id='+ i +'>';
+        html += '<td><select name="prodgroup_opts" id="prodgroup_opts" class="form-control select2">';
+        html += $('#prodgroup_opts').html();   
+        html += '</select> </td>';
+
+        html += '<td><select id="prod_id" class="form-control">';        
+        html += '</select></td>';
+
+        html += '<td><input type="text" class="form-control" id="prodtype" readonly></td>';        
+
+        html += '<td> <input type="text" class="form-control" id="uom" readonly></td>';
+        html += '<td> <input type="number" class="form-control"></td>';
+        html += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
+        html += '</tr>';
+        i ++;                       
+            $(wrapper).append(html);
+
+            $('#prodgroup_opts').change(function(){
+                var cat = $('#prodgroup_opts').val();
+
+                $('#prod_id').empty();
+                var url = "{{ path('feac_inv_begin_productgroup', { var_id: ':id'}) }}";
+                url = url.replace(":id", cat);
+
+                $.getJSON(url, function(data){
+                    // console.log(data);
+                    $('#prod_id').html('<option></option>').select2();
+                    i=0;
+                    for(var index in data)
+                    {
+                        var prod = data[index];
+                        i++;
+                        $("#prod_id").append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
+                    }
+                });
+            });
+
+            $('#prod_id').change(function(){
+                var prod = $('#prod_id').val();
+
+                var url = "{{ path('feac_inv_begin_product', { id: ':id'}) }}";
+                url = url.replace(":id", prod);
+
+                $.getJSON(url, function(json){
+                    console.log(json)                    
+                    
+                        $("#prodtype").val(json.prodtype);
+                        $("#uom").val(json.uom);
+                   
+                });
+
+            });
         });
-
-
+        
         //remove row
         $(document).on("click",".remove_field", function(e){
             e.preventDefault();            

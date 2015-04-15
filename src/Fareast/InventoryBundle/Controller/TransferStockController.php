@@ -35,8 +35,12 @@ class TransferStockController extends CrudController
 
         $twig_file = 'FareastInventoryBundle:TransferStock:index.html.twig';
 
+        $inv = $this->get('catalyst_inventory');
+
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();
+        $params['wh_opts'] = $inv->getWarehouseOptions();
+        $params['prodgroup_opts'] = $inv->getProductGroupOptions();  
 
         return $this->render($twig_file, $params);
     }

@@ -2,6 +2,19 @@ feac_inv_begin_index:
     path:     /begin
     defaults: { _controller: FareastInventoryBundle:Transaction:index }
 
+feac_inv_begin_productgroup:
+    path:    /begin/productgroup/{var_id}
+    defaults: { _controller: FareastInventoryBundle:Transaction:getGroup }
+
+feac_inv_begin_product:
+    path:    /begin/product/{id}
+    defaults: { _controller: FareastInventoryBundle:Transaction:getProduct }
+
+feac_inv_begin_submit:
+    path:    /begin
+    methods: [POST]
+    defaults: { _controller: FareastInventoryBundle:Transaction:addSubmit }
+
 
 feac_inv_borrowed_index:
     path:     /borrowed
