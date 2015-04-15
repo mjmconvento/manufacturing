@@ -104,6 +104,21 @@ class InventoryManager
 
         return $pg_opts;
     }
+
+    public function getProductTypeOptions($filter = array())
+    {
+        $pts = $this->em
+            ->getRepository('FareastInventoryBundle:ProductType')
+            ->findBy(
+                $filter,
+                array('name' => 'ASC')
+            );
+        $pt_opts = array();
+        foreach ($pts as $pt)
+            $pt_opts[$pt->getID()] = $pt->getName();
+
+        return $pt_opts;
+    }
     
     public function getProductVariantsOption($product){
         $products = $product->getVariants();
@@ -147,7 +162,7 @@ class InventoryManager
     {
         // TODO: db row locking
 
-        $account = $entry->getAccount();
+        $account = $entry->getInventoryAccount();
         $prod = $entry->getProduct();
 
         $qty = bcsub($entry->getDebit(), $entry->getCredit(), 2);
@@ -158,7 +173,7 @@ class InventoryManager
         if ($stock == null)
         {
             $stock = new Stock();
-            $stock->setAccount($account)
+            $stock->setInventoryAccount($account)
                 ->setProduct($prod)
                 ->setQuantity($qty);
 
@@ -218,8 +233,8 @@ class InventoryManager
     
     public function itemsIn($product, $quantity,$supplier){
         $conf = new ConfigurationManager($this->container);
-        $to = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getAccount();
-        $from = $supplier->getAccount();
+        $to = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getInventoryAccount();
+        $from = $supplier->getInventoryAccount();
         
         return $this->itemTransfer($product, $quantity, $from, $to);
     }
@@ -229,12 +244,12 @@ class InventoryManager
         $entryCredit = $this->newEntry();
         
         $entryCredit->setProduct($product)
-                    ->setAccount($from)
+                    ->setInventoryAccount($from)
                     ->setCredit($quantity)
                     ->setDebit(0);
         
         $entryDebit->setProduct($product)
-                    ->setAccount($to)
+                    ->setInventoryAccount($to)
                     ->setDebit($quantity)
                     ->setCredit(0);
         
@@ -242,16 +257,24 @@ class InventoryManager
     }
     
     public function getWarehouseStock($warehouse){
-        $stock = $this->em->getRepository('CatalystInventoryBundle:InventoryStock')
-                ->findByWarehouse($warehouse);
+        $stock = $this->em->getRepository('CatalystInventoryBundle:Stock')
+                ->findByAccount($warehouse->getInventoryAccount());
         
         return $stock;
     }
-    
+
+
+    /**
+     * 
+     * @param type $warehouse
+     * @param type $product
+     * @return int
+     * Returns the total quantity of a product and its variants
+     */
     public function getStock( $warehouse, $product){
-        $stock = $this->em->getRepository('CatalystInventoryBundle:InventoryStock')
+        $stock = $this->em->getRepository('CatalystInventoryBundle:Stock')
                 ->findOneBy(array('product' => $product,
-                            'warehouse' => $warehouse));
+                            'inv_account' => $warehouse->getInventoryAccount()));
 
         if($product->getVariants() == null){
             if($stock == null || empty($stock)){
@@ -260,7 +283,7 @@ class InventoryManager
                     return $stock->getQuantity();
             }
         }else {
-            $qty = $stock->getQuantity();
+            $qty = $stock==null?0:$stock->getQuantity();
             foreach ($product->getVariants() as $variant){
                 $qty += $this->getStock($warehouse, $variant);
             }

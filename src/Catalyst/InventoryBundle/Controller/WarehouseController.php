@@ -5,12 +5,12 @@ namespace Catalyst\InventoryBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\Warehouse;
-use Catalyst\InventoryBundle\Template\Controller\HasAccount;
+use Catalyst\InventoryBundle\Template\Controller\HasInventoryAccount;
 use Catalyst\ValidationException;
 
 class WarehouseController extends CrudController
 {
-    use HasAccount;
+    use HasInventoryAccount;
     public function __construct()
     {
         $this->route_prefix = 'cat_inv_wh';
@@ -52,7 +52,7 @@ class WarehouseController extends CrudController
             ->setContactNumber($data['contact_num'])
             ->setAddress($data['address']);
         
-        $this->updateHasAccount($o,$data,$is_new);
+        $this->updateHasInventoryAccount($o,$data,$is_new);
         
         if (isset($data['flag_threshold']) && $data['flag_threshold'])
             $o->setFlagThreshold();

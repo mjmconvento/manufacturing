@@ -7,14 +7,14 @@ use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\ValidationException;
 
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
-use Catalyst\InventoryBundle\Template\Controller\HasAccount;
+use Catalyst\InventoryBundle\Template\Controller\HasInventoryAccount;
 use Catalyst\ContactBundle\Template\Controller\HasContactInfo;
 
 class SupplierController extends CrudController
 {
     use TrackCreate;
     use HasContactInfo;
-    use HasAccount;
+    use HasInventoryAccount;
 
     public function __construct()
     {
@@ -61,7 +61,7 @@ class SupplierController extends CrudController
     {
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateContact($o, $data, $is_new);
-        $this->updateHasAccount($o, $data, $is_new);
+        $this->updateHasInventoryAccount($o, $data, $is_new);
     }
     
     protected function buildData($o)
