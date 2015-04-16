@@ -9,7 +9,7 @@ use Catalyst\CoreBundle\Template\Entity\HasName;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\ContactBundle\Template\Entity\HasAddress;
 use Catalyst\ContactBundle\Template\Entity\HasPhones;
-use Catalyst\InventoryBundle\Template\Entity\HasAccount;
+use Catalyst\InventoryBundle\Template\Entity\HasInventoryAccount;
 
 /**
  * @ORM\Entity
@@ -21,25 +21,25 @@ class Warehouse
     use HasName;
     use TrackCreate;
     use HasAddress;
-    use HasAccount;
+    use HasInventoryAccount;
     use HasPhones;
 
-    /** @ORM\Column(type="string", length=25) */
+    /** @ORM\Column(type="string", length=25, nullable=true) */
     protected $internal_code;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_threshold;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_shopfront;
 
-    /** @ORM\Column(type="integer") */
+    /** @ORM\Column(type="integer", nullable=true) */
     protected $pm_terms;
 
     public function __construct()
     {
         $this->initHasAddress();
-        $this->initHasAccount();
+        $this->initHasInventoryAccount();
         $this->initHasPhones();
         $this->initTrackCreate();
 

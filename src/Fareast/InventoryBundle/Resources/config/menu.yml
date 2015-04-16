@@ -2,39 +2,22 @@ menu_items:
     - id: menu_inventory
       acl: cat_inv.menu
       label: Inventory
-      icon: fa-suitcase
-    # - id: cat_inv_wh_index
-    #   acl: cat_inv_wh.menu
-    #   label: Warehouse
-    #   parent: menu_inventory
-    # - id: cat_inv_prod_index
-    #   acl: cat_inv_prod.menu
-    #   label: Product / Service
-    #   parent: menu_inventory
-    # - id: cat_inv_brand_index
-    #   acl: cat_inv_brand.menu
-    #   label: Brand
-    #   parent: menu_inventory
-    # - id: cat_inv_pg_index
-    #   acl: cat_inv_pg.menu
-    #   label: Product Group
-    #   parent: menu_inventory
-    # - id: cat_inv_trans_index
-    #   acl: cat_inv_trans.menu
-    #   label: Transfer Stock
-    #   parent: menu_inventory
-    - id: feac_inv_begin
+      icon: fa-suitcase    
+    - id: feac_inv_begin_index
       label: Beginning Inventory
       parent: menu_inventory
-    - id: feac_inv_borrowed
-      label: Borrowed Items/Pull Out
+    - id: feac_inv_borrowed_index
+      label: Borrowed Items
       parent: menu_inventory
-    - id: feac_inv_adjust
+    - id: feac_inv_issued_index
+      label: Issued Items
+      parent: menu_inventory
+    - id: feac_inv_adjust_index
       label: Stock Adjustment
       parent: menu_inventory
-    - id: feac_inv_transfer
+    - id: feac_inv_transfer_index
       label: Transfer Stock
       parent: menu_inventory
-    - id: feac_inv_warehouse
+    - id: feac_inv_warehouse_index
       label: Warehouse Stock
       parent: menu_inventory

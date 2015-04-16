@@ -1,0 +1,123 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Borrowed Items</div>
+            </div>
+        
+
+        <div class="portlet-body form">
+            <form method="post" class="form-horizontal">
+                <div class="form-body">
+                    <h4 class="form-section"> Information </h4>                    
+                    {{ f.group_select('Borrower','user_opts',user_opts,2,3,4)}}
+                    {{ f.group_text('Department','dept',object.getWarehouse|default(),3,4,true)}}
+                    {{ f.group_date('Date Issued', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 4) }}                    
+                    {{ f.group_date('Date Returned', 'date_return', object.getDateReturned|date('m/d/Y'), 3, 4) }}
+
+                    <h4 class="form-section"> Item Entries </h4>
+
+                    <div>
+                        <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
+                        <a id="btn_from_add" href="" class="btn green">Print</a>
+                    </div>
+
+                    <div class="row table-responsive" style="padding-top:10px">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Description</th>
+                                        <th>Unit of Measurement</th>
+                                        <th>Purpose/Remarks</th>
+                                        <th>Quantity</th>                                            
+                                        <th style="width: 60px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="from_table">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('feac_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <select id="prod_opts" class="form-control select2">
+        {{ f.options(prod_opts,0)}}
+    </select>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        ComponentsPickers.init();
+
+        $('#cform-user_opts').change(function(){
+            var user =  $('#cform-user_opts').val();
+
+            var url = "{{ path('feac_inv_borrowed_dept', { id: ':id'}) }}";
+                url = url.replace(":id", user);
+
+                $.getJSON(url, function(data){
+                    // console.log(data)
+                    $('#cform-dept').val(data.dept);
+                });
+
+        });
+
+        var add_button = $(".add-field");
+        var wrapper = $("#from_table");
+        var field = '<tr>';        
+        field += '<td><select name="prod_opts" id="prod_opts" class="form-control select2">';
+        field += $('#prod_opts').html();   
+        field += '</select> </td>';                    
+        field += '<td> <input type="text" name="desc" id="desc" class="form-control"></td>';
+        field += '<td> <input type="text" name="uom" id="uom" class="form-control" readonly></td>';
+        field += '<td> <input type="text" name="remarks" id="remarks" class="form-control"></td>';
+        field += '<td> <input type="number" name="qty" id="qty" min="0" class="form-control"></td>';
+        field += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
+        field += '</tr>';
+
+        $(add_button).click(function(){
+            $(wrapper).append(field);
+
+            $('#prod_opts').change(function(){
+                var prod_id = $('#prod_opts').val();
+                var url = "{{ path('feac_inv_borrowed_product', { prod_id: ':id'}) }}";
+                    url = url.replace(":id", prod_id);
+
+                    $.getJSON(url, function(data){
+                        $('#uom').val(data.uom);
+                    });
+            });
+        });
+
+
+        //remove row
+        $(document).on("click",".remove_field", function(e){
+            e.preventDefault();            
+            var tr = $(this).closest('tr');
+            tr.remove();
+            return false;
+        });
+    });
+</script>
+{% endblock %}

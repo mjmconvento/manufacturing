@@ -2,24 +2,24 @@ menu_items:
     - id: feac_settings
       label: Settings
       icon: fa-wrench
-    - id: feac_set_supp
+    - id: feac_set_supp_index
       label: Supplier Management
       parent: feac_settings
-    - id: feac_set_cust
+    - id: feac_set_cust_index
       label: Customer Management
       parent: feac_settings
-    - id: feac_set_wh
+    - id: feac_set_wh_index
       label: Warehouse Management
       parent: feac_settings
-    - id: feac_set_prod
+    - id: feac_set_prod_index
       label: Product Management
       parent: feac_settings
-    - id: feac_set_cat
+    - id: feac_set_cat_index
       label: Category Management
       parent: feac_settings
-    - id: feac_set_raw
+    - id: feac_set_raw_index
       label: Raw Materials Management
       parent: feac_settings
-    - id: feac_set_assets
+    - id: feac_set_assets_index
       label: Fixed Assets Management
       parent: feac_settings

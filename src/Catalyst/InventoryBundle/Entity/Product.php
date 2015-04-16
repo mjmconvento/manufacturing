@@ -9,6 +9,7 @@ use Catalyst\CoreBundle\Template\Entity\HasName;
 use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\TrackUpdate;
+use Fareast\InventoryBundle\Entity\ProductType;
 
 use stdClass;
 
@@ -29,16 +30,16 @@ class Product
     /** @ORM\Column(type="string", length=20) */
     protected $uom;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_service;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_sale;
 
-    /** @ORM\Column(type="boolean") */
+    /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_purchase;
 
-     /** @ORM\Column(type="boolean") */
+     /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_perishable;
     
     /** @ORM\Column(type="decimal", precision=13, scale=2) */
@@ -67,6 +68,12 @@ class Product
      * @ORM\JoinColumn(name="prodgroup_id", referencedColumnName="id")
      */
     protected $prodgroup;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\Fareast\InventoryBundle\Entity\ProductType")
+     * @ORM\JoinColumn(name="prodtype_id", referencedColumnName="id")
+     */
+    protected $prodtype;
 
     /**
      * @ORM\ManyToOne(targetEntity="Brand")
@@ -169,6 +176,12 @@ class Product
         return $this;
     }
 
+    public function setProductType(ProductType $type)
+    {
+        $this->prodtype = $type;
+        return $this;
+    }
+
     public function setBrand(Brand $brand)
     {
         $this->brand = $brand;
@@ -253,6 +266,11 @@ class Product
     public function getProductGroup()
     {
         return $this->prodgroup;
+    }
+
+    public function getProductType()
+    {
+        return $this->prodtype;
     }
 
     public function getBrand()
@@ -362,6 +380,7 @@ class Product
         $data->sku = $this->sku;
         $data->name = $this->name;        
         $data->prodgroup_id = $this->prodgroup->getID();
+        $data->prodtype_id = $this->prodtype->getID();
         $data->uom = $this->uom;
         $data->supp_code = $this->supp_code;
         $data->flag_service = $this->flag_service;

@@ -6,9 +6,9 @@ use Catalyst\InventoryBundle\Entity\Account;
 use Catalyst\InventoryBundle\Entity\Warehouse;
 use Catalyst\PurchasingBundle\Entity\Supplier;
 
-trait HasAccount
+trait HasInventoryAccount
 {
-    protected function updateHasAccount($o, $data, $is_new)
+    protected function updateHasInventoryAccount($o, $data, $is_new)
     {
         
         if($is_new){
@@ -23,6 +23,7 @@ trait HasAccount
                 $prefix = 'Supplier: ';
                 $allow = true;
             }
+                        
            
             $account = new Account();
             $account->setAllowNegative($allow);
@@ -32,7 +33,7 @@ trait HasAccount
             $em = $this->getDoctrine()->getManager();
             $em->persist($account);
             $em->flush();
-            $o->setAccount($account);
+            $o->setInventoryAccount($account);
         }
     }
 }

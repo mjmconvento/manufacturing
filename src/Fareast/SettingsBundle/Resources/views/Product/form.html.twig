@@ -1,0 +1,113 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">{% block form_header %}{% endblock %}</div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        {{ form.group_text('Product Code','code',object.getCode|default(''),3,4)}}
+                        {{ form.group_text('Product Name','name',object.getCode|default(''),3,4)}}
+                        {{ form.group_select('Category','prodgroup',object.getCode|default(''),2,3,4)}}
+                        {{ form.group_text('Unit of Measurement','uom',object.getCode|default(''),3,4)}}
+                        {{ form.group_number('Selling Price','sell_price',object.getCode|default(''),3,4)}}                        
+                        {# include "CatalystContactBundle::form.contact_company.html.twig" %}
+                        {% for contact in object.getContacts %}
+                            {% include "CatalystContactBundle::form.contact_individual.html.twig" with {"object":contact} %}
+                        {% endfor #}
+                    </div>
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{ path(route_list) }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+</div>
+
+{# include "CatalystContactBundle::modal.contact.html.twig" %}
+{% include "CatalystContactBundle::modal.has_contact_persons.html.twig" #}
+{% endblock %}
+
+
+{% block js %}
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_contact_persons.js') }}"></script>
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_phones2.js') }}"></script>
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_addresses.js') }}"></script>
+<script src="{{ asset('bundles/catalystcontact/js/catalyst.has_contactinfo.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script>
+$(document).ready(function() {
+    FormValidation.init(); // init form validation
+
+    // set default error and success elements
+    jQuery.validator.setDefaults({
+        errorClass: 'help-block',
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {
+                error.appendTo(element.parent().last());
+                element.parent().parent().addClass('has-error');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                error.appendTo(element.parent().parent().parent().parent().last());
+                element.parent().parent().parent().parent().parent().addClass('has-error');
+            }
+            else
+            {
+                error.appendTo(element.parent().parent().last());
+                element.parent().parent().parent().addClass('has-error');
+            }
+        },
+        success: function(element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {  
+                element.parent().parent().removeClass('has-error');
+                element.parent().parent().addClass('has-success');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                element.parent().parent().parent().parent().parent().addClass('has-error');
+                element.parent().parent().parent().parent().parent().addClass('has-success');
+            }
+            else
+            {  
+                element.parent().parent().parent().removeClass('has-error');
+                element.parent().parent().parent().addClass('has-success');
+            }
+
+            element.remove();
+        }
+    });
+
+    // validate form elements
+    $(".form-horizontal").validate({
+        onfocusout: function(element) {
+           this.element(element);
+        },
+        rules: {
+
+        },
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+});
+</script>
+{% endblock %}

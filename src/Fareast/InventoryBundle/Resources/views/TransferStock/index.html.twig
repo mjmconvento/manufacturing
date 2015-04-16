@@ -1,0 +1,140 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">{{list_title}}</div>
+            </div>
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        {{ f.group_select('Department Source','wh_opts',wh_opts,2,3,4)}}
+                        {{ f.group_select('Department Destination','wh_opts',wh_opts,2,3,4)}}
+                        {# f.group_textarea('Description','desc', object.getCode|default(''), 4,3,4) #}  
+
+                        <h4 class="form-section">Item Entries</h4>
+
+                        <div>
+                            <a id="btn_from_add" href="#entry_form" class="btn green add-field">Add Item</a>
+                        </div>                                         
+
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>
+                                        <tr>
+                                            <th width="25%">Category</th>
+                                            <th width="25%">Item Name</th>                                            
+                                            <th width="18%">Type</th>
+                                            <th width="20%">Unit Of Measurement</th>
+                                            <th width="13%">Quantity</th>
+                                            <th width="10%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="from_table">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('feac_inv_transfer_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <select id="prodgroup_opts" class="form-control select2">
+        {{ f.options(prodgroup_opts,0)}}
+    </select>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function() {
+        ComponentsPickers.init();
+
+        var add_button = $(".add-field");
+        var wrapper = $("#from_table");
+                
+        var i=0;
+
+        $(add_button).click(function(){
+        var row_parent = $(this).parents('tr');
+        var html = '<tr id='+ i +'>';
+        html += '<td><select name="prodgroup_opts" id="prodgroup_opts" class="form-control select2">';
+        html += $('#prodgroup_opts').html();   
+        html += '</select> </td>';
+
+        html += '<td><select id="prod_id" class="form-control">';        
+        html += '</select></td>';
+
+        html += '<td><input type="text" class="form-control" id="prodtype" readonly></td>';        
+
+        html += '<td> <input type="text" class="form-control" id="uom" readonly></td>';
+        html += '<td> <input type="number" class="form-control"></td>';
+        html += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
+        html += '</tr>';
+        i ++;                       
+            $(wrapper).append(html);
+
+            $('#prodgroup_opts').change(function(){
+                var cat = $('#prodgroup_opts').val();
+
+                $('#prod_id').empty();
+                var url = "{{ path('feac_inv_begin_productgroup', { var_id: ':id'}) }}";
+                url = url.replace(":id", cat);
+
+                $.getJSON(url, function(data){
+                    // console.log(data);
+                    $('#prod_id').html('<option></option>').select2();
+                    i=0;
+                    for(var index in data)
+                    {
+                        var prod = data[index];
+                        i++;
+                        $("#prod_id").append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
+                    }
+                });
+            });
+
+            $('#prod_id').change(function(){
+                var prod = $('#prod_id').val();
+
+                var url = "{{ path('feac_inv_begin_product', { id: ':id'}) }}";
+                url = url.replace(":id", prod);
+
+                $.getJSON(url, function(json){
+                    console.log(json)                    
+                    
+                        $("#prodtype").val(json.prodtype);
+                        $("#uom").val(json.uom);
+                   
+                });
+
+            });
+        });
+        
+        //remove row
+        $(document).on("click",".remove_field", function(e){
+            e.preventDefault();            
+            var tr = $(this).closest('tr');
+            tr.remove();
+            return false;
+        });
+    });
+</script>
+{% endblock %}

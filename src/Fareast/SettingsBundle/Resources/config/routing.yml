@@ -1,51 +1,229 @@
-feac_set_cust:
+feac_set_cust_index:
     path:     /customers
-    defaults: { _controller: FareastSettingsBundle:Settings:customer }
+    defaults: { _controller: FareastSettingsBundle:Customer:index }
 
-feac_set_cust_add:
+feac_set_cust_add_form:
     path:     /customer/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addCustomer }
+    defaults: { _controller: FareastSettingsBundle:Customer:addForm }
 
-feac_set_supp:
+feac_set_cust_add_submit:
+    pattern: /customer
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Customer:addSubmit }
+
+feac_set_cust_edit_form:
+    pattern: /customer/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Customer:editForm }
+
+feac_set_cust_edit_submit:
+    pattern: /customer/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Customer:editSubmit }
+
+feac_set_cust_delete:
+    pattern: /customer/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Customer:delete }
+
+feac_set_cust_grid:
+    path:   /customers/grid
+    defaults: { _controller: FareastSettingsBundle:Customer:grid }
+
+
+feac_set_supp_index:
     path:     /suppliers
-    defaults: { _controller: FareastSettingsBundle:Settings:supplier }
+    defaults: { _controller:FareastSettingsBundle:Supplier:index }
 
-feac_set_supp_add:
+feac_set_supp_add_form:
     path:     /supplier/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addSupplier }
+    defaults: { _controller: FareastSettingsBundle:Supplier:addForm }
 
-feac_set_wh:
+feac_set_supp_add_submit:
+    pattern: /supplier
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Supplier:addSubmit }
+
+feac_set_supp_edit_form:
+    pattern: /supplier/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Supplier:editForm }
+
+feac_set_supp_edit_submit:
+    pattern: /supplier/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Supplier:editSubmit }
+
+feac_set_supp_delete:
+    pattern: /supplier/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Supplier:delete }
+
+feac_set_supp_grid:
+    path:   /suppliers/grid
+    defaults: { _controller: FareastSettingsBundle:Supplier:grid }
+
+
+feac_set_wh_index:
     path:     /warehouses
-    defaults: { _controller: FareastSettingsBundle:Settings:warehouse }
+    defaults: { _controller: FareastSettingsBundle:Warehouse:index }
 
-feac_set_wh_add:
+feac_set_wh_add_form:
     path:     /warehouse/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addWarehouse }
+    defaults: { _controller: FareastSettingsBundle:Warehouse:addForm }
 
-feac_set_prod:
+feac_set_wh_add_submit:
+    pattern: /warehouse
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Warehouse:addSubmit }
+
+feac_set_wh_edit_form:
+    pattern: /warehouse/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Warehouse:editForm }
+
+feac_set_wh_edit_submit:
+    pattern: /warehouse/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Warehouse:editSubmit }
+
+feac_set_wh_delete:
+    pattern: /warehouse/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Warehouse:delete }
+
+feac_set_wh_grid:
+    path:   /warehouses/grid
+    defaults: { _controller: FareastSettingsBundle:Warehouse:grid }
+
+
+feac_set_prod_index:
     path:     /products
-    defaults: { _controller: FareastSettingsBundle:Settings:product }
+    defaults: { _controller: FareastSettingsBundle:Product:index }
 
-feac_set_prod_add:
+feac_set_prod_add_form:
     path:     /product/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addProduct }
+    defaults: { _controller: FareastSettingsBundle:Product:addForm }
 
-feac_set_raw:
+feac_set_prod_add_submit:
+    pattern: /product
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Product:addSubmit }
+
+feac_set_prod_edit_form:
+    pattern: /product/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Product:editForm }
+
+feac_set_prod_edit_submit:
+    pattern: /product/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Product:editSubmit }
+
+feac_set_prod_delete:
+    pattern: /product/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Product:delete }
+
+feac_set_prod_grid:
+    path:   /products/grid
+    defaults: { _controller: FareastSettingsBundle:Product:grid }
+
+
+feac_set_raw_index:
     path:     /raw_mats
-    defaults: { _controller: FareastSettingsBundle:Settings:rawMatls }
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:index }
 
-feac_set_raw_add:
+feac_set_raw_add_form:
     path:     /raw_mat/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addRawMatls }
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:addForm }
 
-feac_set_cat:
+feac_set_raw_add_submit:
+    pattern: /warehouse
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:addSubmit }
+
+feac_set_raw_edit_form:
+    pattern: /warehouse/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:editForm }
+
+feac_set_raw_edit_submit:
+    pattern: /warehouse/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:editSubmit }
+
+feac_set_raw_delete:
+    pattern: /warehouse/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:delete }
+
+feac_set_raw_grid:
+    path:   /raw_mats/grid
+    defaults: { _controller: FareastSettingsBundle:RawMaterials:grid }
+
+
+feac_set_cat_index:
     path:     /categories
-    defaults: { _controller: FareastSettingsBundle:Settings:category }
+    defaults: { _controller:FareastSettingsBundle:ProductGroup:index }
 
-feac_set_assets:
+feac_set_cat_add_form:
+    path:     /caregory/add
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:addForm }
+
+feac_set_cat_add_submit:
+    pattern: /category
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:addSubmit }
+
+feac_set_cat_edit_form:
+    pattern: /category/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:editForm }
+
+feac_set_cat_edit_submit:
+    pattern: /category/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:editSubmit }
+
+feac_set_cat_delete:
+    pattern: /category/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:delete }
+
+feac_set_cat_grid:
+    path:   /category/grid
+    defaults: { _controller: FareastSettingsBundle:ProductGroup:grid }
+
+
+feac_set_assets_index:
     path:     /assets
-    defaults: { _controller: FareastSettingsBundle:Settings:assets }
+    defaults: { _controller: FareastSettingsBundle:Assets:index }
 
-feac_set_assets_add:
+feac_set_assets_add_form:
     path:     /asset/add
-    defaults: { _controller: FareastSettingsBundle:Settings:addAssets }
+    defaults: { _controller: FareastSettingsBundle:Assets:addForm }
+
+feac_set_assets_add_submit:
+    pattern: /asset
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Assets:addSubmit }
+
+feac_set_assets_edit_form:
+    pattern: /asset/{id}
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Assets:editForm }
+
+feac_set_assets_edit_submit:
+    pattern: /asset/{id}
+    methods: [POST]
+    defaults: { _controller: FareastSettingsBundle:Assets:editSubmit }
+
+feac_set_assets_delete:
+    pattern: /asset/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastSettingsBundle:Assets:delete }
+
+feac_set_assets_grid:
+    path:   /assets/grid
+    defaults: { _controller: FareastSettingsBundle:Assets:grid }
