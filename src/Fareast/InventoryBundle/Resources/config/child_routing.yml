@@ -22,12 +22,28 @@ feac_inv_borrowed_index:
 
 feac_inv_borrowed_add_form:
     path:     /borrowed/add
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:BorrowedItems:addForm }
+
+feac_inv_borrowed_add_submit:
+    path:     /borrowed/add
+    methods:  [POST]
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:addSubmit }
 
 feac_inv_borrowed_grid:
     pattern: /grid
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:BorrowedItems:grid }
+
+feac_inv_borrowed_dept:
+    pattern: /borrowed/dept/{id}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:getDept }
+
+feac_inv_borrowed_product:
+    pattern: /borrowed/product/{prod_id}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:BorrowedItems:getProduct }
 
 feac_inv_issued_index:
     pattern:  /issued

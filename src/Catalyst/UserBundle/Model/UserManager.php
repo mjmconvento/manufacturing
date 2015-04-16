@@ -45,9 +45,9 @@ class UserManager
         return $this->getOptionsArray(
             'CatalystUserBundle:User',
             $filter, 
-            array('username' => 'ASC'),
+            array('name' => 'ASC'),
             'getID',
-            'getUsername'
+            'getName'
         );
     }
 

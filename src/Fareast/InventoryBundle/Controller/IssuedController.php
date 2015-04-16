@@ -55,6 +55,12 @@ class IssuedController extends CrudController
         $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
         $this->padFormParams($params, $obj);
 
+        $um = $this->get('catalyst_user');
+        $inv = $this->get('catalyst_inventory');
+        $params['user_opts'] = $um->getUserOptions(); 
+        $params['prod_opts'] = $inv->getProductOptions();
+
+
         return $this->render('FareastInventoryBundle:IssuedItem:add.html.twig', $params);
     }
 }

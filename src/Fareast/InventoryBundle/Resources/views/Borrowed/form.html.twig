@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="portlet box blue-hoki">
             <div class="portlet-title">
-                <div class="caption">Requisition/Borrowed Items</div>
+                <div class="caption">Borrowed Items</div>
             </div>
         
 
@@ -14,10 +14,10 @@
             <form method="post" class="form-horizontal">
                 <div class="form-body">
                     <h4 class="form-section"> Information </h4>                    
-                    {{ f.group_select('Borrower','borrower',object.getCode|default(''),2,3,4)}}
-                    {{ f.group_text('Department','type',object.getCode|default(''),3,4,true)}}
-                    {{ f.group_date('Date Issued', 'date_issue', object.getDateCreate|default(), 3, 4) }}                    
-                    {{ f.group_date('Date Returned', 'date_return', object.getDateCreate|default(), 3, 4) }}
+                    {{ f.group_select('Borrower','user_opts',user_opts,2,3,4)}}
+                    {{ f.group_text('Department','dept',object.getWarehouse|default(),3,4,true)}}
+                    {{ f.group_date('Date Issued', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 4) }}                    
+                    {{ f.group_date('Date Returned', 'date_return', object.getDateReturned|date('m/d/Y'), 3, 4) }}
 
                     <h4 class="form-section"> Item Entries </h4>
 
@@ -57,6 +57,12 @@
         </div>
     </div>
 </div>
+
+<div class="hidden">
+    <select id="prod_opts" class="form-control select2">
+        {{ f.options(prod_opts,0)}}
+    </select>
+</div>
 {% endblock %}
 
 {% block js %}
@@ -64,19 +70,44 @@
     $(document).ready(function() {
         ComponentsPickers.init();
 
+        $('#cform-user_opts').change(function(){
+            var user =  $('#cform-user_opts').val();
+
+            var url = "{{ path('feac_inv_borrowed_dept', { id: ':id'}) }}";
+                url = url.replace(":id", user);
+
+                $.getJSON(url, function(data){
+                    // console.log(data)
+                    $('#cform-dept').val(data.dept);
+                });
+
+        });
+
         var add_button = $(".add-field");
         var wrapper = $("#from_table");
-        var field = '<tr>'+
-                    '<td> <input type="text" class="form-control"></td>' +
-                    '<td> <input type="text" class="form-control"></td>' +
-                    '<td> <input type="text" class="form-control"></td>' +
-                    '<td> <input type="text" class="form-control"></td>' +
-                    '<td> <input type="number" class="form-control"></td>' +
-                    '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Remove</a></td>' +
-                    '</tr>';
+        var field = '<tr>';        
+        field += '<td><select name="prod_opts" id="prod_opts" class="form-control select2">';
+        field += $('#prod_opts').html();   
+        field += '</select> </td>';                    
+        field += '<td> <input type="text" name="desc" id="desc" class="form-control"></td>';
+        field += '<td> <input type="text" name="uom" id="uom" class="form-control" readonly></td>';
+        field += '<td> <input type="text" name="remarks" id="remarks" class="form-control"></td>';
+        field += '<td> <input type="number" name="qty" id="qty" min="0" class="form-control"></td>';
+        field += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
+        field += '</tr>';
 
         $(add_button).click(function(){
             $(wrapper).append(field);
+
+            $('#prod_opts').change(function(){
+                var prod_id = $('#prod_opts').val();
+                var url = "{{ path('feac_inv_borrowed_product', { prod_id: ':id'}) }}";
+                    url = url.replace(":id", prod_id);
+
+                    $.getJSON(url, function(data){
+                        $('#uom').val(data.uom);
+                    });
+            });
         });
 
 

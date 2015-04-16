@@ -104,11 +104,12 @@ class UserController extends CrudController
             }
         }
 
-        //branch options
-        // $wh = $inv->findWarehouse($data['warehouse_id']);
-        // if($wh == null)
-        //     throw new ValidationException('Could not find branch specified.');
-        // $o->setWarehouse($wh);
+        // branch options
+        $inv = $this->get('catalyst_inventory');
+        $wh = $inv->findWarehouse($data['wh_opts']);
+        if($wh == null)
+            throw new ValidationException('Could not find branch specified.');
+        $o->setWarehouse($wh);
 
         // check if we need to have password
         if ($is_new)
