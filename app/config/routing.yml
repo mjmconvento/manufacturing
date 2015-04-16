@@ -1,3 +1,7 @@
+catalyst_pdf:
+    resource: "@CatalystPdfBundle/Resources/config/routing.yml"
+    prefix:   /
+
 fareast_dashboard:
     resource: "@FareastDashboardBundle/Resources/config/routing.yml"
     prefix:   /

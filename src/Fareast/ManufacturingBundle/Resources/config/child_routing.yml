@@ -1,11 +1,42 @@
 feac_mfg_prod_cal:
-    path:     /production-calendar
+    pattern: /production-calendar
     defaults: { _controller: FareastManufacturingBundle:Production:index }
 
-feac_mfg_shift_rep:
-    path:     /shift-report
-    defaults: { _controller: FareastManufacturingBundle:Production:shiftReport }
+feac_mfg_prod_cal_pdf:
+    pattern: /production-calendar/pdf/{date}
+    defaults: { _controller: FareastManufacturingBundle:Production:printPDF }
+
+feac_mfg_prod_cal_ajax:
+    pattern: /production-calendar/ajax/{date}
+    methods: [GET]
+    defaults: { _controller: FareastManufacturingBundle:Production:dailyConsumptionAjax }
 
 feac_mfg_daily_cons:
-    path:     /daily-consumption
+    pattern: /daily-consumption/{date}
+    methods: [GET]
     defaults: { _controller: FareastManufacturingBundle:Production:dailyConsumption }
+
+feac_mfg_daily_cons_submit:
+    pattern: /daily-consumption/{date}
+    methods: [POST]
+    defaults: { _controller: FareastManufacturingBundle:Production:dailyConsumptionSubmit }
+
+feac_mfg_shift_rep_new:
+    pattern: /shift-report/{date}
+    methods: [GET]
+    defaults: { _controller: FareastManufacturingBundle:Production:shiftReport }
+
+feac_mfg_shift_rep_new_submit:
+    pattern: /shift-report/{date}
+    methods: [POST]
+    defaults: { _controller: FareastManufacturingBundle:Production:shiftReportSubmit }
+
+feac_mfg_shift_rep_edit:
+    pattern: /shift-report/edit/{id}
+    methods: [GET]
+    defaults: { _controller: FareastManufacturingBundle:Production:shiftReportEdit }
+
+feac_mfg_shift_rep_edit_submit:
+    pattern: /shift-report/edit/{id}
+    methods: [POST]
+    defaults: { _controller: FareastManufacturingBundle:Production:shiftReportEditSUbmit }

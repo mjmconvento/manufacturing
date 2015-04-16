@@ -1,0 +1,700 @@
+<page>
+    <style>
+        td
+        {
+            font-size: 11px;
+            border-left: none;
+            border-right: none;
+        }
+        th
+        {
+            font-size: 11px;
+            border-left: none;
+            border-right: none;
+        }
+    </style>
+
+
+    <div style="text-align:center; font-family:arial; padding-bottom: 7px; font-size: 15px">DAILY PRODUCTION REPORT</div>
+
+    <div style="text-align:center; font-family:arial; font-size: 15px">{{ date|date('M d, Y') }}</div>
+
+    <br/>
+    <table style="border: 1px solid black; border-collapse: collapse;" border="1">
+        <tr>
+            <th style="width:200px; text-align:center"> </th>
+            <th style="width:100px; text-align:center"> 1st Shift </th>
+            <th style="width:100px; text-align:center"> 2nd Shift </th>
+            <th style="width:100px; text-align:center"> 3rd Shift </th>
+            <th style="width:100px; text-align:center"> TODAY </th>
+            <th style="width:100px; text-align:center"> TO-DATE </th>
+        </tr>
+       
+        <tr>
+            <td style="width:200px; text-align:center"> Supervisor in Charge </td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getUserCreate.getName }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <th style="width:200px;" colspan="6"> PRODUCTION </th>
+        </tr>
+
+        <tr>
+            <td style="width:200px;">Fine alcohol (IN)</td>
+            {% set fine_alcohol_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set fine_alcohol_today = fine_alcohol_today + s.getFineAlcohol %}
+                <td style="width:100px; text-align:center">{{ s.getFineAlcohol|number_format(2) }}</td>
+            {% endfor %}
+
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ fine_alcohol_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ fine_alcohol_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;r">Heads alcohol</td>
+            {% set head_alcohol_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set head_alcohol_today = head_alcohol_today + s.getHeadsAlcohol %}
+                <td style="width:100px; text-align:center">{{ s.getHeadsAlcohol|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ head_alcohol_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ head_alcohol_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;">% H&T / liter alcohol produced</td>
+            {% set percent_alcohol = 0 %}
+
+            {% for s in shift_reports %}
+                {% set percent_alcohol = s.getHeadsAlcohol / s.getFineAlcohol %}
+                <td style="width:100px; text-align:center">{{ percent_alcohol|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            {% set percent_alcohol_today = head_alcohol_today / fine_alcohol_today %}
+            <td style="width:100px; text-align:center">{{ percent_alcohol_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ percent_alcohol_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;">Alcohol Quality (PTT) production</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getPPT|number_format(2) }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+
+        <tr>
+            <td style="width:200px;">Alcohol Quality (PROOF) production</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getPROOF|number_format(2) }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+
+        <tr>
+            <td style="width:200px;">Column Operator</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getColumnOperator }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+
+        <tr>
+            <th style="width:200px;" colspan="6"> WITHDRAWALS </th>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Beginning Balance (liters)</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center" colspan="2">Beginning Balance (liters)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">In (Production)</td>
+            <td style="width:100px; text-align:center">{{ fine_alcohol_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center" colspan="2">In (Production)</td>
+            <td style="width:100px; text-align:center">{{ head_alcohol_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Out (Sales)</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center" colspan="2">Out (Sales)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Theoretical Alcohol Stock</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center" colspan="2">Theoretical Alcohol Stock</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+
+        <tr>
+            <th style="width:200px;" colspan="6"> PRODUCTION DATA </th>
+        </tr>
+
+        <tr>
+            <th style="width:200px;" colspan="6"> Fermentation: </th>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Average % alcohol in beer</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getBeerAlcohol }} %</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Fermentation</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getFermentation }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Mixer</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getMixer }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <th style="width:200px;" colspan="6"> Biogas: </th>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Biogas produced (cu.m.)</td>
+            {% set biogas_produced_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set biogas_produced_today = biogas_produced_today + s.getBiogasProduced %}
+                <td style="width:100px; text-align:center">{{ s.getBiogasProduced }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ biogas_produced_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ biogas_produced_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">cu.m. gas/liter alcohol</td>
+            {% set gpla_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set gpla_today = gpla_today + s.getGPLA %}
+                <td style="width:100px; text-align:center">{{ s.getGPLA }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ gpla_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ gpla_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Equivalent font-size:13px (L)</td>
+            {% set bunker_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set bunker_today = bunker_today + s.getBiogasBunker %}
+                <td style="width:100px; text-align:center">{{ s.getBiogasBunker }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ bunker_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ bunker_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Steam produced (lbs)</td>
+            {% set steam_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set steam_today = steam_today + s.getBiogasSteam %}
+                <td style="width:100px; text-align:center">{{ s.getBiogasSteam|number_format }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ steam_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ steam_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">VFA (sp3)</td>
+            {% set vfa_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set vfa_today = vfa_today + s.getVFA %}
+                <td style="width:100px; text-align:center">{{ s.getVFA }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ vfa_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ vfa_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">COD loading </td>
+            {% set cod_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set cod_today = cod_today + s.getCOD %}
+                <td style="width:100px; text-align:center">{{ s.getCOD }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ cod_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ cod_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Slops feeding (m3) </td>
+            {% set slops_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set slops_today = slops_today + s.getSlops %}
+                <td style="width:100px; text-align:center">{{ s.getSlops }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ slops_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ slops_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Sampling Point </td>
+
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getSampling }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Setting Volume</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getVolume }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Temperature</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getTemperature }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">pH</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getPH|number_format() }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <th style="width:200px;" colspan="6"> Bunker Fuel/Steam: </th>
+        </tr>
+
+
+        <tr>
+            <td style="width:200px; ">kilos of rice husk used</td>
+            {% set husk_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set husk_today = husk_today + s.getHusk %}
+                <td style="width:100px; text-align:center">{{ s.getHusk|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ husk_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ husk_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Equivalent bunker (L)</td>
+            {% set bunker_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set bunker_today = bunker_today + s.getBunker %}
+                <td style="width:100px; text-align:center">{{ s.getBunker|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ bunker_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ bunker_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Liter of alcohol/liter of bunker</td>
+            {% set loa_lob_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set loa_lob_today = loa_lob_today + s.getLOALOB %}
+                <td style="width:100px; text-align:center">{{ s.getLOALOB|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ loa_lob_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ loa_lob_today|number_format(2) }}</td>
+        </tr>
+
+
+        <tr>
+            <td style="width:200px; ">Steam produced inrice husk (lbs)</td>
+            {% set steam_produced_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set steam_produced_today = steam_produced_today + s.getSteamProduced %}
+                <td style="width:100px; text-align:center">{{ s.getSteamProduced|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ steam_produced_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ steam_produced_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Total Steam produced (lbs)</td>
+            {% set produced_steam_today = 0 %}
+
+            {% for s in shift_reports %}
+                {% set produced_steam_today = produced_steam_today + s.getProducedSteam %}
+                <td style="width:100px; text-align:center">{{ s.getProducedSteam|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            <td style="width:100px; text-align:center">{{ produced_steam_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ produced_steam_today|number_format(2) }}</td>
+        </tr>
+
+
+        <tr>
+            <td style="width:200px; ">Liter of alcohol/kg of rice husk</td>
+
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getLOAHusk|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            {% set loa_husk_today = fine_alcohol_today / husk_today %}
+            <td style="width:100px; text-align:center">{{ loa_husk_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ loa_husk_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">kg of rice husk/liter of alcohol</td>
+
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getHuskLOA|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            {% set husk_loa_today =  husk_today / fine_alcohol_today %}
+            <td style="width:100px; text-align:center">{{ husk_loa_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ husk_loa_today|number_format(2) }}</td>
+        </tr>
+
+
+        <tr>
+            <td style="width:200px; ">Lbs of steam/liter alcohol</td>
+
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getSteamLOA|number_format(2) }}</td>
+            {% endfor %}
+            
+            {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
+            {% set steam_loa_today =  produced_steam_today / fine_alcohol_today %}
+            <td style="width:100px; text-align:center">{{ steam_loa_today|number_format(2) }}</td>
+            <td style="width:100px; text-align:center">{{ steam_loa_today|number_format(2) }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Boiler in operation</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getBoiler }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+        <tr>
+            <td style="width:200px; ">Boiler Operator</td>
+            {% for s in shift_reports %}
+                <td style="width:100px; text-align:center">{{ s.getBoilerOperator }}</td>
+            {% endfor %}
+            {% embed "FareastManufacturingBundle:Production:pdf/filler2.html.twig" %}{% endembed %}
+        </tr>
+
+
+        <tr>
+            <th style="width:200px;" colspan="3"> YIELDS AND RECOVERIES </th>
+            <th style="width:200px;" colspan="3"> LABOR </th>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Fermentation Efficiency</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <th style="width:100px; text-align:center">No. of Personnel</th>
+            <th style="width:100px; text-align:center">Total M/H</th>
+            <th style="width:100px; text-align:center">Liters/Mh</th>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Distillation Efficiency</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Direct Labor</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Overall Efficiency</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Maintenance</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Ave. % alcohol in beer</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Support Group</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Liters fine alc./gal molasses</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Plant Managers</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+
+        <tr>
+            <td style="width:100px;">Liters total alc./gal molasses</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Guard</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Liters fine alc. /ton molasses</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Extra</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:100px;">Liters total alc. /ton molasses</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">Total</td>
+            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+
+        <tr>
+            <th style="width:200px;" colspan="3"> RAW MATERIALS </th>
+            <th style="width:200px;" colspan="3"> RAW MATERIALS </th>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Molasses Beginning Balance</td>
+            <td style="width:100px;">{{ consumption.getMolBeginningBalance }} gallons</td>
+            <td style="width:200px;" colspan="2">Caustic Soda Beginning Balance</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaBeginningBalance }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Molasses Purchases  </td>
+            <td style="width:100px;">{{ consumption.getMolPurchases }} gallons</td>
+            <td style="width:200px;" colspan="2">Add :Purchases</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Pumped to MDT</td>
+            <td style="width:100px;">{{ consumption.getMolPumpedMDT }} gallons</td>
+            <td style="width:200px;" colspan="2">Less: Production Consumption</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+
+        <tr>
+            {% set running_balance = (consumption.getMolBeginningBalance + consumption.getMolPurchases) - consumption.getMolPumpedMDT %}
+            <td style="width:200px;" colspan="2">Running Balance</td>
+            <td style="width:100px;">{{ running_balance }} gallons</td>
+            <td style="width:200px;" colspan="2">Running Balance (liters)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Less:  Pondo</td>
+            <td style="width:100px;">{{ consumption.getMolPondo }} gallons</td>
+            <td style="width:200px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            {% set mol_working_balance = running_balance - consumption.getMolPondo %}
+            <td style="width:200px;" colspan="2">Molasses Working Balance</td>
+            <td style="width:100px;">{{ mol_working_balance }} gallons</td>
+            <td style="width:200px;" colspan="2">Urea Beginning Balance</td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaBeginningBalance }}</td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Molasses used in Production (Gal)</td>
+            <td style="width:100px;">{{ consumption.getMolProductionGal }} gallons</td>
+            <td style="width:200px;" colspan="2">Add :Purchases</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Molasses used in Production (Ton)</td>
+            <td style="width:100px;">{{ consumption.getMolProductionTon }} tons</td>
+            <td style="width:200px;" colspan="2">Less: Production Consumption</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">TSAI</td>
+            <td style="width:100px;">{{ consumption.getMolTsai }}</td>
+            <td style="width:200px;" colspan="2">Running Balance (bags)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">BRIX</td>
+            <td style="width:100px;">{{ consumption.getMolBrix }}</td>
+            <td style="width:200px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2"></td>
+            <td style="width:100px;"></td>
+            <td style="width:200px;" colspan="2">Buffer Tank Level</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Sulfuric Acid Beginning Balance</td>
+            <td style="width:100px;"> gallons</td>
+            <th style="width:200px;" colspan="2">ELECTRICITY</th>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Add :Purchases</td>
+            <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
+            <td style="width:200px;" colspan="2">Electricity final reading(kw)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Less: Production Consumption</td>
+            <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
+            <td style="width:200px;" colspan="2">Electricity beginning (kw)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <td style="width:200px;" colspan="2">Running Balance (gallons)</td>
+            <td style="width:100px;">gallons</td>
+            <td style="width:200px;" colspan="2">Electricity used (kw)</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+
+        <tr>
+            <td style="width:200px;" colspan="2"></td>
+            <td style="width:100px;"></td>
+            <td style="width:200px;" colspan="2">kw used/liter of alcohol</td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;" colspan="3">REMARKS / STOPPAGES: Causes / Downtime / Action taken:</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+        <tr>
+            <th style="width:400px;color:white" colspan="3">hidden</th>
+            <td style="width:100px;" colspan="2"></td>
+            <td style="width:100px; text-align:center"></td>
+        </tr>
+
+    </table>
+
+</page>

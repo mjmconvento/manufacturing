@@ -1,0 +1,14 @@
+{% if shift_reports|length == 0 %}
+    <td style="width:100px; text-align:center"></td>
+    <td style="width:100px; text-align:center"></td>
+    <td style="width:100px; text-align:center"></td>
+{% endif %}
+
+{% if shift_reports|length == 1 %}
+    <td style="width:100px; text-align:center"></td>
+    <td style="width:100px; text-align:center"></td>
+{% endif %}
+
+{% if shift_reports|length == 2 %}
+    <td style="width:100px; text-align:center"></td>
+{% endif %}
