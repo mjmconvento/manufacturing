@@ -33,21 +33,21 @@
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Mollases</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Mollases" value="">
+                                                            <input id="mollases" name="mollases" class="form-control " placeholder="Mollases" value="{{ consumption.getMolRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
 
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Bunker</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Bunker" value="">
+                                                            <input id="bunker" name="bunker" class="form-control " placeholder="Bunker" value="{{ consumption.getBunkerRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
 
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Sulfuric Acid</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Sulfuric Acid" value="">
+                                                            <input id="acid" name="acid" class="form-control " placeholder="Sulfuric Acid" value="{{ consumption.getSulRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -58,29 +58,29 @@
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Caustic Soda</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Caustic Soda" value="">
+                                                            <input id="soda" name="soda" class="form-control " placeholder="Caustic Soda" value="{{ consumption.getSodaRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
 
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Urea</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Urea" value="">
+                                                            <input id="urea" name="urea" class="form-control " placeholder="Urea" value="{{ consumption.getUreaRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
 
                                                     <div id="cgroup-sku" class="form-group">
                                                         <label class="col-md-5 control-label">Salt</label>
                                                         <div class="col-md-7">
-                                                            <input id="name" name="name" class="form-control " placeholder="Salt" value="">
+                                                            <input id="salt" name="salt" class="form-control " placeholder="Salt" value="{{ consumption.getSaltRunningBalance|default(0) }}" readonly="readonly">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4" style="text-align: center;">
-                                                <a href="{{ path('feac_mfg_daily_cons') }}" class="btn blue">Edit/View All</a><br><br>
-                                                <a href="{{ asset('bundles/fareasttemplate/files/dpr.pdf') }}" target="_blank" class="btn green">Generate Daily Production Report</a>
+                                                <a href="{{ path('feac_mfg_daily_cons', { date: today }) }}" id="edit_button" class="btn blue">Edit/View All</a><br><br>
+                                                <a href="{{ path('feac_mfg_prod_cal_pdf', {date: today }) }}" target="_blank" class="btn green">Generate Daily Production Report</a>
                                             </div>
 
                                         </div>
@@ -89,89 +89,69 @@
                             </div>
 
                         <h4 class="form-section">Shift Report</h4>
-                        <div class="row">
+                        <div class="row" id="shift_reports">
+                            {% for s in shift_reports %}
 
-                            <div class="col-sm-6 col-md-4">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <h3 style="font-weight: bold;">Jacinto G.</h3>
-                                        <h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>1st Shift - 7:00 AM - 4:00 PM</h4>
+                                {% if loop.index == 1 %}
+                                    {% set counter = '1st' %}
+                                {% endif %}
 
-                                        <div class="form-horizontal">
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Fermentation</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Fermentation" value="">
+                                {% if loop.index == 2 %}
+                                    {% set counter = '2nd' %}
+                                {% endif %}
+
+                                {% if loop.index == 3 %}
+                                    {% set counter = '3rd' %}
+                                {% endif %}
+
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="thumbnail">
+                                        <div class="caption">
+                                            <h3 style="font-weight: bold;">{{ s.getUserCreate.getName }} </h3>
+                                            <h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>{{ counter }} Shift - {{ s.getShift }}</h4>
+
+                                            <div class="form-horizontal">
+                                                <div id="cgroup-sku" class="form-group">
+                                                    <label class="col-md-5 control-label">Fermentation</label>
+                                                    <div class="col-md-7">
+                                                        <input id="name" name="name" class="form-control " placeholder="Fermentation" value="{{ s.getFermentation }}" readonly="readonly">
+                                                    </div>
+                                                </div>
+
+                                                <div id="cgroup-sku" class="form-group">
+                                                    <label class="col-md-5 control-label">Biogas</label>
+                                                    <div class="col-md-7">
+                                                        <input id="name" name="name" class="form-control " placeholder="Biogas" value="{{ s.getBiogasProduced }}" readonly="readonly">
+                                                    </div>
+                                                </div>
+
+                                                <div id="cgroup-sku" class="form-group">
+                                                    <label class="col-md-5 control-label">Bunker Fuel/Steam</label>
+                                                    <div class="col-md-7">
+                                                        <input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="{{ s.getBunker }}" readonly="readonly">
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Biogas</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Biogas" value="">
-                                                </div>
+                                            <div style="text-align: right;">
+                                                <a href="{{ path('feac_mfg_shift_rep_edit', { id : s.getID } ) }}" class="btn blue">View</a>
                                             </div>
-
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Bunker Fuel/Steam</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div style="text-align: right;">
-                                            <a href="#" class="btn blue">View</a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endfor %}
 
-                            <div class="col-sm-6 col-md-4">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <h3 style="font-weight: bold;">Terese P.</h3>
-                                        <h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>2nd Shift - 4:00 PM - 1:00 AM</h4>
-
-                                        <div class="form-horizontal">
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Fermentation</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Fermentation" value="">
-                                                </div>
-                                            </div>
-
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Biogas</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Biogas" value="">
-                                                </div>
-                                            </div>
-
-                                            <div id="cgroup-sku" class="form-group">
-                                                <label class="col-md-5 control-label">Bunker Fuel/Steam</label>
-                                                <div class="col-md-7">
-                                                    <input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div style="text-align: right;">
-                                            <a href="#" class="btn blue">View</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                        {% if shift_reports|length < 3 %}
                             <div class="col-sm-6 col-md-4">
                                 <div class="thumbnail">
                                     <div class="caption">
                                         <div style="text-align: center;">
-                                            <a href="{{ path('feac_mfg_shift_rep') }}" class="btn green">Create Shift Report</a>
+                                            <a href="{{ path('feac_mfg_shift_rep_new', { date: today }) }}" class="btn green">Create Shift Report</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        {% endif %}
 
                         </div>
 
@@ -201,10 +181,109 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/bootstrap-datepaginator/bootstrap-datepaginator.min.js') }}"></script>
 
 <script>
+
+
 jQuery(document).ready(function() {       
     ComponentsPickers.init();
 
-    $('#datepaginator').datepaginator();
+    $('#datepaginator').datepaginator({
+        onSelectedDateChanged: function(event, date) 
+        {    
+            date_picked = moment(date).format('YYYYMMDD'); 
+        
+            $("#edit_button").attr("href", "/manufacturing/daily-consumption/" + date_picked);
+
+            $.getJSON('/manufacturing/production-calendar/ajax/' + date_picked, function(data) 
+            {
+                $('#mollases').val(data.balance_mollases);
+                $('#bunker').val(data.balance_bunker);
+                $('#acid').val(data.balance_acid);
+                $('#soda').val(data.balance_soda);
+                $('#urea').val(data.balance_urea);
+                $('#salt').val(data.balance_salt);
+
+                var ids = data.shift_reports_id.toString().split(',');
+                var fermentations = data.shift_reports_fermentations.toString().split(',');
+                var biogas = data.shift_reports_biogas.toString().split(',');
+                var bunker = data.shift_reports_bunker.toString().split(',');
+                var shift = data.shift_reports_shift.toString().split(',');
+                var user = data.shift_reports_user.toString().split(',');
+
+                $('#shift_reports').empty();
+
+                var counter = 0;
+                var append = '';
+                for (i = 0; i < ids.length; i++) 
+                { 
+                    counter++;
+                    if (counter == 1)
+                    {
+                        shift_counter = "1st";
+                    }
+                    else if (counter == 2)
+                    {
+                        shift_counter = "2nd";
+                    }
+                    else if (counter == 3)
+                    {
+                        shift_counter = "3rd";
+                    }
+
+                    if (ids[i] != '')
+                    {
+                        append = '<div class="col-sm-6 col-md-4">';
+                        append += '<div class="thumbnail">';
+                        append += '<div class="caption">'; 
+                        append += '<h3 style="font-weight: bold;">' +  user[i] +'</h3>';
+                        append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>' +  shift_counter + ' Shift - ' +  shift[i] + '</h4>'; 
+                        append += '<div class="form-horizontal">';
+                        append += '<div id="cgroup-sku" class="form-group">';
+                        append += '<label class="col-md-5 control-label">Fermentation</label>';
+                        append += '<div class="col-md-7">';
+                        append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="' + fermentations[i] + '" readonly="readonly">';
+                        append += '</div>';
+                        append += '</div>';
+                        append += '<div id="cgroup-sku" class="form-group">';
+                        append += '<label class="col-md-5 control-label">Biogas</label>';
+                        append += '<div class="col-md-7">';
+                        append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="' + biogas[i] + '" readonly="readonly">';
+                        append += '</div>';
+                        append += '</div>';
+                        append += '<div id="cgroup-sku" class="form-group">';
+                        append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                        append += '<div class="col-md-7">';
+                        append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="' + bunker[i] + '" readonly="readonly">';
+                        append += '</div>';
+                        append += '</div>';
+                        append += '</div>';
+                        append += '<div style="text-align: right;">';
+                        append += '<a href="/manufacturing/shift-report/edit/' + ids[i] + '" class="btn blue">View</a>';
+                        append += '</div></div></div></div>';
+
+                        $('#shift_reports').append(append);
+                    }
+                }
+
+                if (ids.length < 3)
+                {
+                    var append = '';
+                    append += '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">';
+                    append += '<div style="text-align: center;">';
+                    append += '<a href="/manufacturing/shift-report/' + date_picked + '" class="btn green">Create Shift Report</a>';
+                    append += '</div></div></div></div>';
+
+                    $('#shift_reports').append(append);
+                }
+
+
+            });
+
+        }
+    });
+
+
 });   
 </script>
 {% endblock %}
