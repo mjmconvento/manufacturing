@@ -112,6 +112,83 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_7">Electricity</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_7" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Electricity final reading(kw)', 'electricity-final', consumption.getElectricityFinal, 3, 4) }}
+                                        {{ form_tools.group_text('Electricity beginning (kw)', 'electricity-beginning', consumption.getElectricityBeginning, 3, 4) }}
+                                        {{ form_tools.group_text('Electricity used (kw)', 'electricity-used', consumption.getElectricityUsed, 3, 4, true) }}
+                                        {{ form_tools.group_text('kw used/liter of alcohol', 'alcohol-kw', consumption.getKuLOA, 3, 4, true) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_8">Yields and Recoveries</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_8" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Fermentation Efficiency', 'fermentation-efficiency', consumption.getFermentationEfficiency, 3, 4) }}
+                                        {{ form_tools.group_text('Distillation Efficiency', 'distillation-efficiency', consumption.getDistillationEfficiency, 3, 4) }}
+                                        {{ form_tools.group_text('Overall Efficiency', 'overall-efficiency', consumption.getOverallEfficiency, 3, 4) }}
+                                        {{ form_tools.group_text('Ave. % alcohol in beer', 'average-alcohol', consumption.getAverageAlcohol, 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_9">Withdrawals</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_9" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Alcohol Beginning Balance (liters)', 'alcohol-beginning', consumption.getAlcoholBeginning, 3, 4) }}
+                                        {{ form_tools.group_text('Alcohol Out (Sales)', 'alcohol-out', consumption.getAlcoholOut, 3, 4) }}
+                                        {{ form_tools.group_text('Aldehyde Beginning Balance (liters)', 'aldehyde-beginning', consumption.getAldehydeBeginning, 3, 4) }}
+                                        {{ form_tools.group_text('Aldehyde Out (Sales)', 'aldehyde-out', consumption.getAldehydeOut, 3, 4) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                    <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_10">Labor</a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_10" class="panel-collapse collapse" style="height: 0px;">
+                                    <div class="panel-body">
+                                        {{ form_tools.group_text('Direct Labor (No. of Personnel)', 'direct-labor-no', consumption.getDirectLaborNo, 3, 4) }}
+                                        {{ form_tools.group_text('Maintenance (No. of Personnel)', 'maintenance-no', consumption.getMaintenanceNo, 3, 4) }}
+                                        {{ form_tools.group_text('Support Group (No. of Personnel)', 'support-group-no', consumption.getSupportGroupNo, 3, 4) }}
+                                        {{ form_tools.group_text('Plant Managers (No. of Personnel)', 'plant-managers-no', consumption.getPlantManagersNo, 3, 4) }}
+                                        {{ form_tools.group_text('Guard (No. of Personnel)', 'guard-no', consumption.getGuardNo, 3, 4) }}
+                                        {{ form_tools.group_text('Extra (No. of Personnel)', 'extra-no', consumption.getExtraNo, 3, 4) }}
+
+                                        {{ form_tools.group_text('Direct Labor (Total M/H)', 'direct-labor-mh', consumption.getDirectLaborMH, 3, 4) }}
+                                        {{ form_tools.group_text('Maintenance (Total M/H)', 'maintenance-mh', consumption.getMaintenanceMH, 3, 4) }}
+                                        {{ form_tools.group_text('Support Group (Total M/H)', 'support-group-mh', consumption.getSupportGroupMH, 3, 4) }}
+                                        {{ form_tools.group_text('Plant Managers (Total M/H)', 'plant-managers-mh', consumption.getPlantManagersMH, 3, 4) }}
+                                        {{ form_tools.group_text('Guard (Total M/H)', 'guard-mh', consumption.getGuardMH, 3, 4) }}
+                                        {{ form_tools.group_text('Extra (Total M/H)', 'extra-mh', consumption.getExtraMH, 3, 4) }}
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
                         <!-- End of accordion -->
                     </div>
@@ -182,6 +259,12 @@ function updateSaltRunningBalance( salt_beginning_balance, salt_purchases, salt_
     $('#cform-run-salt').val(total);
 }
 
+function updateElectricityUsed( electricity_final, electricity_beginning )
+{
+    total = parseInt(electricity_final) - parseInt(electricity_beginning);
+    $('#cform-electricity-used').val(total);
+}
+
 
 jQuery(document).ready(function() {       
     ComponentsPickers.init();
@@ -228,6 +311,16 @@ jQuery(document).ready(function() {
         salt_consumed = $('#cform-salt-consumed').val();
         updateSaltRunningBalance( salt_beginning_balance, salt_purchases, salt_consumed );
     });
+
+    $('#cform-electricity-final, #cform-electricity-beginning').on( "change" , function() {
+        electricity_final = $('#cform-electricity-final').val();
+        electricity_beginning = $('#cform-electricity-beginning').val();
+        updateElectricityUsed( electricity_final, electricity_beginning );
+
+        electricity_used = $('#cform-electricity-used').val();
+        $('#cform-alcohol-kw').val(parseInt(electricity_used) * 350);
+    });
+
 
 });   
 </script>

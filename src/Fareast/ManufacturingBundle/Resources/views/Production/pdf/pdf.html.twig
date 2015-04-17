@@ -117,11 +117,11 @@
         </tr>
 
         <tr>
-            <td style="width:100px;">Beginning Balance (liters)</td>
+            <td style="width:200px;">Beginning Balance (liters)</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAlcoholBeginning|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center" colspan="2">Beginning Balance (liters)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:200px; text-align:center" colspan="2">Beginning Balance (liters)</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAldehydeBeginning|number_format }}</td>
         </tr>
 
         <tr>
@@ -134,18 +134,21 @@
 
         <tr>
             <td style="width:100px;">Out (Sales)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getAlcoholOut|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
             <td style="width:100px; text-align:center" colspan="2">Out (Sales)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getAldehydeOut|number_format }}</td>
         </tr>
 
         <tr>
+            {% set alcohol_stock = (consumption.getAlcoholBeginning + fine_alcohol_today) - consumption.getAlcoholOut %}
             <td style="width:100px;">Theoretical Alcohol Stock</td>
+            <td style="width:100px; text-align:center">{{ alcohol_stock|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+
+            {% set aldehyde_stock = (consumption.getAldehydeBeginning + head_alcohol_today) - consumption.getAldehydeOut %}
             <td style="width:100px; text-align:center" colspan="2">Theoretical Alcohol Stock</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ aldehyde_stock|number_format }}</td>
         </tr>
 
 
@@ -459,76 +462,94 @@
         </tr>
 
         <tr>
-            <td style="width:100px;">Fermentation Efficiency</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:200px;">Fermentation Efficiency</td>
+            <td style="width:100px;"> {{ consumption.getFermentationEfficiency }} %</td>
+            <th style="width:100px; text-align:center"></th>
             <th style="width:100px; text-align:center">No. of Personnel</th>
             <th style="width:100px; text-align:center">Total M/H</th>
             <th style="width:100px; text-align:center">Liters/Mh</th>
         </tr>
 
         <tr>
-            <td style="width:100px;">Distillation Efficiency</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:200px;">Distillation Efficiency</td>
+            <td style="width:100px;"> {{ consumption.getDistillationEfficiency }} %</td>
             <td style="width:100px; text-align:center">Direct Labor</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborMH }}</td>
+            {% set direct_labor_mh = fine_alcohol_today / consumption.getDirectLaborMH %}
+            <td style="width:100px; text-align:center">{{ direct_labor_mh|number_format }}</td>
         </tr>
 
         <tr>
-            <td style="width:100px;">Overall Efficiency</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:200px;">Overall Efficiency</td>
+            <td style="width:100px;"> {{ consumption.getOverallEfficiency }} %</td>
             <td style="width:100px; text-align:center">Maintenance</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceMH }}</td>
+            {% set maintenance_mh = fine_alcohol_today / consumption.getMaintenanceMH %}
+            <td style="width:100px; text-align:center">{{ maintenance_mh|number_format }}</td>
         </tr>
 
         <tr>
-            <td style="width:100px;">Ave. % alcohol in beer</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:200px;">Ave. % alcohol in beer</td>
+            <td style="width:100px;"> {{ consumption.getAverageAlcohol }} </td>
             <td style="width:100px; text-align:center">Support Group</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupMH }}</td>
+            {% set support_group_mh = fine_alcohol_today / consumption.getSupportGroupMH %}
+            <td style="width:100px; text-align:center">{{ support_group_mh|number_format }}</td>
         </tr>
 
         <tr>
-            <td style="width:100px;">Liters fine alc./gal molasses</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            {% set lfagm = fine_alcohol_today / consumption.getMolProductionGal %}
+            <td style="width:200px;">Liters fine alc./gal molasses</td>
+            <td style="width:100px;">{{ lfagm|number_format(2) }}</td>
             <td style="width:100px; text-align:center">Plant Managers</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersMH }}</td>
+            {% set plant_managers_mh = fine_alcohol_today / consumption.getPlantManagersMH %}
+            <td style="width:100px; text-align:center">{{ plant_managers_mh|number_format }}</td>
         </tr>
 
 
         <tr>
-            <td style="width:100px;">Liters total alc./gal molasses</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            {% set ltagm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionGal %}
+            <td style="width:200px;">Liters total alc./gal molasses</td>
+            <td style="width:100px;"> {{ ltagm|number_format(2) }} </td>
             <td style="width:100px; text-align:center">Guard</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getGuardNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getGuardMH }}</td>
+            {% set guard_mh = fine_alcohol_today / consumption.getGuardMH %}
+            <td style="width:100px; text-align:center">{{ guard_mh|number_format }}</td>
         </tr>
 
         <tr>
-            <td style="width:100px;">Liters fine alc. /ton molasses</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            {% set lfatm = fine_alcohol_today / consumption.getMolProductionTon %}
+            <td style="width:200px;">Liters fine alc. /ton molasses</td>
+            <td style="width:100px;"> {{ lfatm|number_format(2) }} </td>
             <td style="width:100px; text-align:center">Extra</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getExtraNo }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getExtraMH }}</td>
+            {% set extra_mh = fine_alcohol_today / consumption.getExtraMH %}
+            <td style="width:100px; text-align:center">{{ extra_mh|number_format }}</td>
         </tr>
 
         <tr>
-            <td style="width:100px;">Liters total alc. /ton molasses</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            {% set ltatm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionTon %}
+            <td style="width:200px;">Liters total alc. /ton molasses</td>
+            <td style="width:100px;"> {{ ltatm|number_format(2) }} </td>
+            
+            {% set total_no = consumption.getDirectLaborNo + consumption.getMaintenanceNo + consumption.getSupportGroupNo + consumption.getPlantManagersNo + consumption.getGuardNo + consumption.getExtraNo %}
+
+            {% set total_mh = consumption.getDirectLaborMH + consumption.getMaintenanceMH + consumption.getSupportGroupMH + consumption.getPlantManagersMH + consumption.getGuardMH + consumption.getExtraMH %}
+
+            {% set total_mh_mh = fine_alcohol_today / total_mh %}
+
+
             <td style="width:100px; text-align:center">Total</td>
-            <td style="width:100px; text-align:center"></td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ total_no|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ total_mh|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ total_mh_mh|number_format }}</td>
         </tr>
 
 
@@ -548,14 +569,14 @@
             <td style="width:200px;" colspan="2">Molasses Purchases  </td>
             <td style="width:100px;">{{ consumption.getMolPurchases }} gallons</td>
             <td style="width:200px;" colspan="2">Add :Purchases</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaPurchase }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Pumped to MDT</td>
             <td style="width:100px;">{{ consumption.getMolPumpedMDT }} gallons</td>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaConsumption }}</td>
         </tr>
 
 
@@ -564,7 +585,7 @@
             <td style="width:200px;" colspan="2">Running Balance</td>
             <td style="width:100px;">{{ running_balance }} gallons</td>
             <td style="width:200px;" colspan="2">Running Balance (liters)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaRunningBalance }}</td>
         </tr>
 
         <tr>
@@ -586,21 +607,21 @@
             <td style="width:200px;" colspan="2">Molasses used in Production (Gal)</td>
             <td style="width:100px;">{{ consumption.getMolProductionGal }} gallons</td>
             <td style="width:200px;" colspan="2">Add :Purchases</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaPurchase }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Molasses used in Production (Ton)</td>
             <td style="width:100px;">{{ consumption.getMolProductionTon }} tons</td>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaConsumption }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">TSAI</td>
             <td style="width:100px;">{{ consumption.getMolTsai }}</td>
             <td style="width:200px;" colspan="2">Running Balance (bags)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaRunningBalance }}</td>
         </tr>
 
         <tr>
@@ -628,21 +649,21 @@
             <td style="width:200px;" colspan="2">Add :Purchases</td>
             <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
             <td style="width:200px;" colspan="2">Electricity final reading(kw)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityFinal }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
             <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
             <td style="width:200px;" colspan="2">Electricity beginning (kw)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityBeginning }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Running Balance (gallons)</td>
             <td style="width:100px;">gallons</td>
             <td style="width:200px;" colspan="2">Electricity used (kw)</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityUsed }}</td>
         </tr>
 
 
@@ -650,7 +671,7 @@
             <td style="width:200px;" colspan="2"></td>
             <td style="width:100px;"></td>
             <td style="width:200px;" colspan="2">kw used/liter of alcohol</td>
-            <td style="width:100px; text-align:center"></td>
+            <td style="width:100px; text-align:center">{{ consumption.getKuLOA }}</td>
         </tr>
 
         <tr>

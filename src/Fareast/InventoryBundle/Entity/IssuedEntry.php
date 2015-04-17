@@ -12,7 +12,7 @@ use Catalyst\CoreBundle\Template\Entity\HasQuantity;
  * @ORM\Entity
  * @ORM\Table(name="inv_issued_entry")
  */
-class BorrowedEntry
+class IssuedEntry
 {
 	use HasGeneratedID;
 	use HasProduct;

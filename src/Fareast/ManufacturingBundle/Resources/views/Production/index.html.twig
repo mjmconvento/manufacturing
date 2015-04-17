@@ -141,17 +141,17 @@
                                 </div>
                             {% endfor %}
 
-                        {% if shift_reports|length < 3 %}
-                            <div class="col-sm-6 col-md-4">
-                                <div class="thumbnail">
-                                    <div class="caption">
-                                        <div style="text-align: center;">
-                                            <a href="{{ path('feac_mfg_shift_rep_new', { date: today }) }}" class="btn green">Create Shift Report</a>
+                            {% if shift_reports|length < 3 %}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="thumbnail">
+                                        <div class="caption">
+                                            <div style="text-align: center;">
+                                                <a href="{{ path('feac_mfg_shift_rep_new', { date: today }) }}" class="btn green">Create Shift Report</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endif %}
+                            {% endif %}
 
                         </div>
 

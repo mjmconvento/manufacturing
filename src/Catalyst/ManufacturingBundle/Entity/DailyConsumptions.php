@@ -163,6 +163,126 @@ class DailyConsumptions
      */
     protected $salt_running_balance;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $electricity_final;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $electricity_beginning;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $electricity_used;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $ku_loa;
+
+    /**
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     */
+    protected $fermentation_efficiency;
+
+    /**
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     */
+    protected $distillation_efficiency;
+
+    /**
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     */
+    protected $overall_efficiency;
+
+    /**
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     */
+    protected $average_alcohol;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $alcohol_beginning_balance;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $alcohol_out;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $aldehyde_beginning_balance;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $aldehyde_out;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $direct_labor_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maintenance_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $support_group_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $plant_managers_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $guard_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $extra_no;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $direct_labor_mh;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maintenance_mh;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $support_group_mh;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $plant_managers_mh;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $guard_mh;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $extra_mh;
+
     public function __construct()
     {
         
@@ -350,6 +470,152 @@ class DailyConsumptions
         return $this;
     }
 
+    public function setElectricityFinal($electricity_final)
+    {
+        $this->electricity_final = $electricity_final;
+        return $this;
+    }
+
+    public function setElectricityBeginning($electricity_beginning)
+    {
+        $this->electricity_beginning = $electricity_beginning;
+        return $this;
+    }
+
+    public function setElectricityUsed($electricity_used)
+    {
+        $this->electricity_used = $electricity_used;
+        return $this;
+    }
+
+    public function setKuLOA($ku_loa)
+    {
+        $this->ku_loa = $ku_loa;
+        return $this;
+    }
+
+    public function setFermentationEfficiency($fermentation_efficiency)
+    {
+        $this->fermentation_efficiency = $fermentation_efficiency;
+        return $this;
+    }
+
+    public function setDistillationEfficiency($distillation_efficiency)
+    {
+        $this->distillation_efficiency = $distillation_efficiency;
+        return $this;
+    }
+
+    public function setOverallEfficiency($overall_efficiency)
+    {
+        $this->overall_efficiency = $overall_efficiency;
+        return $this;
+    }
+
+    public function setAverageAlcohol($average_alcohol)
+    {
+        $this->average_alcohol = $average_alcohol;
+        return $this;
+    }
+
+    public function setAlcoholBeginning($alcohol_beginning_balance)
+    {
+        $this->alcohol_beginning_balance = $alcohol_beginning_balance;
+        return $this;
+    }
+
+    public function setAlcoholOut($alcohol_out)
+    {
+        $this->alcohol_out = $alcohol_out;
+        return $this;
+    }
+
+    public function setAldehydeBeginning($aldehyde_beginning_balance)
+    {
+        $this->aldehyde_beginning_balance = $aldehyde_beginning_balance;
+        return $this;
+    }
+
+    public function setAldehydeOut($aldehyde_out)
+    {
+        $this->aldehyde_out = $aldehyde_out;
+        return $this;
+    }
+
+    public function setDirectLaborNo($direct_labor_no)
+    {
+        $this->direct_labor_no = $direct_labor_no;
+        return $this;
+    }
+
+    public function setMaintenanceNo($maintenance_no)
+    {
+        $this->maintenance_no = $maintenance_no;
+        return $this;
+    }
+
+    public function setSupportGroupNo($support_group_no)
+    {
+        $this->support_group_no = $support_group_no;
+        return $this;
+    }
+
+    public function setPlantManagersNo($plant_managers_no)
+    {
+        $this->plant_managers_no = $plant_managers_no;
+        return $this;
+    }
+
+    public function setGuardNo($guard_no)
+    {
+        $this->guard_no = $guard_no;
+        return $this;
+    }
+
+    public function setExtraNo($extra_no)
+    {
+        $this->extra_no = $extra_no;
+        return $this;
+    }
+
+
+
+    public function setDirectLaborMH($direct_labor_mh)
+    {
+        $this->direct_labor_mh = $direct_labor_mh;
+        return $this;
+    }
+
+    public function setMaintenanceMH($maintenance_mh)
+    {
+        $this->maintenance_mh = $maintenance_mh;
+        return $this;
+    }
+
+    public function setSupportGroupMH($support_group_mh)
+    {
+        $this->support_group_mh = $support_group_mh;
+        return $this;
+    }
+
+    public function setPlantManagersMH($plant_managers_mh)
+    {
+        $this->plant_managers_mh = $plant_managers_mh;
+        return $this;
+    }
+
+    public function setGuardMH($guard_mh)
+    {
+        $this->guard_mh = $guard_mh;
+        return $this;
+    }
+
+    public function setExtraMH($extra_mh)
+    {
+        $this->extra_mh = $extra_mh;
+        return $this;
+    }
+
 
 
     public function getMolBeginningBalance()
@@ -498,6 +764,128 @@ class DailyConsumptions
     {
         return $this->salt_running_balance;
     }
+
+    public function getElectricityFinal()
+    {
+        return $this->electricity_final;
+    }
+
+    public function getElectricityBeginning()
+    {
+        return $this->electricity_beginning;
+    }
+
+    public function getElectricityUsed()
+    {
+        return $this->electricity_used;
+    }
+
+    public function getKuLOA()
+    {
+        return $this->ku_loa;
+    }
+
+    public function getFermentationEfficiency()
+    {
+        return $this->fermentation_efficiency;
+    }
+
+    public function getDistillationEfficiency()
+    {
+        return $this->distillation_efficiency;
+    }
+
+    public function getOverallEfficiency()
+    {
+        return $this->overall_efficiency;
+    }
+
+    public function getAverageAlcohol()
+    {
+        return $this->overall_efficiency;
+    }
+
+    public function getAlcoholBeginning()
+    {
+        return $this->alcohol_beginning_balance;
+    }
+
+    public function getAlcoholOut()
+    {
+        return $this->alcohol_out;
+    }
+
+    public function getAldehydeBeginning()
+    {
+        return $this->aldehyde_beginning_balance;
+    }
+
+    public function getAldehydeOut()
+    {
+        return $this->aldehyde_out;
+    }
+
+
+    public function getDirectLaborNo()
+    {
+        return $this->direct_labor_no;
+    }
+
+    public function getMaintenanceNo()
+    {
+        return $this->maintenance_no;
+    }
+
+    public function getSupportGroupNo()
+    {
+        return $this->support_group_no;
+    }
+
+    public function getPlantManagersNo()
+    {
+        return $this->plant_managers_no;
+    }
+
+    public function getGuardNo()
+    {
+        return $this->guard_no;
+    }
+
+    public function getExtraNo()
+    {
+        return $this->extra_no;
+    }
+
+    public function getDirectLaborMH()
+    {
+        return $this->direct_labor_mh;
+    }
+
+    public function getMaintenanceMH()
+    {
+        return $this->maintenance_mh;
+    }
+
+    public function getSupportGroupMH()
+    {
+        return $this->support_group_mh;
+    }
+
+    public function getPlantManagersMH()
+    {
+        return $this->plant_managers_mh;
+    }
+
+    public function getGuardMH()
+    {
+        return $this->guard_mh;
+    }
+
+    public function getExtraMH()
+    {
+        return $this->extra_mh;
+    }
+
 
     public function toData()
     {
