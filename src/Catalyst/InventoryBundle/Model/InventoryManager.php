@@ -233,8 +233,8 @@ class InventoryManager
     
     public function itemsIn($product, $quantity,$supplier){
         $conf = new ConfigurationManager($this->container);
-        $to = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getInventoryAccount();
-        $from = $supplier->getInventoryAccount();
+        $from = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getInventoryAccount();
+        $to = $supplier->getInventoryAccount();
         
         return $this->itemTransfer($product, $quantity, $from, $to);
     }

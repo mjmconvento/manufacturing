@@ -19,7 +19,7 @@ class BorrowedEntry
 	use HasQuantity;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="BorrowedItem")
+     * @ORM\ManyToOne(targetEntity="BorrowedItems")
      * @ORM\JoinColumn(name="borrowed_id", referencedColumnName="id")
      */
     protected $borrowed;
@@ -32,12 +32,14 @@ class BorrowedEntry
 
     public function __construct()
     {
+        $this->initHasQuantity();        
     	$this->initHasGeneratedID();
     }
 
-    public function setBorrowed(BorrowedItem $borrowed)
+    public function setBorrowed(BorrowedItems $borrowed)
     {
     	$this->borrowed = $borrowed;
+        $this->borrowed_id = $borrowed->getID();
     	return $this;
     }
 
@@ -77,6 +79,7 @@ class BorrowedEntry
     	$this->dataHasQuantity($data);
     	$data->description = $this->description;
 		$data->remarks = $this->remarks;
+        $data->borrowed_id = $this->getBorrowed()->getID();
 
 		return $data;
     }

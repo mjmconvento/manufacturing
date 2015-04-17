@@ -4,6 +4,9 @@ namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 class TransferStockController extends CrudController
 {
 	public function __construct()
@@ -43,6 +46,57 @@ class TransferStockController extends CrudController
         $params['prodgroup_opts'] = $inv->getProductGroupOptions();  
 
         return $this->render($twig_file, $params);
+    }
+
+    public function getProductAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+
+        $json = array();
+        foreach($prod as $p)
+        {
+            if($p->getID() == $id)
+            {
+                $json = [
+                'prodtype' => $p->getProductType()->getName(),
+                'uom' => $p->getUnitOfMeasure(),
+
+                ];
+            }
+        }
+
+        return new JsonResponse($json);   
+    }
+
+    public function getGroupAction($var_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+
+        $data = array();
+        foreach($prod as $p)
+        {
+            if($p->getProductGroup()->getID() == $var_id)
+            {
+                $data[] = [
+                'name' => $p->getName(),
+                'id' => $p->getID(),
+
+                ];
+            }
+        }
+
+        // echo "<pre>";
+        // print_r($inc_po);
+        // // print_r($ctr);
+        // // print_r($date);
+        // echo "</pre>";
+        // die();
+
+        return new JsonResponse($data);
     }
 	
 }

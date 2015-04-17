@@ -19,4 +19,9 @@ class Stock
     use HasQuantity;
     use HasProduct;
     use HasInventoryAccount;
+
+    public function __construct()
+    {
+    	$this->initHasInventoryAccount();
+    }    
 }

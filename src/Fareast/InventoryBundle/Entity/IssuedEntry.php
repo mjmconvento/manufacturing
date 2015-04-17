@@ -32,12 +32,14 @@ class IssuedEntry
 
     public function __construct()
     {
-    	$this->initHasGeneratedID();
+    	$this->initHasQuantity();        
+        $this->initHasGeneratedID();
     }
 
     public function setIssued(IssuedItem $issued)
     {
     	$this->issued = $issued;
+        $this->issued_id = $issued->getID();
     	return $this;
     }
 
@@ -77,6 +79,7 @@ class IssuedEntry
     	$this->dataHasQuantity($data);
     	$data->description = $this->description;
 		$data->remarks = $this->remarks;
+        $data->issued_id = $this->getIssued()->getID();
 
 		return $data;
     }

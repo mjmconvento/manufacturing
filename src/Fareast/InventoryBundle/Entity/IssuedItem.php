@@ -71,6 +71,11 @@ class IssuedItem
         return $this->entries;
     }
 
+    public function getTotalItem()
+    {
+        return count($this->getEntries());
+    }
+
     public function getDateIssue()
     {
         return $this->date_issue;
@@ -85,6 +90,12 @@ class IssuedItem
     {
         return $this->date_issue->format('m/d/Y');
     }
+
+    public function generateCode()
+    {        
+        $this->code = str_pad($this->id,5, "0", STR_PAD_LEFT);
+    }
+
 
 	public function toData()
 	{

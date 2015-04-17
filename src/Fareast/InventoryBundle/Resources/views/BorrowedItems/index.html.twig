@@ -12,7 +12,7 @@
             </div>
             <div class="portlet-body">
                 <div class="table-toolbar">
-                    <a href="{{ path('feac_inv_borrowed_add_form') }}" class="btn green">PullOut Item</a>
+                    <a href="{{ path(route_add) }}" class="btn green">PullOut Item</a>
                     <a href="{# path(ser_inv_prod_export) #}" class="btn green">Export To CSV</a>                    
                 </div>
                 <div class="table-toolbar" style="height:40px">
@@ -33,7 +33,18 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>                                        
+                        <tbody>
+                        {% for d in data %}
+                            <tr>
+                                <td>{{ d.code }}</td>
+                                <td>{{ d.borrower }}</td>
+                                <td>{{ d.count }}</td>
+                                <td>{{ d.date_issue|date('m/d/Y')}}</td>
+                                <td>{{ d.user_create}}</td>
+                                <td>{{ d.status }}</td>
+                                <td><a href="{{ path('feac_inv_borrowed_edit_form', {'id' : d.id }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View </a></td>
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
             </div>
