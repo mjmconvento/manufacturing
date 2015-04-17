@@ -3,7 +3,7 @@
 namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\InventoryBundle\Entity\BorrowedItem;
+use Fareast\InventoryBundle\Entity\BorrowedItems;
 use Fareast\InventoryBundle\Entity\BorrowedEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 
@@ -25,7 +25,7 @@ class BorrowedItemsController extends CrudController
 
     protected function newBaseClass()
     {
-        return new BorrowedItem();
+        return new BorrowedItems();
     }
 
     protected function getObjectLabel($obj)
@@ -41,7 +41,7 @@ class BorrowedItemsController extends CrudController
 
         $params = $this->getViewParams('List');        
 
-        $twig_file = 'FareastInventoryBundle:Borrowed:index.html.twig';
+        $twig_file = 'FareastInventoryBundle:BorrowedItems:index.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();
@@ -54,34 +54,28 @@ class BorrowedItemsController extends CrudController
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
 
+        $em = $this->getDoctrine()->getManager();
+        $borrowed = $em->getRepository('FareastInventoryBundle:BorrowedItems')->findAll();
+        $data = array();
+        foreach ($borrowed as $b) {
+            $data[] =[
+                'id' => $b->getID(),
+                'code' => $b->getCode(),
+                'borrower' => $b->getIssuedTo()->getName(),
+                'date_issue' => $b->getDateIssue(),
+                'user_create' => $b->getUserCreate()->getName(),
+                'status' => $b->getStatus(),
+                'count' => $b->getTotalItem(),
+            ];
+        }
+
+        $params['data'] = $data;
+
         $this->padFormParams($params, $date_from, $date_to);
 
 
 
         return $this->render($twig_file, $params);
-    }
-
-    public function addFormAction()
-    {
-        $this->checkAccess($this->route_prefix . '.add');        
-
-        $this->hookPreAction();
-        $obj = $this->newBaseClass();
-
-        $params = $this->getViewParams('Add');
-        $params['object'] = $obj;
-
-        // check if we have access to form
-        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
-        $this->padFormParams($params, $obj);
-
-        // $em = $this->getDoctrine()->getManager();
-        $um = $this->get('catalyst_user');
-        $inv = $this->get('catalyst_inventory');
-        $params['user_opts'] = $um->getUserOptions(); 
-        $params['prod_opts'] = $inv->getProductOptions();
-
-        return $this->render('FareastInventoryBundle:Borrowed:form.html.twig', $params);
     }
 
     public function getDeptAction($id)
@@ -125,6 +119,20 @@ class BorrowedItemsController extends CrudController
         return new JsonResponse($data);   
     }
 
+    protected function padFormParams(&$params, $po = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $um = $this->get('catalyst_user');
+        $inv = $this->get('catalyst_inventory');
+        $params['user_opts'] = $um->getUserOptions(); 
+        $params['prod_opts'] = $inv->getProductOptions();
+
+        $params['status_opts'] = array('Incomplete'=>  BorrowedItems::STATUS_INCOMPLETE, 'Complete'=>  BorrowedItems::STATUS_COMPLETE);        
+        
+        return $params;
+    }
+
     protected function update($o, $data, $is_new = false)
     {
         // echo "<pre>";
@@ -142,6 +150,7 @@ class BorrowedItemsController extends CrudController
         $o->setDateIssue(new DateTime($data['date_issue']));
         $o->setDateReturned(new DateTime($data['date_return']));
         $this->updateTrackCreate($o, $data, $is_new);
+        $o->setStatus($data['status']);
 
         // clear entries
         $ents = $o->getEntries();
@@ -149,15 +158,14 @@ class BorrowedItemsController extends CrudController
             $em->remove($ent);
         $o->clearEntries();
 
-        
-                // $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
-                // if ($prod == null)
-                //     throw new ValidationException('Could not find product.');
-            $prod = $data['prod_opts'];
-                $prod = $inv->findProduct($prod);
-                $qty = $data['qty'];
-                $rmk = $data['remarks'];
-                $des = $data['desc'];                
+        if(isset($data['prod_opts']))
+        {
+            foreach ($data['prod_opts'] as $index => $prod_id) {
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+
+                $qty = $data['qty'][$index];
+                $rmk = $data['remarks'][$index];
+                $des = $data['desc'][$index];                
                 // instantiate
                     $entry = new BorrowedEntry();
                     $entry->setProduct($prod)
@@ -167,7 +175,18 @@ class BorrowedItemsController extends CrudController
 
                     // add entry
                     $o->addEntry($entry);        
-        
+            }
+        }        
     }
 
+    protected function hookPostSave($obj, $is_new = false)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->setUserCreate($this->getUser());
+            $obj->generateCode();
+            $em->persist($obj);
+            $em->flush();
+        }
+    }
 }

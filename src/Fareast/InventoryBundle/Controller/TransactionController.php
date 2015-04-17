@@ -101,6 +101,7 @@ class TransactionController extends BaseController
 
     public function addSubmitAction()
     {
+        
         $inv = $this->get('catalyst_inventory');
         $log = $this->get('catalyst_log');
 
@@ -142,9 +143,23 @@ class TransactionController extends BaseController
 
     protected function processBeginEntries($data)
     {
+        
         $em = $this->getDoctrine()->getManager();        
         $inv = $this->get('catalyst_inventory');
         $conf = $this->get('catalyst_configuration');
+
+        $supp = $data['wh_opts'];
+
+        $supplier = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($supp);
+            if ($supplier == null)
+                throw new ValidationException('Could not find warehouse.'); 
+
+        //     echo "<pre>";
+        // print_r($data);
+        // print_r($supplier);
+        // // print_r($date);
+        // echo "</pre>";
+        // die();
         
         // initialize entries
         $entries = array();
@@ -156,19 +171,17 @@ class TransactionController extends BaseController
         // process it
         foreach ($data['prod_id'] as $index => $prod_id)
         {
-            $qty = $data['qty'][$index];                               
+            $qty = $data['qty'][$index];
+
             
             // product
-            $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
-            if ($prod == null)
-                throw new ValidationException('Could not find product.');
-            
-            $attrs = new ArrayCollection();            
-            
-            if($product == null){
-                $product = $prod;
-            }
-            $entries = array_merge($entries,$inv->itemsIn($product, $qty,$source));
+            $product = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+            if ($product == null)
+                throw new ValidationException('Could not find product.'); 
+
+                                 
+                        
+            $entries = array_merge($entries,$inv->itemsIn($product,$qty,$supplier));
         }
         return $entries;
     }

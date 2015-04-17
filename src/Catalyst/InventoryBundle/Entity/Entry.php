@@ -40,6 +40,7 @@ class Entry
     {
         $this->debit = 0;
         $this->credit = 0;
+        $this->initHasInventoryAccount();
     }
 
     public function setCredit($qty)

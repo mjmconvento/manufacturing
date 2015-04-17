@@ -54,7 +54,7 @@ class Product
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $stock_max;
 
-    /** @ORM\Column(type="string", length=50, nullable=true) */
+        
     protected $supp_code;
 
     /**
@@ -380,7 +380,7 @@ class Product
         $data->sku = $this->sku;
         $data->name = $this->name;        
         $data->prodgroup_id = $this->prodgroup->getID();
-        $data->prodtype_id = $this->prodtype->getID();
+        // $data->prodtype_id = $this->prodtype->getID();
         $data->uom = $this->uom;
         $data->supp_code = $this->supp_code;
         $data->flag_service = $this->flag_service;

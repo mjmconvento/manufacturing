@@ -15,11 +15,14 @@ use stdClass;
  * @ORM\Entity
  * @ORM\Table(name="inv_borrowed_item")
  */
-class BorrowedItem
+class BorrowedItems
 {
 	use HasGeneratedID;
 	use Hascode;
 	use TrackCreate;
+
+	const STATUS_INCOMPLETE = 'Incomplete';
+    const STATUS_COMPLETE = 'Complete';
 	
 	/** @ORM\Column(type="date") */
     protected $date_returned;
@@ -33,6 +36,9 @@ class BorrowedItem
      */
     protected $issued_to;
 
+    /** @ORM\Column(type="string", length=30, nullable=true) */
+    protected $status;
+
     /**
      * @ORM\OneToMany(targetEntity="BorrowedEntry", mappedBy="borrowed", cascade={"persist"})
      */
@@ -41,7 +47,9 @@ class BorrowedItem
 	public function __construct()
 	{
 		$this->initHasGeneratedID();
+		$this->initTrackCreate();
 		$this->entries = new ArrayCollection();
+		$this->status = self::STATUS_INCOMPLETE;
 	}	
 
     public function setDateReturned(DateTime $date)
@@ -62,6 +70,13 @@ class BorrowedItem
         return $this;
     }
 
+    public function setStatus($status)
+    {
+        // TODO: check for invalid status
+        $this->status = $status;
+        return $this;
+    }
+
     public function addEntry(BorrowedEntry $entry)
     {
         $this->entries->add($entry);
@@ -78,6 +93,16 @@ class BorrowedItem
     public function getEntries()
     {
         return $this->entries;
+    }
+
+    public function getTotalItem()
+    {
+        return count($this->getEntries());
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     public function getDateIssue()
@@ -100,10 +125,14 @@ class BorrowedItem
         return $this->date_issue->format('m/d/Y');
     }
 
-
     public function getDateReturnedFormatted()
     {
         return $this->date_returned->format('m/d/Y');
+    }
+
+    public function generateCode()
+    {        
+        $this->code = str_pad($this->id,5, "0", STR_PAD_LEFT);
     }
 
 	public function toData()
@@ -112,6 +141,7 @@ class BorrowedItem
 		$this->dataHasGeneratedID($data);
 		$this->dataTrackCreate($data);
 		$this->dataHasCode($data);
+		$data->status = $this->status;
 		$data->issued_to = $this->issued_to;
 		$data->date_issue = $this->date_issue;
 		$data->date_returned = $this->date_returned->format('Y-m-d H:i:s');

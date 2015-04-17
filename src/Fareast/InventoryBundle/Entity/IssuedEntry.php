@@ -12,7 +12,7 @@ use Catalyst\CoreBundle\Template\Entity\HasQuantity;
  * @ORM\Entity
  * @ORM\Table(name="inv_issued_entry")
  */
-class BorrowedEntry
+class IssuedEntry
 {
 	use HasGeneratedID;
 	use HasProduct;
@@ -32,12 +32,14 @@ class BorrowedEntry
 
     public function __construct()
     {
-    	$this->initHasGeneratedID();
+    	$this->initHasQuantity();        
+        $this->initHasGeneratedID();
     }
 
     public function setIssued(IssuedItem $issued)
     {
     	$this->issued = $issued;
+        $this->issued_id = $issued->getID();
     	return $this;
     }
 
@@ -77,6 +79,7 @@ class BorrowedEntry
     	$this->dataHasQuantity($data);
     	$data->description = $this->description;
 		$data->remarks = $this->remarks;
+        $data->issued_id = $this->getIssued()->getID();
 
 		return $data;
     }

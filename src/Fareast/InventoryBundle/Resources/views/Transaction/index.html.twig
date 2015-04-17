@@ -35,7 +35,7 @@
                                             <th width="10%"></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="from_table">
+                                    <tbody id="from_table">                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -55,7 +55,7 @@
 </div>
 
 <div class="hidden">
-    <select id="prodgroup_opts" class="form-control select2">
+    <select class="form-control select2 prodgroup_opts">
         {{ f.options(prodgroup_opts,0)}}
     </select>
 </div>
@@ -64,6 +64,25 @@
 
 {% block js %}
 <script>
+function appendEntry()
+{
+    var html = '<tr>';
+        html += '<td><select name="prodgroup_opts[]" class="form-control select2 prodgroup_opts">';
+        html += $('.prodgroup_opts').html();   
+        html += '</select> </td>';
+
+        html += '<td><select name="prod_id[]" class="form-control prod_id">';        
+        html += '</select></td>';
+
+        html += '<td><input type="text" name="prod_type[]" class="form-control prodtype" readonly></td>';        
+
+        html += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
+        html += '<td> <input type="number" name="qty[]" min="0" class="form-control qty"></td>';
+        html += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
+        html += '</tr>';
+
+        $('#from_table').append(html);
+}
     $(document).ready(function() {
         ComponentsPickers.init();
 
@@ -72,60 +91,53 @@
                 
         var i=0;
 
-        $(add_button).click(function(){
-        var row_parent = $(this).parents('tr');
-        var html = '<tr id='+ i +'>';
-        html += '<td><select name="prodgroup_opts" id="prodgroup_opts" class="form-control select2">';
-        html += $('#prodgroup_opts').html();   
-        html += '</select> </td>';
+        $(add_button).click(function(){                            
+            appendEntry();            
+        });
 
-        html += '<td><select id="prod_id" class="form-control">';        
-        html += '</select></td>';
+        $(document).on('change', '.prodgroup_opts', function(e){
+            e.preventDefault();
+                var cat = $(this).closest('tr').find('.prodgroup_opts').val();
 
-        html += '<td><input type="text" class="form-control" id="prodtype" readonly></td>';        
-
-        html += '<td> <input type="text" class="form-control" id="uom" readonly></td>';
-        html += '<td> <input type="number" class="form-control"></td>';
-        html += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>';
-        html += '</tr>';
-        i ++;                       
-            $(wrapper).append(html);
-
-            $('#prodgroup_opts').change(function(){
-                var cat = $('#prodgroup_opts').val();
-
-                $('#prod_id').empty();
+                
                 var url = "{{ path('feac_inv_begin_productgroup', { var_id: ':id'}) }}";
                 url = url.replace(":id", cat);
 
+                var row = $(this).closest('tr');
+
+                $(row).find('.prod_id').empty();
+
                 $.getJSON(url, function(data){
                     // console.log(data);
-                    $('#prod_id').html('<option></option>').select2();
+                    // $('.prod_id').html('<option></option>').select2();
                     i=0;
                     for(var index in data)
                     {
                         var prod = data[index];
                         i++;
-                        $("#prod_id").append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
+                        $(row).find(".prod_id").append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
                     }
                 });
-            });
+        });
 
-            $('#prod_id').change(function(){
-                var prod = $('#prod_id').val();
+
+        $(document).on('change','.prod_id', function(e){
+            e.preventDefault();
+                var prod = $(this).closest('tr').find('.prod_id').val();
 
                 var url = "{{ path('feac_inv_begin_product', { id: ':id'}) }}";
                 url = url.replace(":id", prod);
 
+                var row = $(this).closest('tr');
+
                 $.getJSON(url, function(json){
                     console.log(json)                    
                     
-                        $("#prodtype").val(json.prodtype);
-                        $("#uom").val(json.uom);
+                        $(row).find(".prodtype").val(json.prodtype);
+                        $(row).find(".uom").val(json.uom);
                    
                 });
 
-            });
         });
         
         //remove row
