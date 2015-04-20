@@ -18,14 +18,15 @@ class ContactType
 
     public function __construct()
     {
-            $this->initHasGeneratedID();
+        $this->initHasGeneratedID();
+        $this->initHasName();
     }
 
     public function toData()
     {
-            $data = new \stdClass();
-            $this->dataHasGeneratedID($data);
-            $this->dataHasName($data);
-            return $data;
+        $data = new \stdClass();
+        $this->dataHasGeneratedID($data);
+        $this->dataHasName($data);
+        return $data;
     }
 }

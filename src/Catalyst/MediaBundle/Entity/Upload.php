@@ -3,6 +3,8 @@
 namespace Catalyst\MediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use DateTime;
 
 /**
@@ -11,18 +13,11 @@ use DateTime;
  */
 class Upload
 {
+    use HasGeneratedID;
+    use TrackCreate;
+
     const STATUS_NEW            = 1;
     const STATUS_LINKED         = 2;
-
-    /**
-     * @ORM\ID
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /** @ORM\Column(type="string", length=200, nullable=false) */
-    protected $full_path;
 
     /** @ORM\Column(type="string", length=200, nullable=false) */
     protected $filename;
@@ -30,32 +25,23 @@ class Upload
     /** @ORM\Column(type="string", length=200, nullable=false) */
     protected $url;
 
-    /** @ORM\Column(type="datetime") */
-    protected $date_create;
-
     /** @ORM\Column(type="integer") */
     protected $status;
 
+    /** @ORM\Column(type="string", length=30, nullable=false) */
+    protected $storage_type;
+
+    // storage engines
+    /**
+     * @ORM\OneToOne(targetEntity="Catalyst\MediaBundle\Entity\Storage\LocalFile", mappedBy="upload", cascade={"persist"})
+     */
+    protected $local_file;
+
     public function __construct()
     {
-        $this->date_create = new DateTime();
+        $this->initHasGeneratedID();
+        $this->initTrackCreate();
         $this->status = self::STATUS_NEW;
-    }
-
-    public function getID()
-    {
-        return $this->id;
-    }
-
-    public function setFullPath($fp)
-    {
-        $this->full_path = $fp;
-        return $this;
-    }
-
-    public function getFullPath()
-    {
-        return $this->full_path;
     }
 
     public function setFilename($filename)
@@ -80,17 +66,6 @@ class Upload
         return $this->url;
     }
 
-    public function getDateCreate()
-    {
-        return $this->date_create;
-    }
-
-    public function deleteFile()
-    {
-        unlink($this->full_path);
-        return $this;
-    }
-
     public function setStatus($status)
     {
         $this->status = $status;
@@ -100,5 +75,27 @@ class Upload
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function setStorageType($type)
+    {
+        $this->storage_type = $type;
+        return $this;
+    }
+
+    public function getStorageType()
+    {
+        return $this->storage_type;
+    }
+
+    public function getStorage()
+    {
+        switch ($this->storage_type)
+        {
+            case 'local_file':
+                return $this->local_file;
+        }
+
+        return null;
     }
 }
