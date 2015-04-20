@@ -46,7 +46,7 @@
                                 {% for entry in object.getEntries %}
                                     <tr>                                        
                                         <input type="hidden" name="prod_opts[]" value="{{ entry.getProduct.getID }}">
-                                        <td><select class="form-control prod_opts"><option value="{{ entry.getProduct.getID }}">{{ entry.getProduct.getName }}</option></select></td>
+                                        <td><input class="form-control prod_opts[{{ entry.getProduct.getID }}]" value="{{ entry.getProduct.getName }}" readonly></td>
                                         <td><input type="text" name="desc[]" class="form-control desc" value="{{ entry.getDescription }}"></td>
                                         <td><input type="text" name="uom[]" class="form-control uom" value="{{ entry.getProduct.getUnitOfMeasure }}" readonly></td>
                                         <td><input type="text" name="remarks[]" class="form-control remarks" value="{{ entry.getRemarks }}" ></td>

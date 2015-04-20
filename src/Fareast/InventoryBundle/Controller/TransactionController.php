@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class TransactionController extends BaseController
-{
-   public function __construct()
+{    
+    public function __construct()
     {
         $this->route_prefix = 'feac_inv_begin';
         $this->title = 'Beginning Inventory';
@@ -39,11 +39,8 @@ class TransactionController extends BaseController
         $params = $this->getViewParams('', 'feac_inv_begin_index');
 
         $inv = $this->get('catalyst_inventory');
-        // $pur = $this->get('catalyst_purchasing');
         $params['wh_opts'] = $inv->getWarehouseOptions();
         $params['prodgroup_opts'] = $inv->getProductGroupOptions();        
-        // $params['prod_opts'] = $inv->getProductOptions();
-        // $params['supplier_opts'] = array_merge(array('0'=> 'No Supplier' ),$pur->getSupplierOptions());
 
         return $this->render('FareastInventoryBundle:Transaction:index.html.twig', $params);
     }
@@ -101,7 +98,7 @@ class TransactionController extends BaseController
 
     public function addSubmitAction()
     {
-        
+
         $inv = $this->get('catalyst_inventory');
         $log = $this->get('catalyst_log');
 
@@ -109,6 +106,7 @@ class TransactionController extends BaseController
 
         try
         {
+
             $data = $this->getRequest()->request->all();
 
             $entries = $this->processBeginEntries($data);
@@ -142,11 +140,10 @@ class TransactionController extends BaseController
     }
 
     protected function processBeginEntries($data)
-    {
-        
+    {        
         $em = $this->getDoctrine()->getManager();        
         $inv = $this->get('catalyst_inventory');
-        $conf = $this->get('catalyst_configuration');
+        $conf = $this->get('catalyst_configuration');        
 
         $supp = $data['wh_opts'];
 

@@ -12,8 +12,10 @@
             </div>
             <div class="portlet-body">
                 <div class="table-toolbar">
+                 {# if app.user.hasAccess(prefix ~ '.add') #}
                     <a href="{{ path(route_add) }}" class="btn green">PullOut Item</a>
-                    <a href="{# path(ser_inv_prod_export) #}" class="btn green">Export To CSV</a>                    
+                    <a href="{# path(prefix ~ '_export')#}" class="btn green">Export To CSV</a>                    
+                {# endif #}
                 </div>
                 <div class="table-toolbar" style="height:40px">
                 <form id="date_form" method="post" class="form-horizontal" style="padding-left:10px">

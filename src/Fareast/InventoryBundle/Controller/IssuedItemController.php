@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use DateTime;
 
-class IssuedController extends CrudController
+class IssuedItemController extends CrudController
 {
     use TrackCreate;
 	public function __construct()
@@ -42,7 +42,7 @@ class IssuedController extends CrudController
 
         $params = $this->getViewParams('List');
 
-        $twig_file = 'FareastInventoryBundle:Issued:index.html.twig';
+        $twig_file = 'FareastInventoryBundle:IssuedItem:index.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();

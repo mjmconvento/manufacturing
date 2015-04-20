@@ -169,7 +169,7 @@ class InventoryManager
 
         // get stock
         $stock_repo = $this->em->getRepository('CatalystInventoryBundle:Stock');
-        $stock = $stock_repo->findOneBy(array('account' => $account, 'product' => $prod));
+        $stock = $stock_repo->findOneBy(array('inv_account' => $account, 'product' => $prod));
         if ($stock == null)
         {
             $stock = new Stock();

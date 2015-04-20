@@ -38,8 +38,9 @@ class IssuedItem
 	public function __construct()
 	{
 		$this->initHasGeneratedID();
+        $this->initTrackCreate();
 		$this->entries = new ArrayCollection();
-	}	
+	}
 
     public function setIssuedTo(User $user)
     {
@@ -100,6 +101,7 @@ class IssuedItem
 	public function toData()
 	{
 		$data = new \stdClass();
+
 		$this->dataHasGeneratedID($data);
 		$this->dataTrackCreate($data);
 		$this->dataHasCode($data);
