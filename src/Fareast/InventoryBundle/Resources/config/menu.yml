@@ -21,3 +21,12 @@ menu_items:
     - id: feac_inv_warehouse_index
       label: Warehouse Stock
       parent: menu_inventory
+    - id: cat_inv_wh_index
+      label: Warehouse
+      parent: feac_settings
+    - id: cat_inv_pg_index
+      label: Product Category
+      parent: feac_settings
+    - id: cat_inv_prod_index
+      label: Product
+      parent: feac_settings

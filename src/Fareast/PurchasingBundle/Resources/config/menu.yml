@@ -9,3 +9,6 @@ menu_items:
     - id: feac_pur_req
       label: Purchase Requisition
       parent: menu_purchasing
+    - id: cat_pur_supp_index
+      label: Supplier
+      parent: feac_settings

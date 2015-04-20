@@ -1,6 +1,7 @@
 catalyst_menu:
     bundle_menu:
         - CatalystDashboardBundle
+        - FareastSettingsBundle
         - CatalystAdminBundle
         - CatalystConfigurationBundle
         - CatalystUserBundle
@@ -11,7 +12,6 @@ catalyst_menu:
         - FareastReceivingBundle
         - FareastReportBundle
         - CatalystSalesBundle
-        - FareastSettingsBundle
 
 catalyst_user:
     acl_entries:

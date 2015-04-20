@@ -3,10 +3,10 @@ menu_items:
       acl: cat_sales.menu
       label: Sales
       icon: fa-tag
-    # - id: cat_sales_cust_index
-    #   acl: cat_sales_cust.menu
-    #   label: Customer
-    #   parent: menu_sales
+    - id: cat_sales_cust_index
+      acl: cat_sales_cust.menu
+      label: Customer
+      parent: feac_settings
     # - id: cat_sales_quote_index
     #   acl: cat_sales_quote.menu
     #   label: Quotation
