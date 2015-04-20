@@ -35,3 +35,9 @@ catalyst_configuration:
         - CatalystPurchasingBundle
         - CatalystSalesBundle
         - CatalystServiceBundle
+
+catalyst_media:
+    upload_storage:
+        type: "local_file"
+        folder: "%kernel.root_dir%/../web/uploads"
+        base_url: "http://fareast/uploads"

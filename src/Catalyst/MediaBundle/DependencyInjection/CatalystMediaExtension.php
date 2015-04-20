@@ -3,25 +3,19 @@
 namespace Catalyst\MediaBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Catalyst\MediaBundle\Model\StorageEngine;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\Config\FileLocator;
 
-/**
- * This is the class that loads and manages your bundle configuration
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class CatalystMediaExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $config, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        // storage config
+        $container->setParameter('catalyst_media.storage_config', $config[0]['upload_storage']);
 
+        // load services.yml
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

@@ -1,4 +1,8 @@
 services:
+    catalyst_media:
+        class: Catalyst\MediaBundle\Model\UploadManager
+        arguments: ['%catalyst_media.storage_config%']
+
 #    catalyst_media.example:
 #        class: Catalyst\MediaBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
