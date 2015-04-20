@@ -4,7 +4,6 @@ namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\ManufacturingBundle\Entity\DailyConsumptions;
-use Catalyst\ManufacturingBundle\Entity\ShiftReports;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,21 +37,7 @@ class ProductionController extends CrudController
         $data = $this->findDailyConsumption($today->format("Ymd"));
 
         $params['consumption'] = $data;
-
-        $em = $this->getDoctrine()->getManager();
-
-        $date_from = new DateTime($today->format('Ymd')." 00:00:00");
-        $date_to = new DateTime($today->format('Ymd')." 23:59:59");
-
-        $query = 'SELECT s FROM CatalystManufacturingBundle:ShiftReports s 
-        WHERE s.date_create >= :date_from AND s.date_create <= :date_to';
-        $data = $em->createQuery($query)
-            ->setMaxResults(3)
-            ->setParameter('date_from', $date_from)
-            ->setParameter('date_to', $date_to)
-            ->getResult();
-
-        $params['shift_reports'] = $data;
+        $params['shift_reports'] = $this->getShiftReports($today->format('Ymd'));
 
         return $this->render('FareastManufacturingBundle:Production:index.html.twig', $params);
     }
@@ -62,17 +47,7 @@ class ProductionController extends CrudController
         $em = $this->getDoctrine()->getManager();
         $data = $this->findDailyConsumption($date);
 
-
-        $date_from = new DateTime($date." 00:00:00");
-        $date_to = new DateTime($date." 23:59:59");
-
-        $query = 'SELECT s FROM CatalystManufacturingBundle:ShiftReports s 
-        WHERE s.date_create >= :date_from AND s.date_create <= :date_to';
-        $shift_reports = $em->createQuery($query)
-            ->setMaxResults(3)
-            ->setParameter('date_from', $date_from)
-            ->setParameter('date_to', $date_to)
-            ->getResult();
+        $shift_reports = $this->getShiftReports($date);
 
         $shift_reports_id = array();
         $shift_reports_fermentations = array();
@@ -237,7 +212,35 @@ class ProductionController extends CrudController
             ->setSaltBeginningBalance($data['begin-salt'])
             ->setSaltPurchase($data['salt-purchase'])
             ->setSaltConsumption($data['salt-consumed'])
-            ->setSaltRunningBalance($data['run-salt']);
+            ->setSaltRunningBalance($data['run-salt'])
+
+            ->setElectricityFinal($data['electricity-final'])
+            ->setElectricityBeginning($data['electricity-beginning'])
+            ->setElectricityUsed($data['electricity-used'])
+            ->setKuLOA($data['alcohol-kw'])
+
+            ->setFermentationEfficiency($data['fermentation-efficiency'])
+            ->setDistillationEfficiency($data['distillation-efficiency'])
+            ->setOverallEfficiency($data['overall-efficiency'])
+            ->setAverageAlcohol($data['average-alcohol'])
+
+            ->setAlcoholBeginning($data['alcohol-beginning'])
+            ->setAlcoholOut($data['alcohol-out'])
+            ->setAldehydeBeginning($data['aldehyde-beginning'])
+            ->setAldehydeOut($data['aldehyde-out'])
+
+            ->setDirectLaborNo($data['direct-labor-no'])
+            ->setMaintenanceNo($data['maintenance-no'])
+            ->setSupportGroupNo($data['support-group-no'])
+            ->setPlantManagersNo($data['plant-managers-no'])
+            ->setGuardNo($data['guard-no'])
+            ->setExtraNo($data['extra-no'])
+            ->setDirectLaborMH($data['direct-labor-mh'])
+            ->setMaintenanceMH($data['maintenance-mh'])
+            ->setSupportGroupMH($data['support-group-mh'])
+            ->setPlantManagersMH($data['plant-managers-mh'])
+            ->setGuardMH($data['guard-mh'])
+            ->setExtraMH($data['extra-mh']);
 
         $em->persist($consumption);
         $em->flush();
@@ -272,169 +275,6 @@ class ProductionController extends CrudController
         }
     }
 
-    public function shiftReportAction($date)
-    {
-        $this->title = 'Create Shift Report';
-        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
-
-        $params['shift_opts'] = [
-            '7:00 to 15:00' => '7:00 to 15:00',
-            '15:00 to 23:00' => '15:00 to 23:00',
-            '23:00 to 7:00' => '23:00 to 7:00',
-        ];
-
-        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
-    }
-
-    public function shiftReportSubmitAction($date)
-    {
-        $this->title = 'Create Shift Report';
-        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $data = $this->getRequest()->request->all();
-
-        $today = new DateTime();
-        $shift_reports = new ShiftReports();
-        $shift_reports->setDateCreate(new DateTime($date." ".$today->format('h:i:s')))
-            ->setUserCreate($this->getUser())
-            ->setShift($data['shift'])
-            ->setFineAlcohol($data['fine-alcohol'])
-            ->setHeadsAlcohol($data['heads-alcohol'])
-            ->setAlcoholProduced($data['produced'])
-            ->setPPT($data['ppt'])
-            ->setPROOF($data['proof'])
-            ->setColumnOperator($data['column-operator'])
-            ->setBeerAlcohol($data['beer-alcohol'])
-            ->setFermentation($data['fermentation'])
-            ->setMixer($data['mixer'])
-            ->setBiogasProduced($data['biogas'])
-            ->setGPLA($data['gpla'])
-            ->setBiogasBunker($data['biogas-bunker'])
-            ->setBiogasSteam($data['steam'])
-            ->setVFA($data['vfa'])
-            ->setCOD($data['cod'])
-            ->setSlops($data['slops'])
-            ->setSampling($data['sampling'])
-            ->setVolume($data['volume'])
-            ->setTemperature($data['temp'])
-            ->setPH($data['ph'])
-            ->setBiogasOperator($data['biogas-operator'])
-            ->setHusk($data['husk'])
-            ->setBunker($data['bunker'])
-            ->setLOALOB($data['loa-lob'])
-            ->setSteamProduced($data['steam-produced'])
-            ->setProducedSteam($data['produced-steam'])
-            ->setLOAHusk($data['loa-husk'])
-            ->setHuskLOA($data['husk-loa'])
-            ->setSteamLOA($data['steam-loa'])
-            ->setSteamHusk($data['steam-husk'])
-            ->setBoiler($data['boiler'])
-            ->setBoilerOperator($data['boiler-operator']);
-
-        $em->persist($shift_reports);
-        $em->flush();
-
-        $params['shift_opts'] = [
-            '7:00 to 15:00' => '7:00 to 15:00',
-            '15:00 to 23:00' => '15:00 to 23:00',
-            '23:00 to 7:00' => '23:00 to 7:00',
-        ];
-
-        $this->addFlash('success', 'Shift Report has been created.'); 
-
-        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
-    }
-
-    public function shiftReportEditAction($id)
-    {
-        $this->title = 'Create Shift Report';
-        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
-
-        $em = $this->getDoctrine()->getManager();
-
-        $shift_report = $em->getRepository('CatalystManufacturingBundle:ShiftReports')->find($id);
-
-        $params['shift_report'] = $shift_report;
-
-        $today = new DateTime();
-        $params['today'] = $today->format('Ymd');
-
-
-        $params['shift_opts'] = [
-            '7:00 to 15:00' => '7:00 to 15:00',
-            '15:00 to 23:00' => '15:00 to 23:00',
-            '23:00 to 7:00' => '23:00 to 7:00',
-        ];
-
-        return $this->render('FareastManufacturingBundle:Production:shift-report-edit.html.twig', $params);
-    }
-
-
-    public function shiftReportEditSubmitAction($id)
-    {
-        $this->title = 'Create Shift Report';
-        $params = $this->getViewParams('', 'feac_mfg_prod_cal');
-
-        $data = $this->getRequest()->request->all();
-
-        $em = $this->getDoctrine()->getManager();
-
-
-        $shift_report = $em->getRepository('CatalystManufacturingBundle:ShiftReports')->find($id);
-
-        $shift_report->setShift($data['shift'])
-            ->setFineAlcohol($data['fine-alcohol'])
-            ->setHeadsAlcohol($data['heads-alcohol'])
-            ->setAlcoholProduced($data['produced'])
-            ->setPPT($data['ppt'])
-            ->setPROOF($data['proof'])
-            ->setColumnOperator($data['column-operator'])
-            ->setBeerAlcohol($data['beer-alcohol'])
-            ->setFermentation($data['fermentation'])
-            ->setMixer($data['mixer'])
-            ->setBiogasProduced($data['biogas'])
-            ->setGPLA($data['gpla'])
-            ->setBiogasBunker($data['biogas-bunker'])
-            ->setBiogasSteam($data['steam'])
-            ->setVFA($data['vfa'])
-            ->setCOD($data['cod'])
-            ->setSlops($data['slops'])
-            ->setSampling($data['sampling'])
-            ->setVolume($data['volume'])
-            ->setTemperature($data['temp'])
-            ->setPH($data['ph'])
-            ->setBiogasOperator($data['biogas-operator'])
-            ->setHusk($data['husk'])
-            ->setBunker($data['bunker'])
-            ->setLOALOB($data['loa-lob'])
-            ->setSteamProduced($data['steam-produced'])
-            ->setProducedSteam($data['produced-steam'])
-            ->setLOAHusk($data['loa-husk'])
-            ->setHuskLOA($data['husk-loa'])
-            ->setSteamLOA($data['steam-loa'])
-            ->setSteamHusk($data['steam-husk'])
-            ->setBoiler($data['boiler'])
-            ->setBoilerOperator($data['boiler-operator']);
-
-        $em->persist($shift_report);
-        $em->flush();
-
-        $params['shift_report'] = $shift_report;
-
-        $this->addFlash('success', 'Shift Report has been Updated.');             
-        
-        
-        $params['shift_opts'] = [
-            '7:00 to 15:00' => '7:00 to 15:00',
-            '15:00 to 23:00' => '15:00 to 23:00',
-            '23:00 to 7:00' => '23:00 to 7:00',
-        ];
-
-        return $this->render('FareastManufacturingBundle:Production:shift-report-edit.html.twig', $params);
-    }
-
     public function printPDFAction($date)
     {
         $pdf = $this->get('catalyst_pdf');
@@ -442,6 +282,19 @@ class ProductionController extends CrudController
 
         $date_picked = new DateTime($date);
 
+        $data = $this->findDailyConsumption($date);
+
+        $params['consumption'] = $data;
+        $params['date'] = $date_picked;
+        $params['shift_reports'] = $this->getShiftReports($date);
+
+        $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);
+
+        return $pdf->printPdf($html->getContent());
+    }
+
+    protected function getShiftReports($date)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $date_from = new DateTime($date." 00:00:00");
@@ -455,15 +308,7 @@ class ProductionController extends CrudController
             ->setParameter('date_to', $date_to)
             ->getResult();
 
-        $data = $this->findDailyConsumption($date);
-
-        $params['consumption'] = $data;
-        $params['date'] = $date_picked;
-        $params['shift_reports'] = $shift_reports;
-
-        $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);
-
-        return $pdf->printPdf($html->getContent());
-    }
+        return $shift_reports;
+    }    
 
 }
