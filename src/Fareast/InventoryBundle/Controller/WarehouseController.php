@@ -35,6 +35,7 @@ class WarehouseController extends BaseController
         if (empty($data['name']))
             throw new ValidationException('Cannot leave name blank');
             
+        // add address and phone
         $o->setName($data['name'])
             ->setType($data['type_id']);
 

@@ -255,8 +255,8 @@ abstract class CrudController extends BaseController
         error_log('added');
 
         // log
-        $odata = $obj->toData();
-        $this->logAdd($odata);
+        // $odata = $obj->toData();
+        // $this->logAdd($odata);
 
         return $obj;
     }
