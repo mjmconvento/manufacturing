@@ -105,12 +105,14 @@ class UserController extends CrudController
             }
         }
 
+        /*
         // branch options
         $inv = $this->get('catalyst_inventory');
         $wh = $inv->findWarehouse($data['wh_opts']);
         if($wh == null)
             throw new ValidationException('Could not find branch specified.');
         $o->setWarehouse($wh);
+        */
 
         // profile image
         $upload = $em->getRepository('CatalystMediaBundle:Upload')
