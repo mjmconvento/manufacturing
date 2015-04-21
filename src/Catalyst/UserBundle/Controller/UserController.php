@@ -74,6 +74,7 @@ class UserController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
+        $em = $this->getDoctrine()->getManager();
         $uc = $this->get('catalyst_user');
 
         // TODO: validation check for email
@@ -104,12 +105,19 @@ class UserController extends CrudController
             }
         }
 
+        /*
         // branch options
         $inv = $this->get('catalyst_inventory');
         $wh = $inv->findWarehouse($data['wh_opts']);
         if($wh == null)
             throw new ValidationException('Could not find branch specified.');
         $o->setWarehouse($wh);
+        */
+
+        // profile image
+        $upload = $em->getRepository('CatalystMediaBundle:Upload')
+            ->find($data['upload_id']);
+        $o->setUpload($upload);
 
         // check if we need to have password
         if ($is_new)
@@ -131,5 +139,8 @@ class UserController extends CrudController
             $o->setPlainPassword($data['pass1']);
             $um->updatePassword($o);
         }
+
+        // TODO: trigger upload link
+
     }
 }

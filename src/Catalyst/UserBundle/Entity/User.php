@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
 use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
+use Catalyst\MediaBundle\Template\Entity\HasUpload;
 use stdClass;
 
 /**
@@ -16,6 +17,8 @@ use stdClass;
 class User extends BaseUser
 {
     use HasWarehouse;
+    use HasUpload;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -29,8 +32,6 @@ class User extends BaseUser
      * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $groups;
-
-
 
     /** @ORM\Column(type="string", length=50, nullable=true) */
     protected $name;

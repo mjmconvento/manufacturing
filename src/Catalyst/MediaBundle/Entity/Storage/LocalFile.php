@@ -3,6 +3,8 @@
 namespace Catalyst\MediaBundle\Entity\Storage;
 
 use Doctrine\ORM\Mapping as ORM;
+use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\MediaBundle\Template\Entity\IsStorage;
 
 /**
  * @ORM\Entity
@@ -10,10 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LocalFile
 {
-    protected $id;
+    use HasGeneratedID;
+    use IsStorage;
 
-    /** @ORM\Column(type="string", length=200 nullable=false) */
+    /** @ORM\Column(type="string", length=200, nullable=false) */
     protected $full_path;
+
+    public function __construct()
+    {
+        $this->initHasGeneratedID();
+        $this->initIsStorage();
+    }
 
     public function setFullPath($fp)
     {

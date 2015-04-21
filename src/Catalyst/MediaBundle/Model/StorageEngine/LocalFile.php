@@ -3,7 +3,10 @@
 namespace Catalyst\MediaBundle\Model\StorageEngine;
 
 use Catalyst\MediaBundle\Model\StorageEngineInterface;
+use Catalyst\MediaBundle\Entity\Upload;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Catalyst\MediaBundle\Entity\Storage\LocalFile as StorageLocalFile;
+use Doctrine\ORM\EntityManager;
 
 class LocalFile implements StorageEngineInterface
 {
@@ -20,7 +23,7 @@ class LocalFile implements StorageEngineInterface
         $this->directory = '';
     }
 
-    public function addFile(UploadedFile $file)
+    public function addFile(EntityManager $em, UploadedFile $file, $user)
     {
         // generate filename
         $filename = $this->generateFilename($file);
@@ -32,14 +35,23 @@ class LocalFile implements StorageEngineInterface
         // move file
         $file->move($fullpath, $filename);
 
-        // result data
-        $res = [
-            'full_path' => $fullpath . DIRECTORY_SEPARATOR . $filename,
-            'url' => $this->base_url . '/' . $this->directory . '/' . $filename,
-            'filename' => $filename,
-        ];
+        // upload entity
+        $upload = new Upload();
+        $upload->setURL($this->base_url . '/' . $this->directory . '/' . $filename)
+            ->setFilename($filename)
+            ->setStorageType('local_file')
+            ->setUserCreate($user);
 
-        return $res;
+        // storage entity
+        $local_file = new StorageLocalFile();
+        $local_file->setFullPath($fullpath . DIRECTORY_SEPARATOR . $this->directory . DIRECTORY_SEPARATOR . $filename)
+            ->setUpload($upload);
+
+        $em->persist($upload);
+        $em->persist($local_file);
+        $em->flush();
+
+        return $upload;
     }
 
     protected function makeDirectory($dir)

@@ -22,6 +22,25 @@
                             {{ form.group_password('Password', 'pass1', 3, 4, readonly) }}
                             {{ form.group_password('Re-type Password', 'pass2', 3, 4, readonly) }}
                         {% endif %}
+
+                        <input type="hidden" id="ff-image" name="upload_id" value="{{ object.getUpload.getID|default('0') }}">
+                        <div id="dropzone" class="form-group">
+                            <label class="col-md-3 control-label">Profile Image</label>
+                            <div class="col-md-9">
+                                <div id="real-container">
+                                    <div style="width:200px; overflow:hidden;">
+                                    <a id="main-image-link" class="dzp-image" href="{{ object.getUpload.getURL|default(asset('bundles/catalystmedia/img/no_image.jpg')) }}" data-lightbox="media-upload">
+                                        <img id="main-image" src="{{ object.getUpload.getURL|default(asset('bundles/catalystmedia/img/no_image.jpg')) }}" style="min-height:150px;max-height:150px;" data-id="{{ object.getUpload.getID|default('0') }}">
+                                    </a>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div id="prev-container">
+                                </div>
+                                <a href="#" id="dz-upload" class="btn btn-primary">Upload</a>
+                            </div>
+                        </div>
+
                         {{ form.group_select('Status', 'enabled', enabled_opts, object.isEnabled, 3, 4, readonly) }}
                         {{ form.group_checkbox_set('Roles', 'groups', group_opts, ug_opts, 3, 9, readonly) }}
                     </div>
@@ -39,12 +58,55 @@
         </div>
     </div>
 </div>
+
+
+
+<div id="dz-preview" class="hidden">
+    <div>
+        <div style="width:200px; overflow:hidden;">
+        <a class="dzp-image" href="#" data-lightbox="donor">
+            <img data-dz-thumbnail style="min-height:150px;max-height:150px;">
+        </a>
+        </div>
+
+        <div class="dzp-progress progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:200px">
+          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+        </div>
+
+        <strong class="error text-danger dzp-error" data-dz-errormessage></strong>
+
+        <br>
+    </div>
+</div>
 {% endblock %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/catalystmedia/css/lightbox.css') }}">
+{% endblock %}
+
 
 {% block js %}
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
 <script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+<script src="{{ asset('bundles/catalystmedia/js/lightbox.min.js') }}"></script>
+<script src="{{ asset('bundles/catalystmedia/js/dropzone.js') }}"></script>
+<script src="{{ asset('bundles/catalystmedia/js/catalyst_media.js') }}"></script>
+<script>
+$(document).ready(function() {
+    var upload_config = {
+        'preview': '#dz-preview',
+        'url': '{{ path('cat_media_upload_file') }}',
+        'dropzone': '#dropzone',
+        'preview_container': '#prev-container',
+        'accepted_files': 'image/*',
+        'clickable': '#dz-upload',
+        'display_image': '#main-image',
+        'form_field': '#ff-image'
+    };
+    setup_image_upload(upload_config);
+});
+</script>
 {% if object.getUsername == '' %}
 <script>
 $(document).ready(function() {

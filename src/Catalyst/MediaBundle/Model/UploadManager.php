@@ -4,6 +4,8 @@ namespace Catalyst\MediaBundle\Model;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Catalyst\MediaBundle\Model\StorageEngineFactory;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use DirectoryIterator;
 use Exception;
 
@@ -21,10 +23,15 @@ class UploadManager
     // if we check extension whitelist or not
     protected $flag_check_extension;
 
-    public function __construct($storage_config)
+    protected $user;
+    protected $em;
+
+    public function __construct($storage_config, TokenStorage $token_storage, EntityManager $em)
     {
         $sef = new StorageEngineFactory();
         $this->storage_engine = $sef->getStorageEngine($storage_config);
+        $this->user = $token_storage->getToken()->getUser();
+        $this->em = $em;
 
         // extension checks
         $this->allowed_exts = array();
@@ -113,10 +120,10 @@ class UploadManager
     {
         // do checks
         if (!$this->checkFile($file))
-            return false;
+            return null;
 
         // save in storage engine
-        return $this->storage_engine->addFile($file);
+        return $this->storage_engine->addFile($this->em, $file, $this->user);
     }
 
     public function checkFile(UploadedFile $file)
