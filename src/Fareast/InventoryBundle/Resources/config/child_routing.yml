@@ -65,6 +65,7 @@ feac_inv_borrowed_export:
 
 feac_inv_issued_index:
     pattern:  /issued
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:IssuedItem:index }
 
 feac_inv_issued_add_form:
@@ -111,7 +112,13 @@ feac_inv_adjust_index:
 
 feac_inv_transfer_index:
     path:     /stock/transfer
+    methods: [GET]
     defaults: { _controller: FareastInventoryBundle:TransferStock:index }
+
+feac_inv_transfer_add_submit:
+    path:    /stock/transfer
+    methods: [POST]
+    defaults: { _controller: FareastInventoryBundle:TransferStock:addSubmit }
 
 feac_inv_transfer_product:
     path:    /stock/transfer/product/{id}
