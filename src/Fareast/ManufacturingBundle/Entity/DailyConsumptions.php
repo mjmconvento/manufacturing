@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ManufacturingBundle\Entity;
+namespace Fareast\ManufacturingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,167 +19,167 @@ class DailyConsumptions
     protected $date_create;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_purchases;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_pumped_mdt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_pondo;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_production_gal;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_production_ton;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_tsai;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $mol_brix;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $bunker_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $bunker_purchase;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $bunker_consumption;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $bunker_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $sul_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $sul_purchase;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $sul_consumption;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $sul_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $soda_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $soda_purchase;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $soda_consumption;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $soda_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $urea_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $urea_purchase;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $urea_consumption;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $urea_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $salt_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $salt_purchase;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $salt_consumption;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $salt_running_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $electricity_final;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $electricity_beginning;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $electricity_used;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $ku_loa;
 
@@ -204,82 +204,82 @@ class DailyConsumptions
     protected $average_alcohol;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $alcohol_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $alcohol_out;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $aldehyde_beginning_balance;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $aldehyde_out;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $direct_labor_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $maintenance_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $support_group_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $plant_managers_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $guard_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $extra_no;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $direct_labor_mh;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $maintenance_mh;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $support_group_mh;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $plant_managers_mh;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $guard_mh;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
     protected $extra_mh;
 
@@ -886,7 +886,7 @@ class DailyConsumptions
         return $this->extra_mh;
     }
 
-
+    // TODO : Update toData depending on the fields
     public function toData()
     {
         $data = new \stdClass();

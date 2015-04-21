@@ -1,6 +1,6 @@
 <?php
 
-namespace Catalyst\ManufacturingBundle\Entity;
+namespace Fareast\ManufacturingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,19 +20,19 @@ class ShiftReports
     /** @ORM\Column(type="string" , length=40, nullable=true) */
     protected $shift;
 
-    /** @ORM\Column(type="integer" , nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $fine_alcohol;
 
-    /** @ORM\Column(type="integer" , nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $heads_alcohol;
 
     /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $alcohol_produced;
 
-    /** @ORM\Column(type="integer" , nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $ppt;
 
-    /** @ORM\Column(type="integer" , nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $proof;
 
     /** @ORM\Column(type="string" , length=40, nullable=true) */
@@ -47,16 +47,16 @@ class ShiftReports
     /** @ORM\Column(type="string" , length=40, nullable=true) */
     protected $mixer;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $biogas_produced;
 
     /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $gpla;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $biogas_bunker;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $biogas_steam;
 
     /** @ORM\Column(type="string" , length=40, nullable=true) */
@@ -65,13 +65,13 @@ class ShiftReports
     /** @ORM\Column(type="string" , length=40, nullable=true) */
     protected $cod;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $slops;
 
     /** @ORM\Column(type="string" , length=40, nullable=true) */
     protected $sampling;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $volume;
 
     /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
@@ -89,13 +89,13 @@ class ShiftReports
     /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $bunker;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $loa_lob;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $steam_produced;
 
-    /** @ORM\Column(type="integer" , length=40, nullable=true) */
+    /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
     protected $produced_steam;
 
     /** @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true) */
@@ -484,6 +484,7 @@ class ShiftReports
         return $this->boiler_operator;
     }
 
+    // TODO : Update toData depending on the fields
     public function toData()
     {
         $data = new \stdClass();

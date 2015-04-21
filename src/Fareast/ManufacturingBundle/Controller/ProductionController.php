@@ -3,7 +3,7 @@
 namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Catalyst\ManufacturingBundle\Entity\DailyConsumptions;
+use Fareast\ManufacturingBundle\Entity\DailyConsumptions;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -258,7 +258,7 @@ class ProductionController extends CrudController
         $date_from = new DateTime($date." 00:00:00");
         $date_to = new DateTime($date." 23:59:59");
 
-        $query = 'SELECT d FROM CatalystManufacturingBundle:DailyConsumptions d 
+        $query = 'SELECT d FROM FareastManufacturingBundle:DailyConsumptions d 
         WHERE d.date_create >= :date_from AND d.date_create <= :date_to';
         $data = $em->createQuery($query)
             ->setParameter('date_from', $date_from)
@@ -300,7 +300,7 @@ class ProductionController extends CrudController
         $date_from = new DateTime($date." 00:00:00");
         $date_to = new DateTime($date." 23:59:59");
 
-        $query = 'SELECT s FROM CatalystManufacturingBundle:ShiftReports s 
+        $query = 'SELECT s FROM FareastManufacturingBundle:ShiftReports s 
         WHERE s.date_create >= :date_from AND s.date_create <= :date_to';
         $shift_reports = $em->createQuery($query)
             ->setMaxResults(3)
