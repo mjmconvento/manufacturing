@@ -3,48 +3,205 @@
 namespace Fareast\PurchasingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-// use Catalyst\CoreBundle\Template\Controller\TrackCreate;
-// use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
-// use Catalyst\PurchasingBundle\Entity\POEntry;
-// use Catalyst\PurchasingBundle\Entity\PODelivery;
-// use Catalyst\PurchasingBundle\Entity\PODeliveryEntry;
-// use Catalyst\InventoryBundle\Entity\Product;
-// use Catalyst\InventoryBundle\Entity\ProductAttribute;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\PurchasingBundle\Entity\PurchaseOrder;
+use Catalyst\PurchasingBundle\Entity\POEntry;
+use Catalyst\InventoryBundle\Entity\Product;
+use Catalyst\ValidationException;
+use DateTime;
 
 class PurchaseController extends CrudController
 {
-   public function __construct()
+    use TrackCreate;
+    public function __construct()
     {
         $this->route_prefix = 'feac_pur_po';
         $this->title = 'Purchase Order';
 
-        // $this->list_title = 'Warehouses';
-        $this->list_type = 'static';
+        $this->list_title = 'Purchase Orders';
+        $this->list_type = 'dynamic';
     }
+
+    public function addEntryAction($entry_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $this->checkAccess($this->route_prefix . '.add');
+
+        $this->hookPreAction();
+        $obj = $this->newBaseClass();
+
+        $params = $this->getViewParams('Add', $this->route_prefix );
+
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($entry_id);
+
+        $params['prod'] = array(
+                'id' => $prod->getID(),
+                'code' => $prod->getCode(),
+                'name' => $prod->getName(),
+                'price' => $prod->getPriceSale()
+            );
+
+        $params['object'] = $obj;
+
+        // check if we have access to form
+        $params['readonly'] = !$this->getUser()->hasAccess($this->route_prefix . '.add');
+
+        $this->padFormParams($params, $obj);
+
+        return $this->render('CatalystTemplateBundle:Object:add.html.twig', $params);
+    }
+
 
     protected function newBaseClass()
     {
-        // return new Warehouse();
+        return new PurchaseOrder();
     }
 
     protected function getObjectLabel($obj)
     {
-        // return $obj->getName();
+        if ($obj == null)
+            return '';
+        return $obj->getCode();
     }
 
-    public function indexAction()
+    protected function getGridJoins()
     {
-        $this->title = 'Purchase Order';
-        $params = $this->getViewParams('', 'feac_pur_po');
-
-        return $this->render('FareastPurchasingBundle:Purchasing:index.html.twig', $params);
+        $grid = $this->get('catalyst_grid');
+        return array(
+            $grid->newJoin('s', 'supplier', 'getSupplier', 'left'),
+        );
     }
 
-    public function addAction()
+    public function formatDate($date)
     {
-        $this->title = 'Purchase Order';
-        $params = $this->getViewParams('add', 'feac_pur_po');
-
-        return $this->render('FareastPurchasingBundle:Purchasing:add.html.twig', $params);
+        return $date->format('m/d/Y');
     }
+
+    protected function getGridColumns()
+    {
+        $grid = $this->get('catalyst_grid');
+        return array(
+            $grid->newColumn('Order No.', 'getCode', 'code'),
+            $grid->newColumn('Date', 'getDateIssue', 'date_issue', 'o', array($this, 'formatDate')),
+            $grid->newColumn('Order Type', 'getName', 'first_name', 's'),
+            $grid->newColumn('Product Type', 'getTotalPrice', 'total_price'),
+            $grid->newColumn('Supplier ID', 'getStatusFormatted', 'status_id'),
+            $grid->newColumn('Terms', 'getStatusFormatted', 'status_id'),
+            $grid->newColumn('Gross', 'getStatusFormatted', 'status_id'),
+        );
+    }
+
+    protected function update($o, $data, $is_new = false)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $pur = $this->get('catalyst_purchasing');
+        $this->updateTrackCreate($o,$data,$is_new);
+        
+        $o->setDateIssue(new DateTime($data['date_issue']));
+        $o->setDateNeeded(new DateTime($data['date_need']));
+        $o->setReferenceCode($data['reference_code']);
+        $o->setSupplier($pur->getSupplier($data['supplier_id']));
+        $o->setStatus($data['status_id']);        
+
+        // clear entries
+        $ents = $o->getEntries();
+        foreach ($ents as $ent)
+            $em->remove($ent);
+        $o->clearEntries();
+
+        // entries
+        if (isset($data['en_prod_id']))
+        {
+            foreach ($data['en_prod_id'] as $index => $prod_id)
+            {
+                // fields
+                $qty = $data['en_qty'][$index];
+                $price = $data['en_price'][$index];
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+                if ($prod == null)
+                    throw new ValidationException('Could not find product.');
+
+                // instantiate
+                $entry = new POEntry();
+                $entry->setProduct($prod)
+                    ->setQuantity($qty)
+                    ->setPrice($price);
+
+                // add entry
+                $o->addEntry($entry);
+            }
+        }
+        // TODO: not sure if product entry is needed to have atleast 1, will add an else statement with validation exception for product entry.
+    }
+
+    protected function padFormParams(&$params, $po = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+        $pur = $this->get('catalyst_purchasing');
+        // suppplier
+        $params['supp_opts'] = $pur->getSupplierOptions();
+
+        $params['status_opts'] = array(
+            'draft' => 'Draft',
+            'approved' => 'Approved',
+            'fulfilled' => 'Fulfilled',
+            'sent' => 'Sent',
+            'cancelled' => 'Cancel',
+        );
+        
+        $params['prod_opts'] = $inv->getProductOptions();
+        return $params;
+    }
+
+    protected function statusUpdate($id, $status)
+    {
+        $log = $this->get('catalyst_log');
+        $em = $this->getDoctrine()->getManager();
+        $po = $em->getRepository('CatalystPurchasingBundle:PurchaseOrder')->find($id);
+        if ($po == null)
+            throw new ValidationError('Cannot find purchase order.');
+
+        $po->setStatus($status);
+        $em->flush();
+
+        $log->log('cat_pur_po_status_update', 'status updateed for Purchase Order ' . $po->getID() . '.', $po->toData());
+
+        $this->addFlash('success', 'Purchase order ' . $po->getCode() . ' status has been updated to ' . $status . '.');
+
+        return $this->redirect($this->generateUrl('cat_pur_po_edit_form', array('id' => $id)));
+    }
+
+    public function statusApproveAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseOrder::STATUS_APPROVED);
+    }
+
+    public function statusSendAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseOrder::STATUS_SENT);
+    }
+
+    public function statusCancelAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseOrder::STATUS_CANCEL);
+    }
+
+    public function statusFulfillAction($id)
+    {
+        return $this->statusUpdate($id, PurchaseOrder::STATUS_FULFILLED);
+    }
+    
+    protected function hookPostSave($obj,$is_new = false) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($is_new){
+            $obj->generateCode();
+            $em->persist($obj);
+            $em->flush();
+        }
+       
+    }
+
 }
