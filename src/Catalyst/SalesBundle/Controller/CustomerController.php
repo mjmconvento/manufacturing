@@ -89,14 +89,14 @@ class CustomerController extends CrudController
     {
         if ($obj == null)
             return '';
-        return $obj->getDisplayName();
+        return $obj->getName();
     }
 
     protected function getGridColumns()
     {
         $grid = $this->get('catalyst_grid');
         return array(
-            $grid->newColumn('Name', 'getDisplayName', 'last_name'),
+            $grid->newColumn('Name', 'getName', 'last_name'),
             $grid->newColumn('Email', 'getEmail', 'email'),
         );
     }
@@ -105,6 +105,10 @@ class CustomerController extends CrudController
     {
         if ($o->getID())
             $params['stock_cols'] = $this->getStockColumns();
+
+        $cnt = $this->get('catalyst_contact');
+        $params['phone_type_opts'] = $cnt->getPhoneTypeOptions();
+        $params['contact_opts'] = $cnt->getContactTypeOptions();
 
         return $params;
     }
@@ -134,7 +138,7 @@ class CustomerController extends CrudController
         $o->setMiddleName($data['middle_name']);
         $o->setSalutation($data['salutation']);
         $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateHasContactInfo($o, $data, $is_new);
+        $this->updateContact($o, $data, $is_new);
     }
 
     protected function buildData($o)

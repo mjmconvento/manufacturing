@@ -3,7 +3,7 @@
 namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Catalyst\ManufacturingBundle\Entity\ShiftReports;
+use Fareast\ManufacturingBundle\Entity\ShiftReports;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -178,7 +178,7 @@ class ShiftReportsController extends CrudController
     protected function findShiftReport($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $shift_report = $em->getRepository('CatalystManufacturingBundle:ShiftReports')->find($id);
+        $shift_report = $em->getRepository('FareastManufacturingBundle:ShiftReports')->find($id);
 
         return $shift_report;
     }

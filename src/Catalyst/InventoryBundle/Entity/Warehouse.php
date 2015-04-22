@@ -36,6 +36,9 @@ class Warehouse
     /** @ORM\Column(type="integer", nullable=true) */
     protected $pm_terms;
 
+    /** @ORM\Column(type="string", length=25, nullable=true) */
+    protected $type;
+
     public function __construct()
     {
         $this->initHasAddress();
@@ -95,6 +98,11 @@ class Warehouse
     public function isStocktrack()
     {
         return $this->flag_stocktrack;
+    }
+
+    public function setType()
+    {
+        return $this->type;
     }
 
     public function toData()
