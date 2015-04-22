@@ -107,7 +107,13 @@ feac_inv_returned:
 
 feac_inv_adjust_index:
     path:     /stock/adjust
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:StockAdjustment:index }
+
+feac_inv_adjust_grid:
+    path:    /stock/adjust/grid/{dept}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:StockAdjustment:grid, dept: null, category: null }
 
 
 feac_inv_transfer_index:
@@ -128,6 +134,13 @@ feac_inv_transfer_productgroup:
     path:    /stock/transfer/productgroup/{var_id}
     defaults: { _controller: FareastInventoryBundle:TransferStock:getGroup }
 
+
 feac_inv_warehouse_index:
-    path:     /stock/warehouse
+    path:     /warehouse/stock
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:WarehouseStock:index }
+
+feac_inv_warehouse_grid:
+    path:    /warehouse/stock/grid/{dept}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:grid, dept: null, category: null }
