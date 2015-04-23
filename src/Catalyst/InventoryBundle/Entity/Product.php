@@ -9,7 +9,7 @@ use Catalyst\CoreBundle\Template\Entity\HasName;
 use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\TrackUpdate;
-use Fareast\InventoryBundle\Entity\ProductType;
+use Catalyst\InventoryBundle\Entity\ProductType;
 
 use stdClass;
 
@@ -70,7 +70,7 @@ class Product
     protected $prodgroup;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\Fareast\InventoryBundle\Entity\ProductType")
+     * @ORM\ManyToOne(targetEntity="\Catalyst\InventoryBundle\Entity\ProductType")
      * @ORM\JoinColumn(name="prodtype_id", referencedColumnName="id")
      */
     protected $prodtype;

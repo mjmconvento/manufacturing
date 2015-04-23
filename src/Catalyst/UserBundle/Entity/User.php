@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
 use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
+use Catalyst\CoreBundle\Template\Entity\HasDepartment;
 use Catalyst\MediaBundle\Template\Entity\HasUpload;
 use stdClass;
 
@@ -18,6 +19,7 @@ class User extends BaseUser
 {
     use HasWarehouse;
     use HasUpload;
+    use HasDepartment;
 
     /**
      * @ORM\Id

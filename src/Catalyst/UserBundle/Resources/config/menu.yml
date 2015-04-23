@@ -7,3 +7,6 @@ menu_items:
       acl: cat_user_group.menu
       label: Role
       parent: menu_admin
+    - id: cat_user_dept_index
+      label: Department
+      parent: menu_admin

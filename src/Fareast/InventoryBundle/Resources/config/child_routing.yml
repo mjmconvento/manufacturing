@@ -20,47 +20,47 @@ feac_inv_begin_submit:
 feac_inv_borrowed_index:
     path:     /borrowed
     methods:  [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:index }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:index }
 
 feac_inv_borrowed_add_form:
     path:     /borrow
     methods:  [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:addForm }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:addForm }
 
 feac_inv_borrowed_add_submit:
     path:     /borrow
     methods:  [POST]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:addSubmit }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:addSubmit }
 
 feac_inv_borrowed_edit_form:
     path:     /borrow/{id}
     methods:  [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:editForm }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:editForm }
 
 feac_inv_borrowed_edit_submit:
     pattern: /borrow/{id}
     methods: [POST]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:editSubmit }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:editSubmit }
 
 feac_inv_borrowed_grid:
     pattern: /grid
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:grid }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:grid }
 
 feac_inv_borrowed_dept:
     pattern: /borrowed/dept/{id}
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:getDept }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:getDept }
 
 feac_inv_borrowed_product:
     pattern: /borrowed/product/{prod_id}
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:getProduct }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:getProduct }
 
 feac_inv_borrowed_export:
     pattern: /borrowed/list/csv
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:exportCSV }
+    defaults: { _controller: FareastInventoryBundle:BorrowedItem:exportCSV }
 
 
 feac_inv_issued_index:
@@ -99,15 +99,15 @@ feac_inv_issued_product:
     defaults: { _controller: FareastInventoryBundle:IssuedItem:getProduct }
 
 
-
-feac_inv_returned:
-    path:     /returned
-    defaults: { _controller: FareastInventoryBundle:BorrowedItems:returned }
-
-
 feac_inv_adjust_index:
     path:     /stock/adjust
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:StockAdjustment:index }
+
+feac_inv_adjust_grid:
+    path:    /stock/adjust/grid/{dept}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:StockAdjustment:grid, dept: null, category: null }
 
 
 feac_inv_transfer_index:
@@ -128,6 +128,13 @@ feac_inv_transfer_productgroup:
     path:    /stock/transfer/productgroup/{var_id}
     defaults: { _controller: FareastInventoryBundle:TransferStock:getGroup }
 
+
 feac_inv_warehouse_index:
-    path:     /stock/warehouse
+    path:     /warehouse/stock
+    methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:WarehouseStock:index }
+
+feac_inv_warehouse_grid:
+    path:    /warehouse/stock/grid/{dept}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:grid, dept: null, category: null }

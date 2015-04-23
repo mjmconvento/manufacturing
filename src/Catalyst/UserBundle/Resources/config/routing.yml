@@ -63,3 +63,39 @@ cat_user_group_delete:
     pattern: /group/{id}/delete
     methods: [GET]
     defaults: { _controller: CatalystUserBundle:Group:delete }
+
+
+cat_user_dept_index:
+    pattern: /depts
+    methods: [GET]
+    defaults: { _controller: CatalystUserBundle:Department:index }
+
+cat_user_dept_add_form:
+    pattern: /dept
+    methods: [GET]
+    defaults: { _controller: CatalystUserBundle:Department:addForm }
+
+cat_user_dept_add_submit:
+    pattern: /dept
+    methods: [POST]
+    defaults: { _controller: CatalystUserBundle:Department:addSubmit }
+
+cat_user_dept_edit_form:
+    pattern: /dept/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystUserBundle:Department:editForm }
+
+cat_user_dept_delete:
+    pattern: /dept/{id}/delete
+    methods: [GET]
+    defaults: { _controller: CatalystUserBundle:Department:delete }
+
+cat_user_dept_edit_submit:
+    pattern: /dept/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystUserBundle:Department:editSubmit }
+
+cat_user_dept_grid:
+    pattern: /depts/grid
+    methods: [GET]
+    defaults: { _controller: CatalystUserBundle:Department:grid }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fareast\InventoryBundle\Entity;
+namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -31,7 +31,7 @@ class IssuedItem
     protected $issued_to;
 
     /**
-     * @ORM\OneToMany(targetEntity="IssuedEntry", mappedBy="issued", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="IIEntry", mappedBy="issued", cascade={"persist"})
      */
     protected $entries;
 
@@ -54,7 +54,7 @@ class IssuedItem
         return $this;
     }
 
-    public function addEntry(IssuedEntry $entry)
+    public function addEntry(IIEntry $entry)
     {
         $this->entries->add($entry);
         $entry->setIssued($this);

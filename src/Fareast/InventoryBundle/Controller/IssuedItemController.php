@@ -3,8 +3,8 @@
 namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\InventoryBundle\Entity\IssuedItem;
-use Fareast\InventoryBundle\Entity\IssuedEntry;
+use Catalyst\InventoryBundle\Entity\IssuedItem;
+use Catalyst\InventoryBundle\Entity\IIEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,7 +48,7 @@ class IssuedItemController extends CrudController
         $params['grid_cols'] = $gl->getColumns();
 
         $em = $this->getDoctrine()->getManager();
-        $issued = $em->getRepository('FareastInventoryBundle:IssuedItem')->findAll();
+        $issued = $em->getRepository('CatalystInventoryBundle:IssuedItem')->findAll();
         $data = array();
         foreach ($issued as $i) {
             $data[] =[

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fareast\InventoryBundle\Entity;
+namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;

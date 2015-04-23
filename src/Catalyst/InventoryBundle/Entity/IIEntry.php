@@ -1,6 +1,6 @@
 <?php
 
-namespace Fareast\InventoryBundle\Entity;
+namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
@@ -10,9 +10,9 @@ use Catalyst\CoreBundle\Template\Entity\HasQuantity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="inv_issued_entry")
+ * @ORM\Table(name="inv_ii_entry")
  */
-class IssuedEntry
+class IIEntry
 {
 	use HasGeneratedID;
 	use HasProduct;

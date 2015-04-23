@@ -1,23 +1,27 @@
-feac_sales_del:
+feac_sales_del_index:
     path:     /delivery
-    defaults: { _controller: FareastSalesBundle:Sales:delivery }
+    defaults: { _controller: FareastSalesBundle:Delivery:index }
 
-feac_sales_del_add:
-    path:     /delivery/add
-    defaults: { _controller: FareastSalesBundle:Sales:addDelivery }
+feac_sales_del_add_form:
+    path:     /del
+    defaults: { _controller: FareastSalesBundle:Delivery:addForm }
 
-feac_sales_invc:
+feac_sales_invoice_index:
     path:     /invoice
-    defaults: { _controller: FareastSalesBundle:Sales:invoice }
+    methods:  [GET]
+    defaults: { _controller: FareastSalesBundle:SalesInvoice:index }
 
-feac_sales_invc_add:
-    path:     /invoice/add
-    defaults: { _controller: FareastSalesBundle:Sales:addInvoice }
+feac_sales_invoice_add_form:
+    path:     /inv
+    methods:  [GET]
+    defaults: { _controller: FareastSalesBundle:SalesInvoice:addForm }
 
-feac_sales_order:
-    path:     /order
-    defaults: { _controller: FareastSalesBundle:Sales:order }
 
-feac_sales_order_add:
-    path:     /order/add
-    defaults: { _controller: FareastSalesBundle:Sales:addOrder }
+cat_sales_so_index:
+    path:     /sos
+    methods:  [GET]
+    defaults: { _controller: FareastSalesBundle:SalesOrder:index }
+
+cat_sales_so_add_form:
+    path:     /so
+    defaults: { _controller: FareastSalesBundle:SalesOrder:addForm }

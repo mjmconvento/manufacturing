@@ -6,18 +6,37 @@
     <div class="col-md-12">
         <div class="portlet box blue-hoki">
             <div class="portlet-title">
-                <div class="caption">{{list_title}}</div>
+                <div class="caption">Stock Adjustment</div>
             </div>
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Filters</h4>
-                        {{ f.group_select('Source Warehouse','wh',object.getCode|default(''),2,3,4)}}
-                        {{ f.group_select('Category','wh',object.getCode|default(''),2,3,4)}}
+                        <div class="table-toolbar" style="height:40px">
+                            <form id="date_form" method="post" class="form-horizontal">
+                            <label class="col-md-3 control-label">Source Warehouse</label>
+                            <div class ="col-md-7">
+                                <select id="dept" class="form-control select_2" name="dept" multiple>
+                                {{ f.options(dept, 0) }}
+                                </select>
+                            </div>
+                            </form>
+                        </div>
+
+                        <div class="table-toolbar" style="height:40px">
+                            <form id="date_form" method="post" class="form-horizontal">
+                            <label class="col-md-3 control-label">Category</label>
+                            <div class ="col-md-7">
+                                <select id="prodgroup_opts" class="form-control select_2" name="prodgroup_opts" multiple>
+                                {{ f.options(prodgroup_opts, 0) }}
+                                </select>
+                            </div>
+                            </form>
+                        </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label"></label>
                             <div class="col-md-3">
-                                <button class="btn blue-madison">Apply Filters</button>
+                                <a href="javascript:void(0)" id="filter_button" class="btn blue-madison">Apply Filters</a>
                             </div>
                         </div>
 
@@ -37,12 +56,12 @@
                                     <th>Item Code</th>
                                     <th>Item Name</th>
                                     <th>Quantity</th>
-                                    <th>Unit of Measurement</th>
-                                    <th>Category</th>
+                                    <th>Unit of Measurement</th>                      
                                     <th>Actual Quantity</th>
                                 </tr>
                             </thead>
-                            <tbody>                                        
+                            <tbody>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -50,7 +69,7 @@
                      <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Submit</button>
-                            <a href="{{path('feac_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                            <a href="{{path('feac_inv_adjust_index')}}" class="btn default">Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -64,11 +83,21 @@
 {% block js %}
 <script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/select2/select2.min.js') }}"></script>
 <script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/jquery.dataTables.fnreloadajax.js') }}"></script>
 <script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/data-tables/DT_bootstrap.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
 
 <script>
 $(document).ready(function() {
-    $('#list_table').dataTable({
+    ComponentsPickers.init();
+   var dept;
+   var category;
+   var dTable;
+
+   dTable = $('#list_table').dataTable({
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": "{{ path('feac_inv_warehouse_grid')}}",
         "iDisplayLength": 10,
         "sPaginationType": "bootstrap",
         "oLanguage": {
@@ -77,8 +106,23 @@ $(document).ready(function() {
                 "sPrevious": "Prev",
                 "sNext": "Next"
             }
-        }
+        },
+        "aoColumnDefs": [
+            { "bSortable": false, "aTargets": [{{ grid_cols|length - 1}}] },
+        ]
     });
+
+   $('#filter_button').click(function(){
+        var dept = $('#dept').val();
+        var cat = $('#prodgroup_opts').val();
+        var path = "{{ path('feac_inv_warehouse_grid', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
+        path = path.replace('DEPT', dept);
+        path = path.replace('CATEGORY', cat);
+        // console.log(path)
+        dTable.fnReloadAjax(path);
+   });
+
+
 
     $('#list_table_wrapper .dataTables_filter input').addClass("form-control input-small input-inline"); // modify table search input
     $('#list_table_wrapper .dataTables_length select').addClass("form-control input-xsmall input-inline"); // modify table per page dropdown

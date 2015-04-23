@@ -7,25 +7,13 @@ menu_items:
       acl: cat_sales_cust.menu
       label: Customer
       parent: feac_settings
-    # - id: cat_sales_quote_index
-    #   acl: cat_sales_quote.menu
-    #   label: Quotation
-    #   parent: menu_sales
-    # - id: cat_sales_so_index
-    #   acl: cat_sales_so.menu
-    #   label: Sales Order
-    #   parent: menu_sales
-    # - id: cat_sales_pm_index
-    #   acl: cat_sales_pm.menu
-    #   label: Payment Method
-    #   parent: menu_sales
-    - id: feac_sales_del
+    - id: feac_sales_del_index
       label: Delivery
       parent: menu_sales
-    - id: feac_sales_invc
+    - id: feac_sales_invoice_index
       label: Sales Invoice
       parent: menu_sales
-    - id: feac_sales_order
+    - id: cat_sales_so_index
       label: Sales Order
       parent: menu_sales
 
