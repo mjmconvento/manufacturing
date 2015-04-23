@@ -1,6 +1,6 @@
 <?php
 
-namespace Fareast\InventoryBundle\Entity;
+namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
@@ -10,16 +10,16 @@ use Catalyst\CoreBundle\Template\Entity\HasQuantity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="inv_borrowed_entry")
+ * @ORM\Table(name="inv_bi_entry")
  */
-class BorrowedEntry
+class BIEntry
 {
 	use HasGeneratedID;
 	use HasProduct;
 	use HasQuantity;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="BorrowedItems")
+     * @ORM\ManyToOne(targetEntity="BorrowedItem")
      * @ORM\JoinColumn(name="borrowed_id", referencedColumnName="id")
      */
     protected $borrowed;
@@ -30,13 +30,16 @@ class BorrowedEntry
     /** @ORM\Column(type="string", length=80, nullable=true) */
     protected $remarks;
 
+    /** @ORM\Column(type="date") */
+    protected $date_returned;
+
     public function __construct()
     {
         $this->initHasQuantity();        
     	$this->initHasGeneratedID();
     }
 
-    public function setBorrowed(BorrowedItems $borrowed)
+    public function setBorrowed(BorrowedItem $borrowed)
     {
     	$this->borrowed = $borrowed;
         $this->borrowed_id = $borrowed->getID();

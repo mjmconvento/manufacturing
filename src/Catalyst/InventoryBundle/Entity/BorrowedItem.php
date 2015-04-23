@@ -1,6 +1,6 @@
 <?php
 
-namespace Fareast\InventoryBundle\Entity;
+namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +15,7 @@ use stdClass;
  * @ORM\Entity
  * @ORM\Table(name="inv_borrowed_item")
  */
-class BorrowedItems
+class BorrowedItem
 {
 	use HasGeneratedID;
 	use Hascode;
@@ -23,9 +23,6 @@ class BorrowedItems
 
 	const STATUS_INCOMPLETE = 'Incomplete';
     const STATUS_COMPLETE = 'Complete';
-	
-	/** @ORM\Column(type="date") */
-    protected $date_returned;
 
     /** @ORM\Column(type="date") */
     protected $date_issue;
@@ -40,7 +37,7 @@ class BorrowedItems
     protected $status;
 
     /**
-     * @ORM\OneToMany(targetEntity="BorrowedEntry", mappedBy="borrowed", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="BIEntry", mappedBy="borrowed", cascade={"persist"})
      */
     protected $entries;
 
@@ -77,7 +74,7 @@ class BorrowedItems
         return $this;
     }
 
-    public function addEntry(BorrowedEntry $entry)
+    public function addEntry(BIEntry $entry)
     {
         $this->entries->add($entry);
         $entry->setBorrowed($this);
