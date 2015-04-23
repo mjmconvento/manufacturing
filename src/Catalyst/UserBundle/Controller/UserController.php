@@ -53,8 +53,11 @@ class UserController extends CrudController
         );
 
         //branch opts
-        $inv = $this->get('catalyst_inventory');
-        $params['wh_opts'] = $inv->getWarehouseOptions();
+        // $inv = $this->get('catalyst_inventory');
+        // $params['wh_opts'] = $inv->getWarehouseOptions();
+
+        //dept opts
+        $params['dept_opts'] = $um->getDeptOptions();
 
         // groups
         $params['group_opts'] = $um->getGroupOptions();

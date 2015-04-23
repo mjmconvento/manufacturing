@@ -62,6 +62,17 @@ class UserManager
         );
     }
 
+    public function getDeptOptions($filter = array())
+    {
+        return $this->getOptionsArray(
+            'CatalystUserBundle:Department',
+            $filter,
+            array('name' => 'ASC'),
+            'getID',
+            'getName'
+        );
+    }
+
     public function findUser($id)
     {
         return $this->em->getRepository('CatalystUserBundle:User')
@@ -71,6 +82,12 @@ class UserManager
     public function findGroup($id)
     {
         return $this->em->getRepository('CatalystUserBundle:Group')
+            ->find($id);
+    }
+
+    public function findDepartment($id)
+    {
+        return $this->em->getRepository('CatalystUserBundle:Department')
             ->find($id);
     }
 
