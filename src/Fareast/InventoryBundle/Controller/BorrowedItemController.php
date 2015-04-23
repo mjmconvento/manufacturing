@@ -3,15 +3,15 @@
 namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\InventoryBundle\Entity\BorrowedItems;
-use Fareast\InventoryBundle\Entity\BorrowedEntry;
+use Catalyst\InventoryBundle\Entity\BorrowedItem;
+use Catalyst\InventoryBundle\Entity\BIEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use DateTime;
 
-class BorrowedItemsController extends CrudController
+class BorrowedItemController extends CrudController
 {
     use TrackCreate;
     public function __construct()
@@ -25,7 +25,7 @@ class BorrowedItemsController extends CrudController
 
     protected function newBaseClass()
     {
-        return new BorrowedItems();
+        return new BorrowedItem();
     }
 
     protected function getObjectLabel($obj)
@@ -41,7 +41,7 @@ class BorrowedItemsController extends CrudController
 
         $params = $this->getViewParams('List');        
 
-        $twig_file = 'FareastInventoryBundle:BorrowedItems:index.html.twig';
+        $twig_file = 'FareastInventoryBundle:BorrowedItem:index.html.twig';
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();
@@ -55,7 +55,7 @@ class BorrowedItemsController extends CrudController
         $params['date_to'] = $date_to;
 
         $em = $this->getDoctrine()->getManager();
-        $borrowed = $em->getRepository('FareastInventoryBundle:BorrowedItems')->findAll();
+        $borrowed = $em->getRepository('CatalystInventoryBundle:BorrowedItem')->findAll();
         $data = array();
         foreach ($borrowed as $b) {
             $data[] =[
@@ -90,7 +90,7 @@ class BorrowedItemsController extends CrudController
             if($u->getID() == $id)
             {
                 $data = [
-                'dept' => $u->getWarehouse()->getName()
+                'dept' => $u->getDepartment(),
 
                 ];
             }
@@ -128,7 +128,7 @@ class BorrowedItemsController extends CrudController
         $params['user_opts'] = $um->getUserOptions(); 
         $params['prod_opts'] = $inv->getProductOptions();
 
-        $params['status_opts'] = array('Incomplete'=>  BorrowedItems::STATUS_INCOMPLETE, 'Complete'=>  BorrowedItems::STATUS_COMPLETE);        
+        $params['status_opts'] = array('Incomplete'=>  BorrowedItem::STATUS_INCOMPLETE, 'Complete'=>  BorrowedItem::STATUS_COMPLETE);        
         
         return $params;
     }
