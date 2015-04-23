@@ -1,0 +1,87 @@
+<div class="portlet-title">
+    <div class="caption">Create Shift Report ({{ shift_report.getDateProduced|date('m-d-Y') }})</div>
+</div>
+<div class="portlet-body form">
+    <form method="post" class="form-horizontal">
+        <div class="form-body">
+            <h4 class="form-section">Information</h4>
+            {{ form_tools.group_text('Supervisor in charge', 'supervisor', shift_report.getUserCreate.getName, 3, 4, true) }}
+            {{ form_tools.group_text('Shift', 'shift', shift, 3, 4, true) }}
+            <h4 class="form-section">Production</h4>
+            {{ form_tools.group_text('Fine Alcohol (IN)', 'fine-alcohol', shift_report.getFineAlcohol, 3, 4) }}
+            {{ form_tools.group_text('Heads Alcohol', 'heads-alcohol', shift_report.getHeadsAlcohol, 3, 4) }}
+            {{ form_tools.group_text('% H&T / Liters Alcohol Produced', 'produced', shift_report.getAlcoholProduced, 3, 4, true) }}
+            {{ form_tools.group_text('Alcohol Quality (PPT) Production', 'ppt', shift_report.getPPT, 3, 4) }}
+            {{ form_tools.group_text('Alcohol Quality (PROOF) Production', 'proof', shift_report.getPROOF, 3, 4) }}
+            {{ form_tools.group_text('Column Operator', 'column-operator', shift_report.getColumnOperator, 3, 4) }}
+            <h4 class="form-section">Production Data</h4>
+            <div class="panel-group accordion" id="accordion1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1">Fermentation</a>
+                        </h4>
+                    </div>
+                    <div id="collapse_1" class="panel-collapse collapse in" style="height: auto;">
+                        <div class="panel-body">
+                            {{ form_tools.group_text('Average % Alcohol in Beer', 'beer-alcohol', shift_report.getBeerAlcohol, 3, 4) }}
+                            {{ form_tools.group_text('Fermentation', 'fermentation', shift_report.getFermentation, 3, 4) }}
+                            {{ form_tools.group_text('Mixer', 'mixer', shift_report.getMixer, 3, 4) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_2">Biogas</a>
+                        </h4>
+                    </div>
+                    <div id="collapse_2" class="panel-collapse collapse in" style="height: auto;">
+                        <div class="panel-body">
+                            {{ form_tools.group_text('Biogas Produced', 'biogas', shift_report.getBiogasProduced, 3, 4) }}
+                            {{ form_tools.group_text('cu.m. Gas/Liter Alcohol', 'gpla', shift_report.getGPLA, 3, 4, true) }}
+                            {{ form_tools.group_text('Equivalent Bunker (L)', 'biogas-bunker', shift_report.getBiogasBunker, 3, 4) }}
+                            {{ form_tools.group_text('Steam Produced (lbs)', 'steam', shift_report.getBiogasSteam, 3, 4, true) }}
+                            {{ form_tools.group_text('VFA (sp3)', 'vfa', shift_report.getVFA, 3, 4) }}
+                            {{ form_tools.group_text('COD Loading', 'cod', shift_report.getCOD, 3, 4) }}
+                            {{ form_tools.group_text('Slops Feeding (m3)', 'slops', shift_report.getSlops, 3, 4) }}
+                            {{ form_tools.group_text('Sampling Point', 'sampling', shift_report.getSampling, 3, 4) }}
+                            {{ form_tools.group_text('Settling Volume', 'volume', shift_report.getVolume, 3, 4) }}
+                            {{ form_tools.group_text('Temperature', 'temp', shift_report.getTemperature, 3, 4) }}
+                            {{ form_tools.group_text('pH', 'ph', shift_report.getPH, 3, 4) }}
+                            {{ form_tools.group_text('Biogas Operator', 'biogas-operator', shift_report.getBiogasOperator, 3, 4) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_3">Bunker Fuel/Steam</a>
+                        </h4>
+                    </div>
+                    <div id="collapse_3" class="panel-collapse collapse in" style="height: auto;">
+                        <div class="panel-body">
+                            {{ form_tools.group_text('Kilos of Rice Husk Used', 'husk', shift_report.Husk, 3, 4) }}
+                            {{ form_tools.group_text('Equivalent Bunker (L)', 'bunker', shift_report.Bunker, 3, 4, true) }}
+                            {{ form_tools.group_text('Liter of Alcohol/Liter of Bunker', 'loa-lob', shift_report.getLOALOB, 3, 4) }}
+                            {{ form_tools.group_text('Steam Produced in Rice Husk (lbs)', 'steam-produced', shift_report.getSteamProduced, 3, 4, true) }}
+                            {{ form_tools.group_text('Total Steam Produced (lbs)', 'produced-steam', shift_report.getProducedSteam, 3, 4) }}
+                            {{ form_tools.group_text('Liter of Alcohol/Kg of Rice in Husk', 'loa-husk', shift_report.getLOAHusk, 3, 4, true) }}
+                            {{ form_tools.group_text('Kr of Rice Husk/Liter of Alcohol', 'husk-loa', shift_report.getHuskLOA, 3, 4, true) }}
+                            {{ form_tools.group_text('Lbs of Steam/Liter of Alcohol', 'steam-loa', shift_report.getSteamLOA, 3, 4, true) }}
+                            {{ form_tools.group_text('Lbs of Steam/Kg of Rice Husk', 'steam-husk', shift_report.getSteamHusk, 3, 4, true) }}
+                            {{ form_tools.group_text('Boiler in Operation', 'boiler', shift_report.getBoiler, 3, 4) }}
+                            {{ form_tools.group_text('Boiler Operator', 'boiler-operator', shift_report.getBoilerOperator, 3, 4) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions fluid">
+            <div class="col-md-9">
+                <button type="submit" class="btn blue">Submit</button>
+                <a href="{{ path('feac_mfg_prod_cal') }}" class="btn default">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>

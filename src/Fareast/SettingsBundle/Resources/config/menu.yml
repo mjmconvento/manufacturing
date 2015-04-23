@@ -2,9 +2,9 @@ menu_items:
     - id: feac_settings
       label: Database
       icon: fa-wrench
-    - id: feac_set_raw_index
-      label: Raw Materials Management
-      parent: feac_settings
-    - id: feac_set_assets_index
-      label: Fixed Assets Management
-      parent: feac_settings
+    # - id: feac_set_raw_index
+    #   label: Raw Materials Management
+    #   parent: feac_settings
+    # - id: feac_set_assets_index
+    #   label: Fixed Assets Management
+    #   parent: feac_settings

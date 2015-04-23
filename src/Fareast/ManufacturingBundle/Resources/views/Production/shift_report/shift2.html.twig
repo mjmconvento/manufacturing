@@ -1,0 +1,31 @@
+<div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+        <div class="caption">
+            <h3 style="font-weight: bold;">N/A</h3>
+            <h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br> {% block shift %}{% endblock %} Shift - {{ shift }}</h4>
+            <div class="form-horizontal">
+                <div id="cgroup-sku" class="form-group">
+                    <label class="col-md-5 control-label">Fermentation</label>
+                    <div class="col-md-7">
+                        <input class="form-control " placeholder="Fermentation" value="N/A" readonly="readonly">
+                    </div>
+                </div>
+                <div id="cgroup-sku" class="form-group">
+                    <label class="col-md-5 control-label">Biogas</label>
+                    <div class="col-md-7">
+                        <input class="form-control " placeholder="Biogas" value="N/A" readonly="readonly">
+                    </div>
+                </div>
+                <div id="cgroup-sku" class="form-group">
+                    <label class="col-md-5 control-label">Bunker Fuel/Steam</label>
+                    <div class="col-md-7">
+                        <input class="form-control " placeholder="Bunker Fuel/Steam" value="N/A" readonly="readonly">
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <a href="{{ path('feac_mfg_shift_rep_new', { date: today, shift: shift }) }}" class="btn blue">Create Shift Report</a>
+            </div>
+        </div>
+    </div>
+</div>

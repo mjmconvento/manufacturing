@@ -3,11 +3,11 @@
 namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\ManufacturingBundle\Entity\ShiftReports;
+use Fareast\ManufacturingBundle\Entity\ShiftReport;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShiftReportsController extends CrudController
+class ShiftReportController extends CrudController
 {
     public function __construct()
     {
@@ -17,7 +17,7 @@ class ShiftReportsController extends CrudController
 
     protected function newBaseClass()
     {
-        return new ShiftReports();
+        return new ShiftReport();
     }
 
     protected function getObjectLabel($obj)
@@ -25,17 +25,21 @@ class ShiftReportsController extends CrudController
         return $obj->getName();
     }
 
-    public function shiftReportAction($date)
+    public function shiftReportAction($date, $shift)
     {
         $this->title = 'Create Shift Report';
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
 
         $this->padFormParams($params);
 
+        $date = new DateTime($date);
+        $params['date'] = $date;
+        $params['shift'] = $shift;
+
         return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
     }
 
-    public function shiftReportSubmitAction($date)
+    public function shiftReportSubmitAction($date, $shift)
     {
         $this->title = 'Create Shift Report';
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
@@ -44,8 +48,9 @@ class ShiftReportsController extends CrudController
         $data = $this->getRequest()->request->all();
 
         $today = new DateTime();
-        $shift_reports = new ShiftReports();
-        $shift_reports->setDateCreate(new DateTime($date." ".$today->format('h:i:s')))
+        $shift_report = new ShiftReport();
+        $shift_report->setDateCreate(new DateTime())
+            ->setDateProduced(new DateTime($date))
             ->setUserCreate($this->getUser())
             ->setShift($data['shift'])
             ->setFineAlcohol($data['fine-alcohol'])
@@ -81,31 +86,40 @@ class ShiftReportsController extends CrudController
             ->setBoiler($data['boiler'])
             ->setBoilerOperator($data['boiler-operator']);
 
-        $em->persist($shift_reports);
+        $em->persist($shift_report);
         $em->flush();
 
         $this->padFormParams($params);
 
+        $date = new DateTime($date);
+        $params['date'] = $date;
+        $params['shift'] = $shift;
 
         $this->addFlash('success', 'Shift Report has been created.'); 
 
-        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
+        return $this->redirect($this->generateUrl('feac_mfg_shift_rep_edit', 
+            array(
+                    'id' => $shift_report->getID(),
+                    'shift' => $shift,
+                )));
     }
 
-    public function shiftReportEditAction($id)
+
+    public function shiftReportEditAction($id, $shift)
     {
         $this->title = 'Create Shift Report';
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
 
         $params['shift_report'] = $this->findShiftReport($id);
+        $params['shift'] = $shift;
 
         $this->padFormParams($params);
 
-        return $this->render('FareastManufacturingBundle:Production:shift-report-edit.html.twig', $params);
+        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
     }
 
 
-    public function shiftReportEditSubmitAction($id)
+    public function shiftReportEditSubmitAction($id, $shift)
     {
         $this->title = 'Create Shift Report';
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
@@ -153,12 +167,13 @@ class ShiftReportsController extends CrudController
         $em->flush();
 
         $params['shift_report'] = $shift_report;
+        $params['shift'] = $shift;
 
         $this->addFlash('success', 'Shift Report has been Updated.');             
         
         $this->padFormParams($params);
 
-        return $this->render('FareastManufacturingBundle:Production:shift-report-edit.html.twig', $params);
+        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
     }
 
     protected function padFormParams(&$params, $obj = null)
@@ -178,7 +193,7 @@ class ShiftReportsController extends CrudController
     protected function findShiftReport($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $shift_report = $em->getRepository('FareastManufacturingBundle:ShiftReports')->find($id);
+        $shift_report = $em->getRepository('FareastManufacturingBundle:ShiftReport')->find($id);
 
         return $shift_report;
     }
