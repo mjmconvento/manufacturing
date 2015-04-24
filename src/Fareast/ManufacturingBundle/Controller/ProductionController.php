@@ -32,6 +32,7 @@ class ProductionController extends CrudController
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
 
         $today = new DateTime();
+
         $params['today'] = $today->format('Ymd');    
 
         $data = $this->findDailyConsumption($today->format("Ymd"));
@@ -260,7 +261,7 @@ class ProductionController extends CrudController
         $em = $this->getDoctrine()->getManager();
 
         $query = 'SELECT d FROM FareastManufacturingBundle:DailyConsumption d 
-        WHERE d.date_produced >= :date_today';
+        WHERE d.date_produced = :date_today';
         $data = $em->createQuery($query)
             ->setParameter('date_today', $date)
             ->getResult();
