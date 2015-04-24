@@ -34,105 +34,13 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/fareastmanufacturing/js/mfg_shift_report.js') }}"></script>
 
 <script>
-function updateAlcoholProduced( fine_alcohol, heads_alcohol )
-{
-    total = ( parseInt(heads_alcohol) / parseInt(fine_alcohol) );
-    $('#cform-produced').val(total);
-}
 
-function updateGPLA( biogas, fine_alcohol )
-{
-    total = ( parseInt(biogas) / parseInt(fine_alcohol) );
-    $('#cform-gpla').val(total.toFixed(2));
-}
-
-function updateLOALOB( loa_lob, fine_alcohol )
-{
-    total = ( parseInt(fine_alcohol) / parseInt(loa_lob) );
-    $('#cform-bunker').val(total.toFixed(2));
-}
-
-function updateSteamProduced( produced_steam, form_steam )
-{
-    total = ( parseInt(produced_steam) - parseInt(form_steam) );
-    $('#cform-steam-produced').val(total.toFixed(2));
-}
-
-function updateLOAHusk( form_steam, fine_alcohol )
-{
-    total = ( parseInt(fine_alcohol) / parseInt(form_steam) );
-    $('#cform-loa-husk').val(total.toFixed(2));
-
-    total2 = ( parseInt(form_steam) / parseInt(fine_alcohol) );
-    $('#cform-husk-loa').val(total2.toFixed(2));
-
-}
-
-function updateSteamLOA( produced_steam, fine_alcohol )
-{
-    total = ( parseInt(produced_steam) / parseInt(fine_alcohol) );
-    $('#cform-steam-loa').val(total.toFixed(2));
-
-}
-
-function updateSteamHusk( produced_steam, husk )
-{
-    total = ( parseInt(produced_steam) / parseInt(husk) );
-    $('#cform-steam-husk').val(total.toFixed(2));
-
-}
 
 jQuery(document).ready(function() {       
     ComponentsPickers.init();
-
-    $('#cform-fine-alcohol, #cform-heads-alcohol').on( "change" , function() {
-        fine_alcohol = $('#cform-fine-alcohol').val();
-        heads_alcohol = $('#cform-heads-alcohol').val();
-        updateAlcoholProduced( fine_alcohol, heads_alcohol );
-    });
-
-    $('#cform-biogas, #cform-fine-alcohol').on( "change" , function() {
-        biogas = $('#cform-biogas').val();
-        fine_alcohol = $('#cform-fine-alcohol').val();
-        updateGPLA( biogas, fine_alcohol );
-        biogas_bunker = biogas * .4;
-        biogas_steam = biogas * 11;
-        $('#cform-biogas-bunker').val(biogas_bunker.toFixed(2));
-        $('#cform-steam').val(biogas_steam);
-    });
-
-    $('#cform-loa-lob, #cform-fine-alcohol').on( "change" , function() {
-        loa_lob = $('#cform-loa-lob').val();
-        fine_alcohol = $('#cform-fine-alcohol').val();
-        updateLOALOB( loa_lob, fine_alcohol );
-    });
-
-    $('#cform-produced-steam, #cform-steam').on( "change" , function() {
-        produced_steam = $('#cform-produced-steam').val();
-        form_steam = $('#cform-steam').val();
-        updateSteamProduced( produced_steam, form_steam );
-    });
-
-    $('#cform-husk, #cform-fine-alcohol').on( "change" , function() {
-        form_husk = $('#cform-husk').val();
-        fine_alcohol = $('#cform-fine-alcohol').val();
-        updateLOAHusk( form_husk, fine_alcohol );
-    });
-
-    $('#cform-produced-steam, #cform-fine-alcohol').on( "change" , function() {
-        produced_steam = $('#cform-produced-steam').val();
-        fine_alcohol = $('#cform-fine-alcohol').val();
-        updateSteamLOA( produced_steam, fine_alcohol );
-    });
-
-    $('#cform-steam-produced, #cform-husk').on( "change" , function() {
-        produced_steam = $('#cform-steam-produced').val();
-        husk = $('#cform-husk').val();
-        updateSteamHusk( produced_steam, husk );
-    });
-
 });   
 </script>
 {% endblock %}

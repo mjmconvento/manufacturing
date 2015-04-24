@@ -223,106 +223,12 @@
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/global/scripts/metronic.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/layout/scripts/layout.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/components-pickers.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/fareastmanufacturing/js/mfg_daily_consumption.js') }}"></script>
 
 <script>
-function updateMolRunningBalance( mol_beginning_balance, mol_purchases, mol_pumped_mdt )
-{
-    total = ( parseInt(mol_beginning_balance) + parseInt(mol_purchases) ) - parseInt(mol_pumped_mdt);
-    $('#cform-run-mol').val(total);
-}
-
-function updateBunkerRunningBalance( bunker_beginning_balance, bunker_purchases, bunker_consumed )
-{
-    total = ( parseInt(bunker_beginning_balance) + parseInt(bunker_purchases) ) - parseInt(bunker_consumed);
-    $('#cform-run-bunk').val(total);
-}
-
-function updateSulRunningBalance( sul_beginning_balance, sul_purchases, sul_consumed )
-{
-    total = ( parseInt(sul_beginning_balance) + parseInt(sul_purchases) ) - parseInt(sul_consumed);
-    $('#cform-run-acid').val(total);
-}
-
-function updateSodaRunningBalance( soda_beginning_balance, soda_purchases, soda_consumed )
-{
-    total = ( parseInt(soda_beginning_balance) + parseInt(soda_purchases) ) - parseInt(soda_consumed);
-    $('#cform-run-soda').val(total);
-}
-
-function updateUreaRunningBalance( urea_beginning_balance, urea_purchases, urea_consumed )
-{
-    total = ( parseInt(urea_beginning_balance) + parseInt(urea_purchases) ) - parseInt(urea_consumed);
-    $('#cform-run-urea').val(total);
-}
-
-function updateSaltRunningBalance( salt_beginning_balance, salt_purchases, salt_consumed )
-{
-    total = ( parseInt(salt_beginning_balance) + parseInt(salt_purchases) ) - parseInt(salt_consumed);
-    $('#cform-run-salt').val(total);
-}
-
-function updateElectricityUsed( electricity_final, electricity_beginning )
-{
-    total = parseInt(electricity_final) - parseInt(electricity_beginning);
-    $('#cform-electricity-used').val(total);
-}
-
 
 jQuery(document).ready(function() {       
     ComponentsPickers.init();
-
-
-    $('#cform-begin-mol, #cform-purchase, #cform-pumped').on( "change" , function() {
-        mol_beginning_balance = $('#cform-begin-mol').val();
-        mol_purchases = $('#cform-purchase').val();
-        mol_pumped_mdt = $('#cform-pumped').val();
-        updateMolRunningBalance( mol_beginning_balance, mol_purchases, mol_pumped_mdt );
-    });
-
-    $('#cform-begin-bunk, #cform-bunk-pur, #cform-consumed').on( "change" , function() {
-        bunker_beginning_balance = $('#cform-begin-bunk').val();
-        bunker_purchases = $('#cform-bunk-pur').val();
-        bunker_consumed = $('#cform-consumed').val();
-        updateBunkerRunningBalance( bunker_beginning_balance, bunker_purchases, bunker_consumed );
-    });
-
-    $('#cform-begin-acid, #cform-acid-purchase, #cform-acid-consumed').on( "change" , function() {
-        sul_beginning_balance = $('#cform-begin-acid').val();
-        sul_purchases = $('#cform-acid-purchase').val();
-        sul_consumed = $('#cform-acid-consumed').val();
-        updateSulRunningBalance( sul_beginning_balance, sul_purchases, sul_consumed );
-    });
-
-    $('#cform-begin-soda, #cform-soda-purchase, #cform-soda-consumed').on( "change" , function() {
-        soda_beginning_balance = $('#cform-begin-soda').val();
-        soda_purchases = $('#cform-soda-purchase').val();
-        soda_consumed = $('#cform-soda-consumed').val();
-        updateSodaRunningBalance( soda_beginning_balance, soda_purchases, soda_consumed );
-    });
-
-    $('#cform-begin-urea, #cform-urea-purchase, #cform-urea-consumed').on( "change" , function() {
-        urea_beginning_balance = $('#cform-begin-urea').val();
-        urea_purchases = $('#cform-urea-purchase').val();
-        urea_consumed = $('#cform-urea-consumed').val();
-        updateUreaRunningBalance( urea_beginning_balance, urea_purchases, urea_consumed );
-    });
-
-    $('#cform-begin-salt, #cform-salt-purchase, #cform-salt-consumed').on( "change" , function() {
-        salt_beginning_balance = $('#cform-begin-salt').val();
-        salt_purchases = $('#cform-salt-purchase').val();
-        salt_consumed = $('#cform-salt-consumed').val();
-        updateSaltRunningBalance( salt_beginning_balance, salt_purchases, salt_consumed );
-    });
-
-    $('#cform-electricity-final, #cform-electricity-beginning').on( "change" , function() {
-        electricity_final = $('#cform-electricity-final').val();
-        electricity_beginning = $('#cform-electricity-beginning').val();
-        updateElectricityUsed( electricity_final, electricity_beginning );
-
-        electricity_used = $('#cform-electricity-used').val();
-        $('#cform-alcohol-kw').val(parseInt(electricity_used) * 350);
-    });
-
 
 });   
 </script>
