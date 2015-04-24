@@ -67,7 +67,7 @@ class ProductionController extends CrudController
             array_push($shift_reports_user, $s->getUserCreate()->getName());
         }
 
-        if ($data != null)
+        if ($data != null and $shift_reports != null)
         {
             $consumption = $data;
             $running_balance = array(
@@ -85,6 +85,44 @@ class ProductionController extends CrudController
                     'shift_reports_user' => $shift_reports_user,
                 );
         }
+
+        elseif ($data == null and $shift_reports != null)
+        {
+            $running_balance = array(
+                    'balance_mollases' => 0,
+                    'balance_bunker' => 0,
+                    'balance_acid' => 0,
+                    'balance_soda' => 0,
+                    'balance_urea' => 0,
+                    'balance_salt' => 0,
+                    'shift_reports_id' => $shift_reports_id,
+                    'shift_reports_fermentations' => $shift_reports_fermentations,
+                    'shift_reports_biogas' => $shift_reports_biogas,
+                    'shift_reports_bunker' => $shift_reports_bunker,
+                    'shift_reports_shift' => $shift_reports_shift,
+                    'shift_reports_user' => $shift_reports_user,
+                );
+        }
+        
+        elseif ($data != null and $shift_reports == null)
+        {
+            $consumption = $data;
+            $running_balance = array(
+                    'balance_mollases' => $consumption->getMolRunningBalance(),
+                    'balance_bunker' => $consumption->getBunkerRunningBalance(),
+                    'balance_acid' => $consumption->getSulRunningBalance(),
+                    'balance_soda' => $consumption->getSodaRunningBalance(),
+                    'balance_urea' => $consumption->getUreaRunningBalance(),
+                    'balance_salt' => $consumption->getSaltRunningBalance(),
+                    'shift_reports_id' => '',
+                    'shift_reports_fermentations' => '',
+                    'shift_reports_biogas' => '',
+                    'shift_reports_bunker' => '',
+                    'shift_reports_shift' => '',
+                    'shift_reports_user' => '',
+                );
+        }
+
         else
         {
             $running_balance = array(
@@ -102,6 +140,7 @@ class ProductionController extends CrudController
                     'shift_reports_user' => '',
                 );
         }
+
 
         $resp = new Response(json_encode($running_balance));
         $resp->headers->set('Content-Type', 'application/json');
@@ -260,10 +299,11 @@ class ProductionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
+        $date = new DateTime($date);
         $query = 'SELECT d FROM FareastManufacturingBundle:DailyConsumption d 
         WHERE d.date_produced = :date_today';
         $data = $em->createQuery($query)
-            ->setParameter('date_today', $date)
+            ->setParameter('date_today', $date->format('Y-m-d'))
             ->getResult();
 
         if ($data != null)
