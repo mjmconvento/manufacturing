@@ -8,37 +8,35 @@
             <div class="portlet-title">
                 <div class="caption">Stock Adjustment</div>
             </div>
+
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Filters</h4>
                         <div class="table-toolbar" style="height:40px">
-                            <form id="date_form" method="post" class="form-horizontal">
+                            {# <form id="date_form" method="post" class="form-horizontal"> #}
                             <label class="col-md-3 control-label">Source Warehouse</label>
-                            <div class ="col-md-7">
+                            <div class ="col-md-5">
                                 <select id="dept" class="form-control select_2" name="dept" multiple>
                                 {{ f.options(dept, 0) }}
                                 </select>
                             </div>
-                            </form>
+                            {# </form> #}
                         </div>
 
                         <div class="table-toolbar" style="height:40px">
-                            <form id="date_form" method="post" class="form-horizontal">
+                            {# <form id="date_form" method="post" class="form-horizontal"> #}
                             <label class="col-md-3 control-label">Category</label>
-                            <div class ="col-md-7">
+                            <div class ="col-md-5">
                                 <select id="prodgroup_opts" class="form-control select_2" name="prodgroup_opts" multiple>
                                 {{ f.options(prodgroup_opts, 0) }}
                                 </select>
                             </div>
-                            </form>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label"></label>
-                            <div class="col-md-3">
+                            <div>
                                 <a href="javascript:void(0)" id="filter_button" class="btn blue-madison">Apply Filters</a>
                             </div>
-                        </div>
+                            {# </form> #}
+                        </div>                        
 
                         <h4 class="form-section">Summary Details</h4>
 
@@ -54,6 +52,7 @@
                             <thead>
                                 <tr>
                                     <th>Item Code</th>
+                                    <th>Warehouse</th>
                                     <th>Item Name</th>
                                     <th>Quantity</th>
                                     <th>Unit of Measurement</th>                      
@@ -61,20 +60,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                
+                                {% for d in data %}
+                                    <tr>
+                                        <td><input class="form-control prod_id" type="hidden" name="prod_id[{{ d.prod_id }}][]">{{ d.code }}</td>
+                                        <td><input class="form-control wh_id" type="hidden" name="wh_id[{{ d.wh_id }}][]">{{ d.warehouse }}</td>
+                                        <td>{{ d.name }}</td>
+                                        <td><input class="form-control old_qty" type="hidden" name="old_qty[{{ d.wh_id }}][]">{{ d.quantity }}</td>
+                                        <td>{{ d.uom }}</td>
+                                        <td><input type="text" class="form-control new_qty" name="new_qty[{{ d.wh_id }}][]" value=""></td>
+                                    </tr>
+                                {% endfor %}                                
                             </tbody>
                         </table>
                     </div>
 
-                     <div class="form-actions fluid">
+                    <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Submit</button>
-                            <a href="{{path('feac_inv_adjust_index')}}" class="btn default">Cancel</a>
+                            <a href="{{ path('feac_inv_adjust_index')}}" class="btn default">Cancel</a>
                         </div>
-                    </div>
-                </div>
+                    </div>                
                 </form>
-            </div>
+            </div>  
         </div>
     </div>
 </div>
@@ -92,12 +99,7 @@ $(document).ready(function() {
     ComponentsPickers.init();
    var dept;
    var category;
-   var dTable;
-
-   dTable = $('#list_table').dataTable({
-        "bProcessing": true,
-        "bServerSide": true,
-        "sAjaxSource": "{{ path('feac_inv_warehouse_grid')}}",
+   $('#list_table').dataTable({
         "iDisplayLength": 10,
         "sPaginationType": "bootstrap",
         "oLanguage": {
@@ -106,20 +108,17 @@ $(document).ready(function() {
                 "sPrevious": "Prev",
                 "sNext": "Next"
             }
-        },
-        "aoColumnDefs": [
-            { "bSortable": false, "aTargets": [{{ grid_cols|length - 1}}] },
-        ]
+        }
     });
 
    $('#filter_button').click(function(){
         var dept = $('#dept').val();
         var cat = $('#prodgroup_opts').val();
-        var path = "{{ path('feac_inv_warehouse_grid', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
+        var path = "{{ path('feac_inv_adjust_filter', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
         path = path.replace('DEPT', dept);
         path = path.replace('CATEGORY', cat);
         // console.log(path)
-        dTable.fnReloadAjax(path);
+        $('#list_table').fnReloadAjax(path);
    });
 
 

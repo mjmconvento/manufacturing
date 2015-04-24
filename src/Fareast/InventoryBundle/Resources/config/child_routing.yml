@@ -104,10 +104,15 @@ feac_inv_adjust_index:
     methods:  [GET]
     defaults: { _controller: FareastInventoryBundle:StockAdjustment:index }
 
-feac_inv_adjust_grid:
-    path:    /stock/adjust/grid/{dept}/{category}
+feac_inv_adjust_filter:
+    path:    /stock/adjust/filter/{dept}/{category}
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:StockAdjustment:grid, dept: null, category: null }
+    defaults: { _controller: FareastInventoryBundle:StockAdjustment:filter, dept: null, category: null }
+
+feac_inv_adjust_submit:
+    path:   /stock/adjust
+    methods: [POST]
+    defaults: { _controller: FareastInventoryBundle:StockAdjustment:addSubmit }
 
 
 feac_inv_transfer_index:
