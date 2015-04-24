@@ -22,21 +22,21 @@ feac_mfg_daily_cons_submit:
     defaults: { _controller: FareastManufacturingBundle:Production:dailyConsumptionSubmit }
 
 feac_mfg_shift_rep_new:
-    pattern: /shift-report/{date}
+    pattern: /shift-report/{date}/{shift}
     methods: [GET]
-    defaults: { _controller: FareastManufacturingBundle:ShiftReports:shiftReport }
+    defaults: { _controller: FareastManufacturingBundle:ShiftReport:shiftReport }
 
 feac_mfg_shift_rep_new_submit:
-    pattern: /shift-report/{date}
+    pattern: /shift-report/{date}/{shift}
     methods: [POST]
-    defaults: { _controller: FareastManufacturingBundle:ShiftReports:shiftReportSubmit }
+    defaults: { _controller: FareastManufacturingBundle:ShiftReport:shiftReportSubmit }
 
 feac_mfg_shift_rep_edit:
-    pattern: /shift-report/edit/{id}
+    pattern: /shift-report/edit/{id}/{shift}
     methods: [GET]
-    defaults: { _controller: FareastManufacturingBundle:ShiftReports:shiftReportEdit }
+    defaults: { _controller: FareastManufacturingBundle:ShiftReport:shiftReportEdit }
 
 feac_mfg_shift_rep_edit_submit:
-    pattern: /shift-report/edit/{id}
+    pattern: /shift-report/edit/{id}/{shift}
     methods: [POST]
-    defaults: { _controller: FareastManufacturingBundle:ShiftReports:shiftReportEditSUbmit }
+    defaults: { _controller: FareastManufacturingBundle:ShiftReport:shiftReportEditSUbmit }

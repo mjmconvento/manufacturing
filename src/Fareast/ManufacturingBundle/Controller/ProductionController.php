@@ -3,7 +3,7 @@
 namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\ManufacturingBundle\Entity\DailyConsumptions;
+use Fareast\ManufacturingBundle\Entity\DailyConsumption;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +18,7 @@ class ProductionController extends CrudController
 
     protected function newBaseClass()
     {
-        return new DailyConsumptions();
+        return new DailyConsumption();
     }
 
     protected function getObjectLabel($obj)
@@ -119,12 +119,12 @@ class ProductionController extends CrudController
         $data = $this->findDailyConsumption($date);
 
         $date_time_now = new DateTime();
-        $time_now = $date_time_now->format('H:i:s');
 
         if ($data == null)
         {
-            $consumption = new DailyConsumptions();
-            $consumption->setDateCreate(new DateTime($date." ".$time_now))
+            $consumption = new DailyConsumption();
+            $consumption->setDateCreate(new DateTime())
+                ->setDateProduced(new DateTime($date))
                 ->setMolBeginningBalance(0)
                 ->setMolPurchases(0)
                 ->setMolPumpedMDT(0)
@@ -163,7 +163,8 @@ class ProductionController extends CrudController
             $consumption = $data;
         }
 
-
+        $date = new DateTime($date);
+        $params['date'] = $date;
         $params['consumption'] = $consumption;
 
         return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
@@ -178,7 +179,8 @@ class ProductionController extends CrudController
 
         $consumption = $this->findDailyConsumption($date); 
 
-        $data = $this->getRequest()->request->all();    
+        $data = $this->getRequest()->request->all(); 
+
         $consumption->setMolBeginningBalance($data['begin-mol'])
             ->setMolPurchases($data['purchase'])
             ->setMolPumpedMDT($data['pumped'])
@@ -245,9 +247,11 @@ class ProductionController extends CrudController
         $em->persist($consumption);
         $em->flush();
 
-
         $this->addFlash('success', 'Daily Consumption has been updated.'); 
         $params['consumption'] = $consumption;
+        $date = new DateTime($date);
+        $params['date'] = $date;
+
         return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
     }
 
@@ -255,14 +259,10 @@ class ProductionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $date_from = new DateTime($date." 00:00:00");
-        $date_to = new DateTime($date." 23:59:59");
-
-        $query = 'SELECT d FROM FareastManufacturingBundle:DailyConsumptions d 
-        WHERE d.date_create >= :date_from AND d.date_create <= :date_to';
+        $query = 'SELECT d FROM FareastManufacturingBundle:DailyConsumption d 
+        WHERE d.date_produced >= :date_today';
         $data = $em->createQuery($query)
-            ->setParameter('date_from', $date_from)
-            ->setParameter('date_to', $date_to)
+            ->setParameter('date_today', $date)
             ->getResult();
 
         if ($data != null)
@@ -297,15 +297,11 @@ class ProductionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $date_from = new DateTime($date." 00:00:00");
-        $date_to = new DateTime($date." 23:59:59");
-
-        $query = 'SELECT s FROM FareastManufacturingBundle:ShiftReports s 
-        WHERE s.date_create >= :date_from AND s.date_create <= :date_to';
+        $query = 'SELECT s FROM FareastManufacturingBundle:ShiftReport s 
+        WHERE s.date_produced = :date_produced';
         $shift_reports = $em->createQuery($query)
             ->setMaxResults(3)
-            ->setParameter('date_from', $date_from)
-            ->setParameter('date_to', $date_to)
+            ->setParameter('date_produced', $date)
             ->getResult();
 
         return $shift_reports;

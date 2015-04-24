@@ -10,12 +10,15 @@ use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="man_shift_reports")
+ * @ORM\Table(name="mfg_shift_report")
  */
-class ShiftReports
+class ShiftReport
 {
     use HasGeneratedID;
     use TrackCreate;
+
+    /** @ORM\Column(type="date") */
+    protected $date_produced;
 
     /** @ORM\Column(type="string" , length=40, nullable=true) */
     protected $shift;
@@ -119,6 +122,12 @@ class ShiftReports
     public function __construct()
     {
         $this->initTrackCreate();
+    }
+
+    public function setDateProduced(DateTime $date_produced)
+    {
+        $this->date_produced = $date_produced;
+        return $this;
     }
 
     public function setShift($shift)
@@ -317,6 +326,11 @@ class ShiftReports
     {
         $this->boiler_operator = $boiler_operator;
         return $this;
+    }
+
+    public function getDateProduced()
+    {
+        return $this->date_produced;
     }
 
     public function getShift()

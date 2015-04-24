@@ -6,21 +6,23 @@
     <div class="col-md-12">
         <div class="portlet box blue-hoki">
             <div class="portlet-title">
-                <div class="caption">Daily Consumption</div>
+                <div class="caption">Daily Consumption 
+                    ({% if date is defined %}{{ date|date('m-d-Y') }}{% endif %})
+                </div>
             </div>
             <div class="portlet-body form">
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Raw Materials</h4>
                         <!-- Start Raw Mats accordion -->
-                        <div class="panel-group accordion" id="accordion1">
+                        <div class="panel-group accordion">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1">Mollases</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_1" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_1" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Mollases Beginning Balance', 'begin-mol', consumption.getMolBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Mollases Purchase', 'purchase', consumption.getMolPurchases, 3, 4) }}
@@ -43,7 +45,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_2">Bunker</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_2" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_2" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Bunker Beginning Balance', 'begin-bunk', consumption.getBunkerBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Bunker Purchase', 'bunk-pur', consumption.getBunkerPurchase, 3, 4) }}
@@ -58,7 +60,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_3">Sulfuric Acid</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_3" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_3" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Sulfuric Acid Beginning Balance', 'begin-acid', consumption.getSulBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Add: Purchase', 'acid-purchase', consumption.getSulPurchase, 3, 4) }}
@@ -73,7 +75,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_4">Caustic Soda</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_4" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_4" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Caustic Soda Beginning Balance', 'begin-soda', consumption.getSodaBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Add: Purchase', 'soda-purchase', consumption.getSodaPurchase, 3, 4) }}
@@ -88,7 +90,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_5">Urea</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_5" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_5" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Urea Balance', 'begin-urea', consumption.getUreaBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Add: Purchase', 'urea-purchase', consumption.getUreaPurchase, 3, 4) }}
@@ -103,7 +105,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_6">Salt</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_6" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_6" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Salt Balance', 'begin-salt', consumption.getSaltBeginningBalance, 3, 4) }}
                                         {{ form_tools.group_text('Add: Purchase', 'salt-purchase', consumption.getSaltPurchase, 3, 4) }}
@@ -119,7 +121,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_7">Electricity</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_7" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_7" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Electricity final reading(kw)', 'electricity-final', consumption.getElectricityFinal, 3, 4) }}
                                         {{ form_tools.group_text('Electricity beginning (kw)', 'electricity-beginning', consumption.getElectricityBeginning, 3, 4) }}
@@ -135,7 +137,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_8">Yields and Recoveries</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_8" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_8" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Fermentation Efficiency', 'fermentation-efficiency', consumption.getFermentationEfficiency, 3, 4) }}
                                         {{ form_tools.group_text('Distillation Efficiency', 'distillation-efficiency', consumption.getDistillationEfficiency, 3, 4) }}
@@ -151,7 +153,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_9">Withdrawals</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_9" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_9" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Alcohol Beginning Balance (liters)', 'alcohol-beginning', consumption.getAlcoholBeginning, 3, 4) }}
                                         {{ form_tools.group_text('Alcohol Out (Sales)', 'alcohol-out', consumption.getAlcoholOut, 3, 4) }}
@@ -167,7 +169,7 @@
                                     <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion1" href="#collapse_10">Labor</a>
                                     </h4>
                                 </div>
-                                <div id="collapse_10" class="panel-collapse collapse" style="height: 0px;">
+                                <div id="collapse_10" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
                                         {{ form_tools.group_text('Direct Labor (No. of Personnel)', 'direct-labor-no', consumption.getDirectLaborNo, 3, 4) }}
                                         {{ form_tools.group_text('Maintenance (No. of Personnel)', 'maintenance-no', consumption.getMaintenanceNo, 3, 4) }}

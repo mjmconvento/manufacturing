@@ -5,18 +5,20 @@ namespace Fareast\ManufacturingBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use DateTime;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="man_daily_consumptions")
+ * @ORM\Table(name="mfg_daily_consumption")
  */
-class DailyConsumptions
+class DailyConsumption
 {
     use HasGeneratedID;
+    use TrackCreate;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
-    protected $date_create;
+    /** @ORM\Column(type="date") */
+    protected $date_produced;
 
     /**
      * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
@@ -288,9 +290,9 @@ class DailyConsumptions
         
     }
 
-    public function setDateCreate(DateTime $date_create)
+    public function setDateProduced(DateTime $date_produced)
     {
-        $this->date_create = $date_create;
+        $this->date_produced = $date_produced;
         return $this;
     }
 
@@ -616,7 +618,10 @@ class DailyConsumptions
         return $this;
     }
 
-
+    public function getDateProduced()
+    {
+        return $this->date_produced;
+    }
 
     public function getMolBeginningBalance()
     {

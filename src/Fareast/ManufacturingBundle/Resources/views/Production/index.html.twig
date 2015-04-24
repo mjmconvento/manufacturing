@@ -78,7 +78,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4" style="text-align: center;">
+                                            <div class="col-md-4">
                                                 <a href="{{ path('feac_mfg_daily_cons', { date: today }) }}" id="edit_button" class="btn blue">Edit/View All</a><br><br>
                                                 <a href="{{ path('feac_mfg_prod_cal_pdf', {date: today }) }}" id="print_button" target="_blank" class="btn green">Generate Daily Production Report</a>
                                             </div>
@@ -90,58 +90,64 @@
 
                         <h4 class="form-section">Shift Report</h4>
                         <div class="row" id="shift_reports">
+                            
+                            <!-- 1st -->
+                            {% set checker = false %}
+                            {% set shift = '7:00 to 15:00' %}
                             {% for s in shift_reports %}
-
-                                {% if loop.index == 1 %}
-                                    {% set counter = '1st' %}
+                                {% if s.getShift == shift %}
+                                    {% set checker = true %}
+                                    {% embed "FareastManufacturingBundle:Production:shift_report/shift.html.twig" %}
+                                        {% block shift %}1st{% endblock %}
+                                    {% endembed %}
                                 {% endif %}
-
-                                {% if loop.index == 2 %}
-                                    {% set counter = '2nd' %}
-                                {% endif %}
-
-                                {% if loop.index == 3 %}
-                                    {% set counter = '3rd' %}
-                                {% endif %}
-
-                                <div class="col-sm-6 col-md-4">
-                                    <div class="thumbnail">
-                                        <div class="caption">
-                                            <h3 style="font-weight: bold;">{{ s.getUserCreate.getName }} </h3>
-                                            <h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>{{ counter }} Shift - {{ s.getShift }}</h4>
-
-                                            <div class="form-horizontal">
-                                                <div id="cgroup-sku" class="form-group">
-                                                    <label class="col-md-5 control-label">Fermentation</label>
-                                                    <div class="col-md-7">
-                                                        <input id="name" name="name" class="form-control " placeholder="Fermentation" value="{{ s.getFermentation }}" readonly="readonly">
-                                                    </div>
-                                                </div>
-
-                                                <div id="cgroup-sku" class="form-group">
-                                                    <label class="col-md-5 control-label">Biogas</label>
-                                                    <div class="col-md-7">
-                                                        <input id="name" name="name" class="form-control " placeholder="Biogas" value="{{ s.getBiogasProduced }}" readonly="readonly">
-                                                    </div>
-                                                </div>
-
-                                                <div id="cgroup-sku" class="form-group">
-                                                    <label class="col-md-5 control-label">Bunker Fuel/Steam</label>
-                                                    <div class="col-md-7">
-                                                        <input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="{{ s.getBunker }}" readonly="readonly">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div style="text-align: right;">
-                                                <a href="{{ path('feac_mfg_shift_rep_edit', { id : s.getID } ) }}" class="btn blue">View</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             {% endfor %}
 
-                            {% if shift_reports|length < 3 %}
+                            {% if checker == false %}
+                                {% embed "FareastManufacturingBundle:Production:shift_report/shift2.html.twig" %}
+                                    {% block shift %}1st{% endblock %}
+                                {% endembed %}
+                            {% endif %}
+
+
+                            <!-- 2nd -->
+                            {% set checker = false %}
+                            {% set shift = '15:00 to 23:00' %}
+                            {% for s in shift_reports %}
+                                {% if s.getShift == shift %}
+                                    {% set checker = true %}
+                                    {% embed "FareastManufacturingBundle:Production:shift_report/shift.html.twig" %}
+                                        {% block shift %}2nd{% endblock %}
+                                    {% endembed %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if checker == false %}
+
+                                {% embed "FareastManufacturingBundle:Production:shift_report/shift2.html.twig" %}
+                                    {% block shift %}2nd{% endblock %}
+                                {% endembed %}
+                            {% endif %}
+
+                            <!-- 3rd -->
+                            {% set checker = false %}
+                            {% set shift = '23:00 to 7:00' %}
+                            {% for s in shift_reports %}
+                                {% if s.getShift == shift %}
+                                    {% set checker = true %}
+                                    {% embed "FareastManufacturingBundle:Production:shift_report/shift.html.twig" %}
+                                        {% block shift %}3rd{% endblock %}
+                                    {% endembed %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if checker == false %}
+                                {% embed "FareastManufacturingBundle:Production:shift_report/shift2.html.twig" %}
+                                    {% block shift %}3rd{% endblock %}
+                                {% endembed %}
+                            {% endif %}
+
+                            {#{% if shift_reports|length < 3 %}
                                 <div class="col-sm-6 col-md-4">
                                     <div class="thumbnail">
                                         <div class="caption">
@@ -151,7 +157,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            {% endif %}
+                            {% endif %}#}
 
                         </div>
 
@@ -162,6 +168,13 @@
     </div>
 </div>
 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 {% endblock %}
 
 {% block js %}
@@ -202,6 +215,7 @@ jQuery(document).ready(function() {
                 $('#soda').val(data.balance_soda);
                 $('#urea').val(data.balance_urea);
                 $('#salt').val(data.balance_salt);
+                $('#shift_reports').empty();
 
                 var ids = data.shift_reports_id.toString().split(',');
                 var fermentations = data.shift_reports_fermentations.toString().split(',');
@@ -209,75 +223,253 @@ jQuery(document).ready(function() {
                 var bunker = data.shift_reports_bunker.toString().split(',');
                 var shift = data.shift_reports_shift.toString().split(',');
                 var user = data.shift_reports_user.toString().split(',');
+                var checker = false;
+                var append;
+                var id;
 
-                $('#shift_reports').empty();
-
-                var counter = 0;
-                var append = '';
+                // 1st
                 for (i = 0; i < ids.length; i++) 
                 { 
-                    counter++;
-                    if (counter == 1)
+                    if (shift[i] == "7:00 to 15:00")
                     {
-                        shift_counter = "1st";
-                    }
-                    else if (counter == 2)
-                    {
-                        shift_counter = "2nd";
-                    }
-                    else if (counter == 3)
-                    {
-                        shift_counter = "3rd";
-                    }
-
-                    if (ids[i] != '')
-                    {
-                        append = '<div class="col-sm-6 col-md-4">';
-                        append += '<div class="thumbnail">';
-                        append += '<div class="caption">'; 
-                        append += '<h3 style="font-weight: bold;">' +  user[i] +'</h3>';
-                        append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>' +  shift_counter + ' Shift - ' +  shift[i] + '</h4>'; 
-                        append += '<div class="form-horizontal">';
-                        append += '<div id="cgroup-sku" class="form-group">';
-                        append += '<label class="col-md-5 control-label">Fermentation</label>';
-                        append += '<div class="col-md-7">';
-                        append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="' + fermentations[i] + '" readonly="readonly">';
-                        append += '</div>';
-                        append += '</div>';
-                        append += '<div id="cgroup-sku" class="form-group">';
-                        append += '<label class="col-md-5 control-label">Biogas</label>';
-                        append += '<div class="col-md-7">';
-                        append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="' + biogas[i] + '" readonly="readonly">';
-                        append += '</div>';
-                        append += '</div>';
-                        append += '<div id="cgroup-sku" class="form-group">';
-                        append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
-                        append += '<div class="col-md-7">';
-                        append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="' + bunker[i] + '" readonly="readonly">';
-                        append += '</div>';
-                        append += '</div>';
-                        append += '</div>';
-                        append += '<div style="text-align: right;">';
-                        append += '<a href="/manufacturing/shift-report/edit/' + ids[i] + '" class="btn blue">View</a>';
-                        append += '</div></div></div></div>';
-
-                        $('#shift_reports').append(append);
+                        checker = true;
+                        id = i;
                     }
                 }
 
-                if (ids.length < 3)
+                if (checker == true)
                 {
-                    var append = '';
-                    append += '<div class="col-sm-6 col-md-4">';
+                    
+                    append = '<div class="col-sm-6 col-md-4">';
                     append += '<div class="thumbnail">';
-                    append += '<div class="caption">';
-                    append += '<div style="text-align: center;">';
-                    append += '<a href="/manufacturing/shift-report/' + date_picked + '" class="btn green">Create Shift Report</a>';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">'+ user[id] +'</h3>';
+
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>2nd Shift - 15:00 to 23:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="'+ fermentations[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="'+ biogas[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="'+ bunker[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                    append += '<a href="/manufacturing/shift-report/edit/'+ ids[id] +'/7:00 to 15:00" class="btn blue">View</a>';
                     append += '</div></div></div></div>';
 
-                    $('#shift_reports').append(append);
+                }
+                else
+                {
+                    append = '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">N/A</h3>';
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>1st Shift - 7:00 to 15:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="N/A" readonly="readonly">';
+
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                     append += '<a href="/manufacturing/shift-report/' + date_picked + '/7:00 to 15:00" class="btn blue">Create Shift Report</a>';
+                    append += '</div></div></div></div>';
                 }
 
+                $('#shift_reports').append(append);
+
+
+
+                // 2nd
+                checker = false;
+                for (i = 0; i < ids.length; i++) 
+                { 
+                    if (shift[i] == "15:00 to 23:00")
+                    {
+                        checker = true;
+                        id = i;
+                    }
+                }
+
+                if (checker == true)
+                {
+                    
+                    append = '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">'+ user[id] +'</h3>';
+
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>2nd Shift - 15:00 to 23:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="'+ fermentations[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="'+ biogas[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="'+ bunker[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                    append += '<a href="/manufacturing/shift-report/edit/'+ ids[id] +'/15:00 to 23:00" class="btn blue">View</a>';
+                    append += '</div></div></div></div>';
+
+                }
+                else
+                {
+                    append = '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">N/A</h3>';
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>2nd Shift - 15:00 to 23:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="N/A" readonly="readonly">';
+
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                     append += '<a href="/manufacturing/shift-report/' + date_picked + '/15:00 to 23:00" class="btn blue">Create Shift Report</a>';
+                    append += '</div></div></div></div>';
+                }
+
+                $('#shift_reports').append(append);
+
+
+
+
+                // 3rd
+                checker = false;
+                for (i = 0; i < ids.length; i++) 
+                { 
+                    if (shift[i] == "23:00 to 7:00")
+                    {
+                        checker = true;
+                        id = i;
+                    }
+                }
+
+                if (checker == true)
+                {
+                    
+                    append = '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">'+ user[id] +'</h3>';
+
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>3rd Shift - 23:00 to 7:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="'+ fermentations[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="'+ biogas[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="'+ bunker[id] +'" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                    append += '<a href="/manufacturing/shift-report/edit/'+ ids[id] +'/23:00 to 7:00" class="btn blue">View</a>';
+                    append += '</div></div></div></div>';
+
+                }
+                else
+                {
+                    append = '<div class="col-sm-6 col-md-4">';
+                    append += '<div class="thumbnail">';
+                    append += '<div class="caption">'; 
+                    append += '<h3 style="font-weight: bold;">N/A</h3>';
+                    append += '<h4 class="form-section" style="margin-top: 10px;">Supervisor-in-charge<br>3rd Shift - 23:00 to 7:00</h4>'; 
+                    append += '<div class="form-horizontal">';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Fermentation</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Fermentation" value="N/A" readonly="readonly">';
+
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Biogas</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Biogas" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div id="cgroup-sku" class="form-group">';
+                    append += '<label class="col-md-5 control-label">Bunker Fuel/Steam</label>';
+                    append += '<div class="col-md-7">';
+                    append += '<input id="name" name="name" class="form-control " placeholder="Bunker Fuel/Steam" value="N/A" readonly="readonly">';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '</div>';
+                    append += '<div style="text-align: right;">';
+                     append += '<a href="/manufacturing/shift-report/' + date_picked + '/23:00 to 7:00" class="btn blue">Create Shift Report</a>';
+                    append += '</div></div></div></div>';
+                }
+
+                $('#shift_reports').append(append);
 
             });
 
