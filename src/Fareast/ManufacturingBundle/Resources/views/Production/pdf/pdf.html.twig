@@ -75,7 +75,16 @@
             {% set percent_alcohol = 0 %}
 
             {% for s in shift_reports %}
-                {% set percent_alcohol = s.getHeadsAlcohol / s.getFineAlcohol %}
+                {% set checker = false %}
+                {% if s.getHeadsAlcohol == 0 or s.getFineAlcohol == 0 %}
+                    {% set checker = true %}
+                    {% set percent_alcohol = 0 %}
+                {% endif %} 
+
+                {% if checker == false %}   
+                    {% set percent_alcohol = s.getHeadsAlcohol / s.getFineAlcohol %}
+                {% endif %}
+
                 <td style="width:100px; text-align:center">{{ percent_alcohol|number_format(2) }}</td>
             {% endfor %}
             
