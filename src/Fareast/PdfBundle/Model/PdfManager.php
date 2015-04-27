@@ -30,6 +30,10 @@ class PdfManager
         case 'page' :
         default: $this->pdf = $this->pdf_container->create('P', 'A4', 'en', true, 'UTF-8', array(10, 15, 10, 15));
             break;
+        case 'page_legal' :
+        default: $this->pdf = $this->pdf_container->create('P', 'legal', 'en', true, 'UTF-8', array(10, 15, 10, 15));
+            break;
+            
             
         }
        
