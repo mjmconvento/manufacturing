@@ -105,8 +105,14 @@ class BorrowedTransactionController extends CrudController
 
         $um = $this->get('catalyst_user');        
         $params['dept_opts'] = $um->getDeptOptions(); 
-        $params['prod_opts'] = $em->getRepository('CatalystInventoryBundle:Product')
-                                ->findBy(array('type_id' => Product::TYPE_FIXED_ASSET));
+        
+        // get product options (fixed assets only)
+        $products = $em->getRepository('CatalystInventoryBundle:Product')
+            ->findBy(array('type_id' => Product::TYPE_FIXED_ASSET));
+        $prod_opts = array();
+        foreach ($products as $prod)
+            $prod_opts[$prod->getID()] = $prod->getName();
+        $params['prod_opts'] = $prod_opts;
 
         $params['status_opts'] = array(
             'Incomplete'=> BorrowedTransaction::STATUS_INCOMPLETE, 
