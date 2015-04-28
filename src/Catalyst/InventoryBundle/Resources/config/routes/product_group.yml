@@ -37,3 +37,8 @@ cat_inv_pg_ajax_get:
     pattern: /ajax/{id}
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:ProductGroup:ajaxGet }
+
+cat_inv_pg_ajax_get_products:
+    pattern: /ajax/{id}/products
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:ProductGroup:ajaxGetProducts }

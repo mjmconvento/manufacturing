@@ -12,9 +12,8 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-                        {{ f.group_select('Warehouse Source', 'from_wh_id', wh_opts, 2, 3, 4, false) }}
-                        {{ f.group_select('Warehouse Destination', 'to_wh_id', wh_opts, 2, 3, 4, false)}}
-                        {# f.group_textarea('Description','desc', object.getCode|default(''), 4,3,4) #}  
+                        {{ f.group_select('Warehouse', 'from_wh_id', wh_opts, 2, 3, 4, false) }}
+                        {{ f.group_textarea('Description', 'desc', 'Stock Adjustment', 4, 3, 4) }}  
 
                         <h4 class="form-section">Item Entries</h4>
 
@@ -46,7 +45,7 @@
                      <div class="form-actions fluid">
                         <div class="col-md-9">
                             <button type="submit" class="btn blue">Submit</button>
-                            <a href="{{path('feac_inv_transfer_index')}}" class="btn default">Cancel</a>
+                            <a href="{{path('cat_inv_adjust_index')}}" class="btn default">Cancel</a>
                         </div>
                     </div>
                 </div>

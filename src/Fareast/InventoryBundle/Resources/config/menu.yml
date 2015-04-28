@@ -16,11 +16,11 @@ menu_items:
     - id: feac_inv_issued_index
       label: Issued Items
       parent: menu_inventory
-    - id: feac_inv_adjust_index
-      label: Stock Adjustment
-      parent: menu_inventory
     - id: feac_inv_transfer_index
       label: Transfer Stock
+      parent: menu_inventory
+    - id: cat_inv_adjust_index
+      label: Stock Adjustment
       parent: menu_inventory
     - id: feac_inv_warehouse_index
       label: Warehouse Stock

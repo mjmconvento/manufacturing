@@ -8,7 +8,9 @@ use Catalyst\InventoryBundle\Entity\ServiceTask;
 use Catalyst\ValidationException;
 use Catalyst\InventoryBundle\Model\Gallery;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManager;
+
 
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
@@ -404,5 +406,40 @@ class ProductController extends CrudController
   
         $params["id"] = $id;    
         return $this->redirect($this->generateUrl('cat_inv_prod_edit_form', $params));
+    }
+
+    public function ajaxGetWarehouseStockAction($prod_id, $wh_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+
+        // product not found
+        if ($prod == null)
+        {
+            $json = [
+                'prodtype' => '',
+                'uom' => '',
+                'current_stock' => 0.00
+            ];
+
+            return new JsonResponse($json);
+        }
+
+        // TODO: check if warehouse exists
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($wh_id);
+        $iacc = $wh->getInventoryAccount();
+
+        // get stock count
+        $quantity = $inv->getStockCount($iacc, $prod);
+
+        $json = [
+            'prodtype' => $prod->getTypeText(),
+            'uom' => $prod->getUnitOfMeasure(),
+            'current_stock' => $quantity
+        ];
+
+        return new JsonResponse($json);
     }
 }

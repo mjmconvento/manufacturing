@@ -66,4 +66,3 @@ class ProductGroup
         return $data;
     }
 }
-

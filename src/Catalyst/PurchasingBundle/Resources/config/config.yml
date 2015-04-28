@@ -6,8 +6,3 @@ config:
           type: select
           options_service: catalyst_inventory
           options_method: getWarehouseOptions
-        - id: catalyst_warehouse_supplier_default
-          label: "Supplier Warehouse"
-          type: select
-          options_service: catalyst_inventory
-          options_method: getWarehouseOptions

@@ -1,0 +1,9 @@
+cat_inv_adjust_index:
+    path:     /
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:StockAdjustment:index }
+
+cat_inv_adjust_add_submit:
+    path:    /
+    methods: [POST]
+    defaults: { _controller: CatalystInventoryBundle:StockAdjustment:addSubmit }

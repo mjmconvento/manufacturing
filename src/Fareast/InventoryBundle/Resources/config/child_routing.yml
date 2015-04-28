@@ -78,13 +78,13 @@ feac_inv_transfer_add_submit:
     methods: [POST]
     defaults: { _controller: FareastInventoryBundle:TransferStock:addSubmit }
 
-feac_inv_transfer_product:
-    path:    /stock/transfer/product/{prod_id}/warehouse/{wh_id}
-    defaults: { _controller: FareastInventoryBundle:TransferStock:getProductAndStock }
+#feac_inv_transfer_product:
+#    path:    /stock/transfer/product/{prod_id}/warehouse/{wh_id}
+#    defaults: { _controller: FareastInventoryBundle:TransferStock:getProductAndStock }
 
-feac_inv_transfer_productgroup:
-    path:    /stock/transfer/productgroup/{var_id}
-    defaults: { _controller: FareastInventoryBundle:TransferStock:getGroup }
+#feac_inv_transfer_productgroup:
+#    path:    /stock/transfer/productgroup/{var_id}
+#    defaults: { _controller: FareastInventoryBundle:TransferStock:getGroup }
 
 
 feac_inv_warehouse_index:

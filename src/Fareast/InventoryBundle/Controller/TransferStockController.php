@@ -51,57 +51,6 @@ class TransferStockController extends CrudController
         return $this->render($twig_file, $params);
     }
 
-    public function getProductAndStockAction($prod_id, $wh_id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $inv = $this->get('catalyst_inventory');
-        
-        $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
-
-        if ($prod == null)
-        {
-            $json = [
-                'prodtype' => '',
-                'uom' => '',
-                'current_stock' => 0.00
-            ];
-        }
-        else
-        {
-            $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($wh_id);
-            $iacc = $wh->getInventoryAccount();
-
-            $quantity = $inv->getStockCount($iacc, $prod);
-
-            $json = [
-                'prodtype' => $prod->getTypeText(),
-                'uom' => $prod->getUnitOfMeasure(),
-                'current_stock' => $quantity
-            ];
-        }
-
-        return new JsonResponse($json);   
-    }
-
-    public function getGroupAction($var_id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $pg = $em->getRepository('CatalystInventoryBundle:ProductGroup')->find($var_id);
-        $prods = $pg->getProducts();
-
-        $data = array();
-        foreach($prods as $p)
-        {
-            $data[] = [
-                'name' => $p->getName(),
-                'id' => $p->getID(),
-            ];
-        }
-
-        return new JsonResponse($data);
-    }
-
     protected function processTransferEntries($data, $prefix)
     {
         $em = $this->getDoctrine()->getManager();

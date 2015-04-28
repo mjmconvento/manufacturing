@@ -1,29 +1,8 @@
 config:
-    - category: "Inventory"
-      entries:
-        - id: catalyst_product_group_default
-          label: "Customer Product Group"
-          type: select
-          options_service: catalyst_inventory
-          options_method: getProductGroupOptions
     - category: "User"
       entries:
         - id: catalyst_service_role_default
           label: "Default Service Role"
-          type: select
-          options_service: catalyst_user
-          options_method: getGroupOptions
-    - category: "Inventory"
-      entries:
-        - id: catalyst_inventory_restricted_default
-          label: "Restricted Product Group"
-          type: select
-          options_service: catalyst_inventory
-          options_method: getProductGroupOptions
-    - category: "User"
-      entries:
-        - id: catalyst_super_user_role_default
-          label: "Default Super User Role"
           type: select
           options_service: catalyst_user
           options_method: getGroupOptions

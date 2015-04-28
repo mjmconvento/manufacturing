@@ -5,6 +5,7 @@ namespace Catalyst\InventoryBundle\Controller;
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\ProductGroup;
 use Catalyst\ValidationException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductGroupController extends CrudController
 {
@@ -43,5 +44,24 @@ class ProductGroupController extends CrudController
             $o->setName($data['name']);
         else
             throw new ValidationException('Cannot leave name blank');
+    }
+
+    public function ajaxGetProductsAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pg = $em->getRepository('CatalystInventoryBundle:ProductGroup')->find($id);
+        $prods = $pg->getProducts();
+
+        $data = array();
+        foreach($prods as $p)
+        {
+            $data[] = [
+                'id' => $p->getID(),
+                'name' => $p->getName(),
+            ];
+        }
+
+        return new JsonResponse($data);
     }
 }

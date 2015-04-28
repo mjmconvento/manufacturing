@@ -66,6 +66,11 @@ cat_inv_prod_ajax_get:
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:Product:ajaxGet }
 
+cat_inv_prod_ajax_wh_stock:
+    pattern: /ajax/product/{prod_id}/warehouse/{wh_id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:Product:ajaxGetWarehouseStock }
+
 # upload
 cat_inv_prod_upload:
     pattern: /upload/{id}
