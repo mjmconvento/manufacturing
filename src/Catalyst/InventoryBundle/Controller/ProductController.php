@@ -10,8 +10,18 @@ use Catalyst\InventoryBundle\Model\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
+use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
+use Catalyst\CoreBundle\Template\Controller\HasName;
+
+
 class ProductController extends CrudController
 {
+    use TrackCreate;
+    use TrackUpdate;
+    use HasGeneratedID;
+    use HasName;
 
     public function __construct()
     {
@@ -101,6 +111,12 @@ class ProductController extends CrudController
             $images = $gallery->getImages();
             $params['images'] = $images;
         }
+
+        $params['type_opts'] = array(
+            Product::TYPE_RAW_MATERIAL => 'Raw Material',
+            Product::TYPE_FINISHED_GOOD => 'Finished Good',
+            Product::TYPE_INVENTORY =>'Inventory'
+        );
 
         return $params;
     }
@@ -196,7 +212,10 @@ class ProductController extends CrudController
             $o->setSKU($data['sku']);
         }
 
-
+        $this->updateTrackCreate($o, $data, $is_new);
+        $this->updateTrackUpdate($o, $data, $is_new);
+        $this->updateHasGeneratedID($o, $data, $is_new);
+        $this->updateHasName($o, $data, $is_new);
     }
 
     protected function buildData($o)
