@@ -6,10 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\HasName;
-use Catalyst\PurchasingBundle\Entity\Supplier;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\TrackUpdate;
-use Catalyst\InventoryBundle\Entity\ProductType;
 
 use stdClass;
 
@@ -19,6 +17,15 @@ use stdClass;
  */
 class Product
 {
+    const TYPE_RAW_MATERIAL         = 1; // to be used as raw materials for manufacturing
+    const TYPE_FINISHED_GOOD        = 2; // result of manufacturing
+    const TYPE_INVENTORY            = 3; // anything classified under inventory but not raw materials or finished goods
+    const TYPE_SERVICE              = 4; // services 
+    const TYPE_VIRTUAL              = 5; // virtual products
+    const TYPE_FIXED_ASSET          = 6; // fixed assets / capital goods. PP&E
+    const TYPE_CUSTOMER_ITEM        = 7; // customer items given by customer and to be returned after servicing.
+    const TYPE_OTHER                = 100; // anything else that's not covered (should not reach this)
+
     use HasGeneratedID;
     use HasName;
     use TrackCreate;
@@ -29,9 +36,6 @@ class Product
 
     /** @ORM\Column(type="string", length=20) */
     protected $uom;
-
-    /** @ORM\Column(type="boolean", nullable=true) */
-    protected $flag_service;
 
     /** @ORM\Column(type="boolean", nullable=true) */
     protected $flag_sale;
@@ -54,26 +58,11 @@ class Product
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     protected $stock_max;
 
-        
-    protected $supp_code;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="\Catalyst\PurchasingBundle\Entity\Supplier")
-    * @ORM\JoinColumn(name="supplier_id", referencedColumnName="id")
-    */
-    protected $supplier;
-
     /**
      * @ORM\ManyToOne(targetEntity="ProductGroup")
      * @ORM\JoinColumn(name="prodgroup_id", referencedColumnName="id")
      */
     protected $prodgroup;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\Catalyst\InventoryBundle\Entity\ProductType")
-     * @ORM\JoinColumn(name="prodtype_id", referencedColumnName="id")
-     */
-    protected $prodtype;
 
     /**
      * @ORM\ManyToOne(targetEntity="Brand")
@@ -96,6 +85,9 @@ class Product
     /** @ORM\Column(type="json_array") */
     protected $attribute_hash;
 
+    /** @ORM\Column(type="integer") */
+    protected $type_id;
+
 
     public function __construct()
     {
@@ -106,7 +98,6 @@ class Product
         $this->stock_min = 0.00;
         $this->stock_max = 0.00;
 
-        $this->flag_service = false;
         $this->flag_sale = false;
         $this->flag_purchase = false;
         $this->flag_perishable = false;
@@ -115,9 +106,10 @@ class Product
         $this->variants = new ArrayCollection();
 
         $this->attributes = new ArrayCollection();
-
         $this->attribute_hash = array();
 
+        $this->initHasGeneratedID();
+        $this->initHasName();
         $this->initTrackCreate();
         $this->initTrackUpdate();
     }
@@ -131,12 +123,6 @@ class Product
     public function setUnitOfMeasure($uom)
     {
         $this->uom = $uom;
-        return $this;
-    }
-
-    public function setFLagService($flag = true)
-    {
-        $this->flag_service = $flag;
         return $this;
     }
 
@@ -176,12 +162,6 @@ class Product
         return $this;
     }
 
-    public function setProductType(ProductType $type)
-    {
-        $this->prodtype = $type;
-        return $this;
-    }
-
     public function setBrand(Brand $brand)
     {
         $this->brand = $brand;
@@ -200,29 +180,6 @@ class Product
         return $this;
     }
 
-    public function setSupplier(Supplier $supp)
-    {
-        $this->supplier = $supp;
-        $this->supplier_id = $supp->getID();
-        return $this;
-    }
-
-    public function setSupplierCode($supp_code)
-    {
-        $this->supp_code = $supp_code;
-        return $this;
-    }
-
-    public function getSupplier()
-    {
-        return $this->supplier;
-    }
-
-    public function getSupplierCode()
-    {
-        return $this->supp_code;
-    }
-
     public function getSKU()
     {
         return $this->sku;
@@ -233,11 +190,6 @@ class Product
         return $this->uom;
     }
 
-    public function isService()
-    {
-        return $this->flag_service;
-    }
-    
     public function isPerishable()
     {
         return $this->flag_perishable;
@@ -266,11 +218,6 @@ class Product
     public function getProductGroup()
     {
         return $this->prodgroup;
-    }
-
-    public function getProductType()
-    {
-        return $this->prodtype;
     }
 
     public function getBrand()
@@ -305,7 +252,7 @@ class Product
         $this->variants->add($prod);
         return $this;
     }
-    
+
     public function getVariants()
     {
         return $this->variants;
@@ -322,55 +269,25 @@ class Product
         return $this->attributes;
     }
     
-    public function getRootProduct(){
-        if($this->parent != null){
-            return $this->parent->getRootProduct();
-        }
-        return $this;
-    }
-    
-    public function getAttributeValue($name){
-        foreach($this->attributes as $attribute){
-            if($attribute->getName() == $name){
+    public function getAttributeValue($name)
+    {
+        foreach($this->attributes as $attribute)
+        {
+            if($attribute->getName() == $name)
+            {
                 return $attribute->getValue();
             }
         }
+
         return null;
     }
     
-    public function isVariant(){
-        if($this->parent == null){
+    public function isVariant()
+    {
+        if ($this->parent == null)
             return false;
-        }
         return true;
     }
-    
-    // Generate SKU depending on the variants
-    public function generateSku()
-    {
-        if(!$this->isVariant()){
-            $sku = $this->prodgroup->getCode() . "-" . str_pad($this->id,7,"0",STR_PAD_LEFT);            
-        }else {
-            $sku = $this->sku;
-            
-            foreach($this->attributes as $attribute){
-                $value = str_replace('/', '', $attribute->getValue());
-                $sku .= '-'.$value;
-            }
-        }
-        $this->setSKU($sku);
-    }
-    
-    public function getVariantsByAttribute($attribute, $value){
-        $variants = $this->getVariants();
-        $filtered = array();
-        foreach($variants as $variant){
-            if($variant->getAttributeValue($attribute) == $value){
-                $filtered[] = $variant;
-            }
-        }
-        return $filtered;
-    }      
 
     public function toData()
     {
@@ -380,10 +297,7 @@ class Product
         $data->sku = $this->sku;
         $data->name = $this->name;        
         $data->prodgroup_id = $this->prodgroup->getID();
-        // $data->prodtype_id = $this->prodtype->getID();
         $data->uom = $this->uom;
-        $data->supp_code = $this->supp_code;
-        $data->flag_service = $this->flag_service;
         $data->flag_sale = $this->flag_sale;
         $data->flag_purchase = $this->flag_purchase;
         $data->price_sale = $this->price_sale;
@@ -394,6 +308,12 @@ class Product
             $data->brand_id = null;
         else
             $data->brand_id = $this->brand->getID();
+
+        // traits
+        $this->dataHasGeneratedID($data);
+        $this->dataHasName($data);
+        $this->dataTrackCreate($data);
+        $this->dataTrackUpdate($data);
 
         return $data;
     }

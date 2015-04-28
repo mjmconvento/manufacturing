@@ -22,7 +22,7 @@ trait HasGeneratedID
     {
     }
 
-    public function dataHasGeneratedID($data)
+    public function dataHasGeneratedID(&$data)
     {
         $data->id = $this->id;
     }

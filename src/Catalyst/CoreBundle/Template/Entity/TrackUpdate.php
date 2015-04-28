@@ -44,7 +44,7 @@ trait TrackUpdate
         return $this->user_update;
     }
 
-    protected function dataTrackUpdate($data)
+    protected function dataTrackUpdate(&$data)
     {
         $data->date_update = $this->date_update->format('Y-m-d H:i:s');
         $data->user_update = $this->user_update->toData();

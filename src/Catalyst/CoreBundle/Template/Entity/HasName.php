@@ -25,7 +25,7 @@ trait HasName
         $this->name = '';
     }
 
-    public function dataHasName($data)
+    public function dataHasName(&$data)
     {
         $data->name = $this->name;
     }

@@ -49,7 +49,7 @@ trait TrackCreate
         return $this->user_create;
     }
 
-    protected function dataTrackCreate($data)
+    protected function dataTrackCreate(&$data)
     {
         $data->date_create = $this->date_create->format('Y-m-d H:i:s');
         $data->user_create = $this->user_create->toData();
