@@ -1,0 +1,156 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Borrowed Items</div>
+            </div>
+        
+
+        <div class="portlet-body form">
+            <form method="post" class="form-horizontal">
+                <div class="form-body">
+                    <h4 class="form-section"> Information </h4>                    
+                    {{ f.group_select('Department','dept_opts',dept_opts,object.getDepartment is not null ? object.getDepartment.getID,3,4, readonly)}}                    
+                    {{ f.group_date('Date Borrowed', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 4) }}                     
+                    {{ f.group_select('Status', 'status',status_opts, object.getStatus, 3, 4) }}
+
+
+                    <h4 class="form-section"> Item Entries </h4>
+
+                    <div>
+                        <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
+                        <a id="btn_from_add" href="" class="btn green">Print</a>
+                    </div>
+
+                    <div class="row table-responsive" style="padding-top:10px">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                <thead>
+                                    <tr>
+                                        <th>Item Name</th>
+                                        <th>Description</th>
+                                        <th>Date Returned</th>
+                                        <th>Unit of Measurement</th>
+                                        <th>Purpose/Remarks</th>
+                                        <th>Quantity</th>                                            
+                                        <th style="width: 60px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="from_table">
+                                {% if (object.getID != null) %}
+                                {% for entry in object.getEntries %}
+                                    <tr>                                        
+                                        <input type="hidden" name="prod_opts[]" value="{{ entry.getProduct.getID }}">
+                                        <td><input class="form-control prod_opts[{{ entry.getProduct.getID }}]" value="{{ entry.getProduct.getName }}" readonly></td>
+                                        <td><input type="text" name="desc[]" class="form-control desc" value="{{ entry.getDescription }}"></td>
+                                        <td><input type="text" readonly class="form-control date-picker date_return[]" name="date_return[]"></td>
+                                        <td><input type="text" name="uom[]" class="form-control uom" value="{{ entry.getProduct.getUnitOfMeasure }}" readonly></td>
+                                        <td><input type="text" name="remarks[]" class="form-control remarks" value="{{ entry.getRemarks }}" ></td>
+                                        <td><input type="text" name="qty[]" class="form-control qty" value="{{ entry.getQuantity }}" ></td>
+                                        <td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('cat_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <select class="form-control select2 prod_opts">
+        {{ f.options(prod_opts,0)}}
+    </select>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function appendEntry()
+{
+    var field = '<tr>';        
+        field += '<td><select name="prod_opts[]" class="form-control select2 prod_opts">';
+        field += $('.prod_opts').html();   
+        field += '</select> </td>';                    
+        field += '<td> <input type="text" name="desc[]" class="form-control desc"></td>';
+        field += '<td><input type="text" readonly name="date_return[]" class="form-control date-picker date_return"></td>';
+        field += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
+        field += '<td> <input type="text" name="remarks[]" class="form-control remarks"></td>';
+        field += '<td> <input type="number" name="qty[]" min="0" class="form-control qty"></td>';
+        field += '<td><a href="#" class="btn red btn-xs remove_field"><i class="fa fa-times"></i> Delete</a></td>';
+        field += '</tr>';
+
+        $('#from_table').append(field);
+}
+    $(document).ready(function() {
+        ComponentsPickers.init();        
+
+        $('#cform-user_opts').change(function(){
+            var user =  $('#cform-user_opts').val();
+
+            var url = "{{ path('cat_inv_borrowed_dept', { id: ':id'}) }}";
+                url = url.replace(":id", user);
+
+                $.getJSON(url, function(data){
+                    // console.log(data)
+                    $('#cform-dept').val(data.dept);
+                });
+
+        });
+
+        var add_button = $(".add-field");
+        var wrapper = $("#from_table");
+        
+
+        $(add_button).on('click',function(){        
+            appendEntry();
+
+            $('.date_return').each(function(){
+                console.log('dfasdg')
+               $(this).datepicker(); 
+           });
+
+        });        
+         
+        $(document).on('change','.prod_opts', function(e){
+            e.preventDefault();
+            // console.log('dgagas')
+            var prod_id = $(this).closest('tr').find('.prod_opts').val();
+            var row = $(this).closest('tr');
+            // console.log(prod_id)
+
+            var url = "{{ path('cat_inv_borrowed_product', { prod_id: ':id'}) }}";
+                url = url.replace(":id", prod_id);
+
+                    $.getJSON(url, function(data){
+                        $(row).find('.uom').val(data.uom);
+                    });            
+        });
+
+
+        //remove row
+        $(document).on("click",".remove_field", function(e){
+            e.preventDefault();            
+            var tr = $(this).closest('tr');
+            tr.remove();
+            return false;
+        });
+    });
+</script>
+{% endblock %}

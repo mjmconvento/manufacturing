@@ -10,7 +10,7 @@ menu_items:
     - id: feac_inv_begin_index
       label: Beginning Inventory
       parent: menu_inventory
-    - id: feac_inv_borrowed_index
+    - id: cat_inv_borrowed_index
       label: Borrowed Items
       parent: menu_inventory
     - id: feac_inv_issued_index

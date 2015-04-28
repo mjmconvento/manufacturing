@@ -46,3 +46,49 @@ cat_inv_sv_task_ajax_get_by_prod:
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:ServiceTask:ajaxGetByProd }
 
+
+cat_inv_borrowed_index:
+    path:     /borrowed
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:index }
+
+cat_inv_borrowed_add_form:
+    path:     /borrow
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:addForm }
+
+cat_inv_borrowed_add_submit:
+    path:     /borrow
+    methods:  [POST]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:addSubmit }
+
+cat_inv_borrowed_edit_form:
+    path:     /borrow/{id}
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:editForm }
+
+cat_inv_borrowed_edit_submit:
+    pattern: /borrow/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:editSubmit }
+
+cat_inv_borrowed_grid:
+    pattern: /grid
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:grid }
+
+cat_inv_borrowed_dept:
+    pattern: /borrowed/dept/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:getDept }
+
+cat_inv_borrowed_product:
+    pattern: /borrowed/product/{prod_id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:getProduct }
+
+cat_inv_borrowed_export:
+    pattern: /borrowed/list/csv
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:exportCSV }
+
