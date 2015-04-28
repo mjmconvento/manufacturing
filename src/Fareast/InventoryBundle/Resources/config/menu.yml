@@ -31,6 +31,9 @@ menu_items:
     - id: cat_inv_pg_index
       label: Product Category
       parent: feac_settings
+    - id: feac_inv_fixed_asset_index
+      label: Fixed Asset
+      parent: feac_settings
     - id: cat_inv_prod_index
       label: Product
       parent: feac_settings
