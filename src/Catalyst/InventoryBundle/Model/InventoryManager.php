@@ -51,22 +51,6 @@ class InventoryManager
         return $this->em->getRepository('CatalystInventoryBundle:Brand')->find($id);
     }
 
-    public function findPColor($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PColor')->find($id);
-    }
-
-    public function findPCondition($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PCondition')->find($id);
-    }
-
-    public function findPMaterial($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PMaterial')->find($id);
-    }
-
-
     public function findProduct($id)
     {
         return $this->em->getRepository('CatalystInventoryBundle:Product')->find($id);
@@ -104,33 +88,13 @@ class InventoryManager
         return $pg_opts;
     }
 
-    public function getProductTypeOptions($filter = array())
-    {
-        $pts = $this->em
-            ->getRepository('FareastInventoryBundle:ProductType')
-            ->findBy(
-                $filter,
-                array('name' => 'ASC')
-            );
-        $pt_opts = array();
-        foreach ($pts as $pt)
-            $pt_opts[$pt->getID()] = $pt->getName();
-
-        return $pt_opts;
-    }
-    
     public function getProductVariantsOption($product){
         $products = $product->getVariants();
         $prod_opts = array();
+
         foreach ($products as $prod)
-            if($prod->getSku() == "")
-            {
-                $prod_opts[$prod->getID()] = $prod->getName();
-            }
-            else
-            {
-                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
-            }
+            $prod_opts[$prod->getID()] = $prod->getName();
+
         return $prod_opts;
     }
     
@@ -146,14 +110,8 @@ class InventoryManager
 
         $prod_opts = array();
         foreach ($products as $prod)
-            if($prod->getSku() == "")
-            {
-                $prod_opts[$prod->getID()] = $prod->getName();
-            }
-            else
-            {
-                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
-            }
+            $prod_opts[$prod->getID()] = $prod->getName();
+
         return $prod_opts;
     }
 
@@ -190,11 +148,11 @@ class InventoryManager
 
     public function persistTransaction(Transaction $trans)
     {
-        // TODO: lock table
-
         // check balance
         if (!$trans->checkBalance())
             throw new InventoryException('Inventory transaction unbalanced. Incoming entries must be equivalent to outgoing entries.');
+
+        // TODO: lock table
 
         // TODO: check product stock / availability in source warehouse
 
@@ -230,6 +188,8 @@ class InventoryManager
         return $new;
     }
     
+    // TODO: remove this
+    // inventory service should not be reliant on main warehouse config
     public function itemsIn($product, $quantity,$supplier)
     {
         $conf = new ConfigurationManager($this->container);
@@ -239,6 +199,7 @@ class InventoryManager
         return $this->itemTransfer($product, $quantity, $from, $to);
     }
     
+    // TODO: remove this too. this can be done better
     public function itemTransfer($product,$quantity,$from,$to)
     {
         $entryDebit = $this->newEntry();
