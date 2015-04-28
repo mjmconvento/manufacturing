@@ -18,6 +18,7 @@ use DateTime;
 class DeliveryController extends CrudController
 {
     use TrackCreate;
+
     public function __construct() {
         $this->title = 'Deliveries';
         $this->list_title = 'Deliveries';

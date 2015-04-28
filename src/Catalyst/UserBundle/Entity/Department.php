@@ -18,4 +18,24 @@ class Department
 	use HasGeneratedID;
 	use TrackCreate;
 	use HasName;
+
+    // TODO: hasInventoryAccount trait
+
+    public function __construct()
+    {
+        $this->initHasGeneratedID();
+        $this->initTrackCreate();
+        $this->initHasName();
+    }
+
+    public function toData()
+    {
+        $data = new stdClass();
+
+        $this->dataHasGeneratedID($data);
+        $this->dataTrackCreate($data);
+        $this->dataHasName($data);
+
+        return $data;
+    }
 }
