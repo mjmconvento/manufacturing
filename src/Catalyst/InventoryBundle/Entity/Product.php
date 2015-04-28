@@ -291,6 +291,37 @@ class Product
         return true;
     }
 
+    public function setTypeID($type)
+    {
+        // TODO: check if valid type
+        $this->type_id = $type;
+        return $this;
+    }
+
+    public function getTypeID()
+    {
+        return $this->type_id;
+    }
+
+    public function getTypeText()
+    {
+        switch ($this->type_id)
+        {
+            case self::TYPE_RAW_MATERIAL:
+                return 'Raw Material';
+            case self::TYPE_FINISHED_GOOD:
+                return 'Finished Good';
+            case self::TYPE_INVENTORY:
+                return 'Inventory';
+            case self::TYPE_FIXED_ASSET:
+                return 'Fixed Asset';
+
+            // TODO: the others
+        }
+
+        return 'Unknown';
+    }
+
     public function toData()
     {
         $data = new stdClass();
@@ -316,6 +347,8 @@ class Product
         $this->dataHasName($data);
         $this->dataTrackCreate($data);
         $this->dataTrackUpdate($data);
+
+        // TODO: update for type
 
         return $data;
     }
