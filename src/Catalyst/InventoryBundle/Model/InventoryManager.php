@@ -104,21 +104,6 @@ class InventoryManager
         return $pg_opts;
     }
 
-    public function getProductTypeOptions($filter = array())
-    {
-        $pts = $this->em
-            ->getRepository('FareastInventoryBundle:ProductType')
-            ->findBy(
-                $filter,
-                array('name' => 'ASC')
-            );
-        $pt_opts = array();
-        foreach ($pts as $pt)
-            $pt_opts[$pt->getID()] = $pt->getName();
-
-        return $pt_opts;
-    }
-    
     public function getProductVariantsOption($product){
         $products = $product->getVariants();
         $prod_opts = array();
