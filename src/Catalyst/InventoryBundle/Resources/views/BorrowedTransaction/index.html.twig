@@ -26,8 +26,8 @@
                     <table class="table table-striped table-bordered table-hover" id="list_table">
                         <thead>
                             <tr>
-                                <th>Transaction Code</th>
-                                <th>Borrower's Name</th>
+                                <th>Transaction Code</th>                                
+                                <th>Department</th>
                                 <th>No. of Items</th>
                                 <th>Date Created</th>
                                 <th>Created By</th>
@@ -39,12 +39,12 @@
                         {% for d in data %}
                             <tr>
                                 <td>{{ d.code }}</td>
-                                <td>{{ d.borrower }}</td>
+                                <td>{{ d.dept }}</td>
                                 <td>{{ d.count }}</td>
                                 <td>{{ d.date_issue|date('m/d/Y')}}</td>
                                 <td>{{ d.user_create}}</td>
                                 <td>{{ d.status }}</td>
-                                <td><a href="{{ path('feac_inv_borrowed_edit_form', {'id' : d.id }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View </a></td>
+                                <td><a href="{{ path('cat_inv_borrowed_edit_form', {'id' : d.id }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View </a></td>
                             </tr>
                         {% endfor %}
                         </tbody>

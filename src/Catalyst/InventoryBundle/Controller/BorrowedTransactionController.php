@@ -6,6 +6,7 @@ use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\BorrowedTransaction;
 use Catalyst\InventoryBundle\Entity\BIEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\InventoryBundle\Entity\Product;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,7 +62,7 @@ class BorrowedTransactionController extends CrudController
             $data[] =[
                 'id' => $b->getID(),
                 'code' => $b->getCode(),
-                'borrower' => $b->getIssuedTo()->getName(),
+                'dept' => $b->getDepartment()->getName(),
                 'date_issue' => $b->getDateIssue(),
                 'user_create' => $b->getUserCreate()->getName(),
                 'status' => $b->getStatus(),
@@ -76,27 +77,6 @@ class BorrowedTransactionController extends CrudController
 
 
         return $this->render($twig_file, $params);
-    }
-
-    public function getDeptAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $user = $em->getRepository('CatalystUserBundle:User')->findAll();
-
-        $data = array();
-        foreach($user as $u)
-        {
-            if($u->getID() == $id)
-            {
-                $data = [
-                'dept' => $u->getDepartment(),
-
-                ];
-            }
-        }
-
-        return new JsonResponse($data);   
     }
 
     public function getProductAction($prod_id)
@@ -123,12 +103,21 @@ class BorrowedTransactionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $um = $this->get('catalyst_user');
-        $inv = $this->get('catalyst_inventory');
+        $um = $this->get('catalyst_user');        
         $params['dept_opts'] = $um->getDeptOptions(); 
-        $params['prod_opts'] = $inv->getProductOptions();
+        
+        // get product options (fixed assets only)
+        $products = $em->getRepository('CatalystInventoryBundle:Product')
+            ->findBy(array('type_id' => Product::TYPE_FIXED_ASSET));
+        $prod_opts = array();
+        foreach ($products as $prod)
+            $prod_opts[$prod->getID()] = $prod->getName();
+        $params['prod_opts'] = $prod_opts;
 
-        $params['status_opts'] = array('Incomplete'=>  BorrowedTransaction::STATUS_INCOMPLETE, 'Complete'=>  BorrowedTransaction::STATUS_COMPLETE);        
+        $params['status_opts'] = array(
+            'Incomplete'=> BorrowedTransaction::STATUS_INCOMPLETE, 
+            'Complete'=> BorrowedTransaction::STATUS_COMPLETE
+        );        
         
         return $params;
     }
@@ -146,11 +135,17 @@ class BorrowedTransactionController extends CrudController
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
 
-        $o->setIssuedTo($user->findUser($data['user_opts']));
+        $o->setDepartment($user->findDepartment($data['dept_id']));
         $o->setDateIssue(new DateTime($data['date_issue']));
-        $o->setDateReturned(new DateTime($data['date_return']));
+        if(isset($data['date_return']))
+        {
+            
+        }
         $this->updateTrackCreate($o, $data, $is_new);
         $o->setStatus($data['status']);
+
+        $o->setDescription($data['description']);
+        $o->setRemark($data['remark']);
 
         // clear entries
         $ents = $o->getEntries();
@@ -165,12 +160,14 @@ class BorrowedTransactionController extends CrudController
 
                 $qty = $data['qty'][$index];
                 $rmk = $data['remarks'][$index];
-                $des = $data['desc'][$index];                
+                $des = $data['desc'][$index];
+                $returned = $data['date_return'][$index];
                 // instantiate
                     $entry = new BorrowedEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty)
                         ->setRemarks($rmk)
+                        ->setDateReturned($returned)
                         ->setDescription($des);
 
                     // add entry
