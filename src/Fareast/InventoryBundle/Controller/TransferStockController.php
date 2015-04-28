@@ -4,9 +4,11 @@ namespace Fareast\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\Transaction;
+use Catalyst\InventoryBundle\Entity\Entry;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+
 
 class TransferStockController extends CrudController
 {
@@ -51,23 +53,33 @@ class TransferStockController extends CrudController
         return $this->render($twig_file, $params);
     }
 
-    public function getProductAction($id)
+    public function getProductAndStockAction($prod_id, $wh_id)
     {
         $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
         
-        $prod = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
 
-        $json = array();
-        foreach($prod as $p)
+        if ($prod == null)
         {
-            if($p->getID() == $id)
-            {
-                $json = [
-                'prodtype' => $p->getProductType()->getName(),
-                'uom' => $p->getUnitOfMeasure(),
+            $json = [
+                'prodtype' => '',
+                'uom' => '',
+                'current_stock' => 0.00
+            ];
+        }
+        else
+        {
+            $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($wh_id);
+            $iacc = $wh->getInventoryAccount();
 
-                ];
-            }
+            $quantity = $inv->getStockCount($iacc, $prod);
+
+            $json = [
+                'prodtype' => $prod->getTypeText(),
+                'uom' => $prod->getUnitOfMeasure(),
+                'current_stock' => $quantity
+            ];
         }
 
         return new JsonResponse($json);   
@@ -105,6 +117,8 @@ class TransferStockController extends CrudController
         // // print_r($date);
         // echo "</pre>";
         // die();
+
+        error_log(print_r($data, true));
         $em = $this->getDoctrine()->getManager();
 
         // figure out setter
@@ -116,15 +130,18 @@ class TransferStockController extends CrudController
         // initialize entries
         $entries = array();
 
+        /*
         // check if there's anything to process
         if (!isset($data[$prefix . '_wh_id']))
             return $entries;
+        */
+
+        $wh_id = $data[$prefix . '_wh_id'];
 
         // process it
-        foreach ($data[$prefix . '_wh_id'] as $index => $wh_id)
+        foreach ($data['prod_id'] as $index => $prod_id)
         {
-            $prod_id = $data[$prefix . '_prod_id'][$index];
-            $qty = $data[$prefix . '_qty'][$index];
+            $qty = $data['qty'][$index];
 
             // product
             $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
@@ -137,7 +154,7 @@ class TransferStockController extends CrudController
                 throw new ValidationException('Could not find warehouse.');
 
             $entry = new Entry();
-            $entry->setWarehouse($wh)
+            $entry->setInventoryAccount($wh->getInventoryAccount())
                 ->setProduct($prod)
                 ->$setter($qty);
 
@@ -159,8 +176,8 @@ class TransferStockController extends CrudController
             $data = $this->getRequest()->request->all();
 
             // process entries
-            $from_ents = $this->processTransferEntries($data, 'fromform');
-            $to_ents = $this->processTransferEntries($data, 'toform');
+            $from_ents = $this->processTransferEntries($data, 'from');
+            $to_ents = $this->processTransferEntries($data, 'to');
 
             // setup transaction
             $trans = new Transaction();

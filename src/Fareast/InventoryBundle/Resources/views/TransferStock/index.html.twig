@@ -12,8 +12,8 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
-                        {{ f.group_select('Warehouse Source','wh_id',wh_opts,2,3,4,false,'from')}}
-                        {{ f.group_select('Warehouse Destination','wh_id',wh_opts,2,3,4,false,'to')}}
+                        {{ f.group_select('Warehouse Source', 'from_wh_id', wh_opts, 2, 3, 4, false) }}
+                        {{ f.group_select('Warehouse Destination', 'to_wh_id', wh_opts, 2, 3, 4, false)}}
                         {# f.group_textarea('Description','desc', object.getCode|default(''), 4,3,4) #}  
 
                         <h4 class="form-section">Item Entries</h4>
@@ -27,10 +27,11 @@
                                 <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
                                     <thead>
                                         <tr>
-                                            <th width="25%">Category</th>
+                                            <th width="20%">Category</th>
                                             <th width="25%">Item Name</th>                                            
                                             <th width="18%">Type</th>
-                                            <th width="20%">Unit Of Measurement</th>
+                                            <th width="10%">Unit Of Measurement</th>
+                                            <th width="13%">Stock</th>
                                             <th width="13%">Quantity</th>
                                             <th width="10%"></th>
                                         </tr>
@@ -67,89 +68,111 @@
 <script>
 function appendEntry()
 {
-    var html = '<tr>';
-        html += '<td><select name="prodgroup_opts[]" class="form-control select2 prodgroup_opts">';
-        html += $('.prodgroup_opts').html();   
-        html += '</select> </td>';
+    var html = '<tr class="prod_row">';
+    html += '<td><select name="prodgroup_opts[]" class="form-control select2 prodgroup_opts">';
+    html += $('.prodgroup_opts').html();   
+    html += '</select> </td>';
 
-        html += '<td><select name="prod_id[]" class="form-control prod_id">';        
-        html += '</select></td>';
+    html += '<td><select name="prod_id[]" class="form-control prod_id">';        
+    html += '</select></td>';
 
-        html += '<td><input type="text" name="prod_type[]" class="form-control prodtype" readonly></td>';        
+    html += '<td><input type="text" name="prod_type[]" class="form-control prodtype" readonly></td>';        
 
-        html += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
-        html += '<td> <input type="number" name="qty[]" class="form-control qty"></td>';
-        html += '<td><a href="#" class="btn red btn-xs remove_field"><i class="fa fa-times"></i> Delete</a></td>';
-        html += '</tr>';
+    html += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
+    html += '<td> <input type="text" name="stock[]" class="form-control stock" readonly></td>';
+    html += '<td> <input type="number" name="qty[]" class="form-control qty"></td>';
+    html += '<td><a href="#" class="btn red btn-xs remove_field"><i class="fa fa-times"></i> Delete</a></td>';
+    html += '</tr>';
 
-        $('#from_table').append(html);
+    $('#from_table').append(html);
+
+    var pg_select = $('tr.prod_row:last').find('.prodgroup_opts');
+    prodgroup_refresh(pg_select);
+
 }
-    $(document).ready(function() {
-        ComponentsPickers.init();
 
-        var add_button = $(".add-field");
-        var wrapper = $("#from_table");
-                
-        var i=0;
+function prodgroup_refresh(pg_select) {
+    // var cat = pg_select.closest('tr').find('.prodgroup_opts').val();
+    var cat = pg_select.val();
+    var url = "{{ path('feac_inv_transfer_productgroup', { var_id: ':id'}) }}";
+    url = url.replace(":id", cat);
 
-        $(add_button).click(function(){                            
-            appendEntry();            
-        });
+    var row = pg_select.closest('.prod_row');
+    //closest('tr');
 
-     
+    // $(row).find('.prod_id').empty();
+    var prod_select = $(row).find('.prod_id');
 
-        $(document).on('change', '.prodgroup_opts', function(e){
-            e.preventDefault();
-                var cat = $(this).closest('tr').find('.prodgroup_opts').val();
+    $.getJSON(url, function(data) {
+        // console.log(data);
+        prod_select.html('Hello');
+        for(var index in data)
+        {
+            var prod = data[index];
+            console.log(prod);
+            prod_select.append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
+        }
 
-                
-                var url = "{{ path('feac_inv_transfer_productgroup', { var_id: ':id'}) }}";
-                url = url.replace(":id", cat);
+        product_refresh(prod_select);
+    });
+}
 
-                var row = $(this).closest('tr');
+function product_refresh(prod_select) {
+    var prod_id = prod_select.closest('tr').find('.prod_id').val();
+    var wh_id = $('#cform-from_wh_id').val();
 
-                $(row).find('.prod_id').empty();
-
-                $.getJSON(url, function(data){
-                    // console.log(data);
-                    // $('.prod_id').html('<option></option>').select2();
-                    i=0;
-                    for(var index in data)
-                    {
-                        var prod = data[index];
-                        i++;
-                        $(row).find(".prod_id").append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
-                    }
-                });
-        });
+    var url = "{{ path('feac_inv_transfer_product', { prod_id: ':prod_id', wh_id: ':wh_id' }) }}";
+    url = url.replace(":prod_id", prod_id).replace(':wh_id', wh_id);
 
 
-        $(document).on('change','.prod_id', function(e){
-            e.preventDefault();
-                var prod = $(this).closest('tr').find('.prod_id').val();
+    var row = prod_select.closest('tr');
 
-                var url = "{{ path('feac_inv_transfer_product', { id: ':id'}) }}";
-                url = url.replace(":id", prod);
-
-                var row = $(this).closest('tr');
-
-                $.getJSON(url, function(json){
-                    console.log(json)                    
-                    
-                        $(row).find(".prodtype").val(json.prodtype);
-                        $(row).find(".uom").val(json.uom);
-                   
-                });
-
-        });
+    $.getJSON(url, function(json){
+        console.log(json)                    
         
-        //remove row
-        $(document).on("click",".remove_field", function(e){
-            e.preventDefault();            
-            var tr = $(this).closest('tr');
-            tr.remove();
-            return false;
+        $(row).find('.prodtype').val(json.prodtype);
+        $(row).find('.uom').val(json.uom);
+        $(row).find('.stock').val(json.current_stock);
+       
+    });
+}
+
+$(document).ready(function() {
+    ComponentsPickers.init();
+
+    var wrapper = $("#from_table");
+            
+    var i=0;
+
+    $('.add-field').click(function(){                            
+        appendEntry();            
+    });
+
+
+    // product group dropdown
+    $(document).on('change', '.prodgroup_opts', function(e){
+        prodgroup_refresh($(this));
+    });
+
+
+    // product dropdown
+    $(document).on('change','.prod_id', function(e){
+        product_refresh($(this));
+    });
+    
+    // delete button
+    $(document).on("click",".remove_field", function(e){
+        var tr = $(this).closest('tr');
+        tr.remove();
+        return false;
+    });
+
+    // source warehouse dropdown
+    $('#cform-from_wh_id').change(function() {
+        $('.prod_id').each(function(key, value) {
+            product_refresh($(value));
         });
     });
+});
 </script>
 {% endblock %}

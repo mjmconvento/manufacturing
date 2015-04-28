@@ -91,7 +91,7 @@ class StockAdjustmentController extends BaseController
         return $gl;
     }
 
-    public function gridAction($dept = null, $category = null)
+    public function gridAction($whs = null, $cats = null)
     {
         $gl = $this->setupGrid();
         $qry = array();
@@ -100,24 +100,46 @@ class StockAdjustmentController extends BaseController
         $grid = $this->get('catalyst_grid');
         $fg = $grid->newFilterGroup();
 
-        if($dept != null and $dept != 'null' ){
+
+        // filter warehouses
+        if($whs != null and $whs != 'null' )
+        {
+            $wh_ids = explode(',', $whs);
+            $fg->andWhere('w.id IN (:wh_ids)')
+                ->setParameter($wh_ids);
+
+            /*
             $aw_id = explode(',',$dept);
             $qry[] = 'w.id IN ('. implode(', ', $aw_id).')';
+            */
         }
 
-        if ($category != null and $category != 'null' )
+        // prodgroup
+        if ($cats != null and $cats != 'null' )
         {
+            $cat_ids = explode(',', $cats);
+            $fg->andWhere('p.prodgroup IN (:cat_ids)')
+                ->setParameter($cat_ids);
+
+            /*
             $aw_id = explode(',',$category);
             $qry[] = 'p.prodgroup IN ('. implode(', ', $aw_id).')';
+            */
         }
 
-        $qry[] = 'o.quantity > 0';
+        // $qry[] = 'o.quantity > 0';
         
-        if(!empty($qry)){
+
+        /*
+        if (!empty($qry))
+        {
             $filter = implode(' AND ', $qry);
             $fg->where($filter);
             $gl->setQBFilterGroup($fg);
         }
+        */
+        $gl->setQBFilterGroup($fg);
+
         $gres = $gl->load();
 
         $resp = new Response($gres->getJSON());

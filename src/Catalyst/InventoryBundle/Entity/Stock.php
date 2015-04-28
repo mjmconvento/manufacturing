@@ -4,10 +4,7 @@ namespace Catalyst\InventoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\HasQuantity;
-use Catalyst\InventoryBundle\Template\Entity\HasProduct;
-use Catalyst\InventoryBundle\Template\Entity\HasInventoryAccount;
 
 /**
  * @ORM\Entity
@@ -15,13 +12,63 @@ use Catalyst\InventoryBundle\Template\Entity\HasInventoryAccount;
  */
 class Stock
 {
-    use HasGeneratedID;
     use HasQuantity;
-    use HasProduct;
-    use HasInventoryAccount;
 
-    public function __construct()
+    // NOTE: cannot use HasProduct and HasInventoryAccount trait since we're
+    //       using it as primary key
+
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\Catalyst\InventoryBundle\Entity\Product")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     */
+    protected $product;
+
+    /**
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity="\Catalyst\InventoryBundle\Entity\Account")
+     * @ORM\JoinColumn(name="inv_account_id", referencedColumnName="id")
+     */
+    protected $inv_account;
+
+    public function __construct($inv_account, $product, $qty = 0.00)
     {
-    	$this->initHasInventoryAccount();
+        $this->inv_account = $inv_account;
+        $this->product = $product;
+        $this->quantity = $qty;
     }    
+
+    public function setProduct(Product $prod)
+    {
+        $this->product = $prod;
+        return $this;
+    }
+
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    public function setInventoryAccount(Account $account)
+    {
+        $this->inv_account = $account;
+        return $this;
+    }
+
+    public function getInventoryAccount()
+    {
+        return $this->inv_account;
+    }
+
+    public function toData()
+    {
+        $data = new \stdClass();
+
+        $data->inv_account = $this->inv_account->toData();
+        $data->product = $this->product->toData();
+
+        $this->dataHasQuantity($data);
+
+        return $data;
+    }
 }

@@ -129,10 +129,7 @@ class InventoryManager
         $stock = $stock_repo->findOneBy(array('inv_account' => $account, 'product' => $prod));
         if ($stock == null)
         {
-            $stock = new Stock();
-            $stock->setInventoryAccount($account)
-                ->setProduct($prod)
-                ->setQuantity($qty);
+            $stock = new Stock($account, $prod, $qty);
 
             // persist the new stock object
             $this->em->persist($stock);
@@ -224,6 +221,21 @@ class InventoryManager
                 ->findByAccount($warehouse->getInventoryAccount());
         
         return $stock;
+    }
+
+    public function getStockCount($inv_account, $product)
+    {
+        $stock = $this->em->getRepository('CatalystInventoryBundle:Stock')->find([
+            'product' => $product,
+            'inv_account' => $inv_account
+        ]);
+
+        if ($stock == null)
+            $quantity = 0.00;
+        else
+            $quantity = $stock->getQuantity();
+
+        return $quantity;
     }
 
 
