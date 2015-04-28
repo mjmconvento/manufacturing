@@ -26,22 +26,6 @@ class ProductController extends CrudController
         $this->list_type = 'dynamic';
     }
 
-    public function indexAction()
-    {
-        $this->hookPreAction();
-
-        $gl = $this->setupGridLoader();
-
-        $params = $this->getViewParams('List');
-
-        $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
-
-        $params['list_title'] = $this->list_title;
-        $params['grid_cols'] = $gl->getColumns();
-
-        return $this->render($twig_file, $params);
-    }
-
     protected function newBaseClass()
     {
         return new Product();
@@ -51,7 +35,7 @@ class ProductController extends CrudController
     {
         if ($obj == null)
             return '';
-        return $obj->getSKU();
+        return $obj->getName();
     }
 
     protected function getGridJoins()
@@ -71,6 +55,26 @@ class ProductController extends CrudController
             $grid->newColumn('Unit', 'getUnitOfMeasure', 'uom'),
             $grid->newColumn('Group', 'getName', 'name', 'pg'),
         );
+    }
+
+    protected function setupGridLoader()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        $loader = parent::setupGridLoader();
+
+        // display only raw materials, finished goods and inventories
+        $fg = $grid->newFilterGroup();
+        $fg->where('o.type_id in (:type_ids)')
+            ->setParameter('type_ids', array(
+                Product::TYPE_RAW_MATERIAL,
+                Product::TYPE_FINISHED_GOOD,
+                Product::TYPE_INVENTORY
+            ));
+
+        $loader->setQBFilterGroup($fg);
+
+        return $loader;
     }
 
     protected function getFieldOptions($repo)
