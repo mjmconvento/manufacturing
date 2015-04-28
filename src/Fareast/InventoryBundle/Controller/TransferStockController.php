@@ -23,12 +23,10 @@ class TransferStockController extends CrudController
 
     protected function newBaseClass()
     {
-        
     }
 
     protected function getObjectLabel($obj)
     {
-
     }
 
     public function indexAction()
@@ -89,36 +87,23 @@ class TransferStockController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
         
-        $prod = $em->getRepository('CatalystInventoryBundle:Product')->findAll();
+        $pg = $em->getRepository('CatalystInventoryBundle:ProductGroup')->find($var_id);
+        $prods = $pg->getProducts();
 
         $data = array();
-        foreach($prod as $p)
+        foreach($prods as $p)
         {
-            if($p->getProductGroup()->getID() == $var_id)
-            {
-                $data[] = [
+            $data[] = [
                 'name' => $p->getName(),
                 'id' => $p->getID(),
-
-                ];
-            }
+            ];
         }
-
-        
 
         return new JsonResponse($data);
     }
 
     protected function processTransferEntries($data, $prefix)
     {
-        // echo "<pre>";
-        // print_r($data);
-        // // print_r($ctr);
-        // // print_r($date);
-        // echo "</pre>";
-        // die();
-
-        error_log(print_r($data, true));
         $em = $this->getDoctrine()->getManager();
 
         // figure out setter
@@ -129,12 +114,6 @@ class TransferStockController extends CrudController
 
         // initialize entries
         $entries = array();
-
-        /*
-        // check if there's anything to process
-        if (!isset($data[$prefix . '_wh_id']))
-            return $entries;
-        */
 
         $wh_id = $data[$prefix . '_wh_id'];
 
@@ -213,5 +192,4 @@ class TransferStockController extends CrudController
         $this->addFlash('success', 'Transfer transaction successful.');
         return $this->redirect($this->generateUrl('feac_inv_transfer_index'));
     }
-	
 }

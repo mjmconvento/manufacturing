@@ -59,7 +59,7 @@ class Product
     protected $stock_max;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProductGroup")
+     * @ORM\ManyToOne(targetEntity="ProductGroup", inversedBy="products")
      * @ORM\JoinColumn(name="prodgroup_id", referencedColumnName="id")
      */
     protected $prodgroup;
@@ -93,7 +93,6 @@ class Product
     {
         $this->price_sale = 0.00;
         $this->price_purchase = 0.00;
-        $this->tasks = new ArrayCollection();
 
         $this->stock_min = 0.00;
         $this->stock_max = 0.00;
