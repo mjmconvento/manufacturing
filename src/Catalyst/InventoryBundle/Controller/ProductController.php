@@ -9,10 +9,14 @@ use Catalyst\ValidationException;
 use Catalyst\InventoryBundle\Model\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 
 class ProductController extends CrudController
 {
-
+    use TrackCreate;
+    use TrackUpdate;
+    
     public function __construct()
     {
         $this->route_prefix = 'cat_inv_prod';
@@ -188,6 +192,9 @@ class ProductController extends CrudController
         if ($pb != null)
             $o->setBrand($pb);        
 
+
+        $this->updateTrackCreate($o,$data,$is_new);
+        $this->updateTrackUpdate($o,$data);
 
         // sku check
         if ($o->getSKU() != $data['sku'])
