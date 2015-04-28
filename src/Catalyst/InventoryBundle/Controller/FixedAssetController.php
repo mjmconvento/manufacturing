@@ -9,21 +9,80 @@ use Catalyst\ValidationException;
 use Catalyst\InventoryBundle\Model\Gallery;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
-use Catalyst\CoreBundle\Template\Controller\TrackCreate;
-use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 
-class ProductController extends CrudController
+class FixedAssetController extends CrudController
 {
-    use TrackCreate;
-    use TrackUpdate;
-    
+
     public function __construct()
     {
-        $this->route_prefix = 'cat_inv_prod';
-        $this->title = 'Product';
+        $this->route_prefix = 'feac_inv_fixed_asset';
+        $this->title = 'Fixed Assets';
 
-        $this->list_title = 'Products';
+        $this->list_title = 'Fixed Assets';
         $this->list_type = 'dynamic';
+        $this->repo = 'CatalystInventoryBundle:Product';
+    }
+
+    public function indexAction()
+    {
+        $this->hookPreAction();
+
+        $gl = $this->setupGridLoader();
+
+        $params = $this->getViewParams('List');
+
+        $twig_file = 'FareastInventoryBundle:FixedAsset:index.html.twig';
+
+        $params['list_title'] = $this->list_title;
+        $params['grid_cols'] = $gl->getColumns();
+
+        return $this->render($twig_file, $params);
+    }
+
+    protected function setupGridLoader()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        $loader = parent::setupGridLoader();
+
+        $fg = $grid->newFilterGroup();
+        $fg->where('o.type_id = :type_id')
+            ->setParameter('type_id', Product::TYPE_FIXED_ASSET);
+
+        $loader->setQBFilterGroup($fg);
+
+        return $loader;
+    }
+
+
+    // TODO : Find delete error
+    public function addSubmitAction()
+    {
+        $this->checkAccess($this->route_prefix . '.add');
+
+        $this->hookPreAction();
+        $obj = $this->add();
+        $obj->setUserCreate($this->getUser());
+        try
+        {
+            $this->persist($obj);
+
+            $this->addFlash('success', $this->title . ' added successfully.');
+
+            return $this->redirect($this->generateUrl($this->getRouteGen()->getList()));
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
     }
 
     protected function newBaseClass()
@@ -35,7 +94,7 @@ class ProductController extends CrudController
     {
         if ($obj == null)
             return '';
-        return $obj->getName();
+        return $obj->getSKU();
     }
 
     protected function getGridJoins()
@@ -57,26 +116,6 @@ class ProductController extends CrudController
         );
     }
 
-    protected function setupGridLoader()
-    {
-        $grid = $this->get('catalyst_grid');
-
-        $loader = parent::setupGridLoader();
-
-        // display only raw materials, finished goods and inventories
-        $fg = $grid->newFilterGroup();
-        $fg->where('o.type_id in (:type_ids)')
-            ->setParameter('type_ids', array(
-                Product::TYPE_RAW_MATERIAL,
-                Product::TYPE_FINISHED_GOOD,
-                Product::TYPE_INVENTORY
-            ));
-
-        $loader->setQBFilterGroup($fg);
-
-        return $loader;
-    }
-
     protected function getFieldOptions($repo)
     {
         // brand
@@ -92,15 +131,9 @@ class ProductController extends CrudController
     protected function padFormParams(&$params, $prod = null)
     {
 
-        $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         $params['pg_opts'] = $inv->getProductGroupOptions();
-        $brand_opts = array(0 => '[ Select Brand ]');
-
-        $params['brand_opts'] = $brand_opts + $this->getFieldOptions('Brand');
-
-        //TODO: Cleanup later - Terese
-        $params['type_opts'] = array(Product::TYPE_RAW_MATERIAL => 'Raw Material',  Product::TYPE_FINISHED_GOOD=>'Finished Good', Product::TYPE_INVENTORY =>'Inventory');
+        $params['brand_opts'] = $this->getFieldOptions('Brand');
 
         // images
         if ($prod->getID())
@@ -126,12 +159,9 @@ class ProductController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
-
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         
-
-        $o->setTypeID($data['type_id']);
         $o->setName($data['name']);
 
         // unit of measure
@@ -139,50 +169,6 @@ class ProductController extends CrudController
             $o->setUnitOfMeasure($data['uom']);
         else
             $o->setUnitOfMeasure('');
-
-        /*
-        // service
-        if (isset($data['flag_service']) && $data['flag_service'] == 1)
-            $o->setFlagService();
-        else
-            $o->setFlagService(false);
-        */
-
-        // can sell
-        if (isset($data['flag_sale']) && $data['flag_sale'] == 1)
-            $o->setFlagSale();
-        else
-            $o->setFlagSale(false);
-
-        // can purchase
-        if (isset($data['flag_purchase']) && $data['flag_purchase'] == 1)
-            $o->setFlagPurchase();
-        else
-            $o->setFlagPurchase(false);
-
-        // perishable
-        if (isset($data['flag_perishable']) && $data['flag_perishable'] == 1)
-            $o->setFlagPerishable();
-        else
-            $o->setFlagPerishable(false);
-
-
-        /*
-        // boolean for sell and cost price acl
-        $view_sell_price = $this->getUser()->hasAccess($this->route_prefix . '.view_sell_price');
-
-        $view_cost_price = $this->getUser()->hasAccess($this->route_prefix . '.view_cost_price');
-        */
-        
-        // prices
-        $o->setPriceSale($data['price_sale']);
-        $o->setPricePurchase($data['price_purchase']);
-
-
-        
-        // threshold values
-        $o->setStockMin($data['stock_min']);
-        $o->setStockMax($data['stock_max']);
 
 
         // product group
@@ -197,9 +183,6 @@ class ProductController extends CrudController
             $o->setBrand($pb);        
 
 
-        $this->updateTrackCreate($o,$data,$is_new);
-        $this->updateTrackUpdate($o,$data);
-
         // sku check
         if ($o->getSKU() != $data['sku'])
         {
@@ -209,6 +192,8 @@ class ProductController extends CrudController
                 throw new ValidationException('Product with SKU ' . $data['sku'] . ' already exists.');
             $o->setSKU($data['sku']);
         }
+
+        $o->setTypeID(6);
 
 
     }

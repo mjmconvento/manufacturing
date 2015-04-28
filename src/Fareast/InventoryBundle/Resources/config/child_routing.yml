@@ -1,3 +1,37 @@
+feac_inv_fixed_asset_index:
+    path:     /fixedassets
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:index }
+
+feac_inv_fixed_asset_add_form:
+    path:     /fixedasset
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:addForm }
+
+feac_inv_fixed_asset_add_form_submit:
+    path:     /fixedasset
+    methods:  [POST]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:addSubmit }
+
+feac_inv_fixed_asset_grid:
+    path:     /fixedasset/grid
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:grid }
+
+feac_inv_fixed_asset_edit_form:
+    path:     /fixedasset/{id}
+    methods:  [GET]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:editForm }
+
+feac_inv_fixed_asset_edit_submit:
+    pattern: /fixedasset/{id}
+    methods: [POST]
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:editSubmit }
+
+feac_inv_fixed_asset_delete:
+    pattern: /fixedasset/delete/{id}
+    defaults: { _controller: CatalystInventoryBundle:FixedAsset:delete }
+
 feac_inv_begin_index:
     path:     /begin
     methods:  [GET]

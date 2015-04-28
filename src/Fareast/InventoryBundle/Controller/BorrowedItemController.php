@@ -14,6 +14,7 @@ use DateTime;
 class BorrowedItemController extends CrudController
 {
     use TrackCreate;
+
     public function __construct()
     {        
         $this->route_prefix = 'feac_inv_borrowed';

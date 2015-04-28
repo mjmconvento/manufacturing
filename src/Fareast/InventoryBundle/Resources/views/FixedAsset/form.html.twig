@@ -1,0 +1,186 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as form %}
+
+{% block css %}
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/fancybox/source/jquery.fancybox.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/catalysttemplate/assets/admin/pages/css/portfolio.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('bundles/catalysttemplate/assets/global/plugins/dropzone/css/dropzone.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">{% block form_header %}{% endblock %}</div>
+            </div>
+            <div class="portlet-body form">
+                <!-- BEGIN FORM-->
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                        {{ form.group_text('SKU', 'sku', object.getSKU, 3, 4, readonly) }}
+                        {{ form.group_text('Name', 'name', object.getName, 3, 4, readonly) }}
+                        {{ form.group_select('Product Group', 'prodgroup_id', pg_opts, object.getProductGroup.getID|default(''), 3, 4, readonly) }}
+                        {{ form.group_select('Product Brand', 'brand_id', brand_opts, object.getBrand.getID|default(''), 3, 4, readonly) }}
+                        {{ form.group_text('Unit of Measure', 'uom', object.getUnitOfMeasure, 3, 4, readonly) }}
+
+                    </div>
+
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            {% if not readonly %}
+                            <button type="submit" class="btn blue">Submit</button>
+                            {% endif %}
+                            <a href="{{ path(route_list) }}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+                <!-- END FORM-->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if object.getID != null %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption">Gallery</div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    {% for image in images %}
+                    <div class="col-md-3 col-sd-4">
+                        <a class="fancybox-button" href="/uploads/images/{{ image }}" data-rel="fancybox-button">
+                            <img class="img-responsive" src="/uploads/images/{{ image }}">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if not readonly %}
+                <div class="row">
+                    <form method="post" action="{{ path('cat_inv_prod_upload', {id: object.getID}) }}" class="dropzone dz-clickable">
+                        <div class="dz-default dz-message">
+                            <span>Drop files here to upload</span>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-mixitup/jquery.mixitup.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/fancybox/source/jquery.fancybox.pack.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/portfolio.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/dropzone/dropzone.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-dropzone.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/global/plugins/jquery-validation/js/additional-methods.min.js') }}"></script>
+<script src="{{ asset('bundles/catalysttemplate/assets/admin/pages/scripts/form-validation.js') }}"></script>
+
+
+<script>
+function escape_attr(s) {
+    return String(s).replace(/&(?!\w+;)/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function escape_html(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+
+
+$(document).ready(function() {
+    Portfolio.init();
+    FormDropzone.init();
+    FormValidation.init(); // init form validation
+
+    // handle price toggles
+    update_price();
+    $('#cform-flag_sale').change(function() {
+        update_price();
+    });
+    $('#cform-flag_purchase').change(function() {
+        update_price();
+    });
+
+    // set default error and success elements
+    jQuery.validator.setDefaults({
+        errorClass: 'help-block',
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {
+                error.appendTo(element.parent().last());
+                element.parent().parent().addClass('has-error');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                error.appendTo(element.parent().parent().parent().parent().last());
+                element.parent().parent().parent().parent().addClass('has-error');
+            }
+            else
+            {
+                error.appendTo(element.parent().parent().last());
+                element.parent().parent().parent().addClass('has-error');
+            }
+        },
+        success: function(element) {
+            if(element.parent().parent().hasClass('form-group'))
+            {  
+                element.parent().parent().removeClass('has-error');
+                element.parent().parent().addClass('has-success');
+            }
+            else if(element.parent().parent().hasClass('checker'))
+            {   
+                element.parent().parent().parent().parent().addClass('has-error');
+                element.parent().parent().parent().parent().addClass('has-success');
+            }
+            else
+            {  
+                element.parent().parent().parent().removeClass('has-error');
+                element.parent().parent().parent().addClass('has-success');
+            }
+
+            element.remove();
+        }
+    });
+
+    // validate form elements
+    $(".form-horizontal").validate({
+        onfocusout: function(element) {
+           this.element(element);
+        },
+        rules: {
+            code: {
+                required: true
+            },
+            name: {
+                required: true
+            }
+        },  
+        submitHandler: function(form) {
+            // if($('#flag_service').attr('checked'))
+            // {
+            //     // alert('asdasd')
+            //     if(!$('#en_prod_id').val())
+            //         $validator.showErrors({ en_table: "Please enter an ID to check" });
+            // }
+            // else
+            // {
+                form.submit();
+            // }
+        }
+    });
+});
+</script>
+{% endblock %}
