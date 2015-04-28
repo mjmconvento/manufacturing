@@ -13,9 +13,9 @@ use stdClass;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="inv_borrowed_item")
+ * @ORM\Table(name="inv_borrowed_transaction")
  */
-class BorrowedItem
+class BorrowedTransaction
 {
 	use HasGeneratedID;
 	use Hascode;
@@ -28,10 +28,10 @@ class BorrowedItem
     protected $date_issue;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="\Catalyst\UserBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_issuedto_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\Catalyst\UserBundle\Entity\Department")
+     * @ORM\JoinColumn(name="dept_id", referencedColumnName="id")
      */
-    protected $issued_to;
+    protected $department;
 
     /** @ORM\Column(type="string", length=30, nullable=true) */
     protected $status;
@@ -55,9 +55,9 @@ class BorrowedItem
         return $this;
     }
 
-    public function setIssuedTo(User $user)
+    public function setDepartment(Department $dept)
     {
-        $this->issued_to = $user;
+        $this->department = $dept;
         return $this;
     }
 
@@ -107,9 +107,9 @@ class BorrowedItem
         return $this->date_issue;
     }
 
-    public function getIssuedTo()
+    public function getDepartment()
     {
-        return $this->issued_to;
+        return $this->department;
     }
 
     public function getDateReturned()
@@ -139,7 +139,7 @@ class BorrowedItem
 		$this->dataTrackCreate($data);
 		$this->dataHasCode($data);
 		$data->status = $this->status;
-		$data->issued_to = $this->issued_to;
+		$data->department = $this->department;
 		$data->date_issue = $this->date_issue;
 		$data->date_returned = $this->date_returned->format('Y-m-d H:i:s');
 

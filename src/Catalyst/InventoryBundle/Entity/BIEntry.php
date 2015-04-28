@@ -19,7 +19,7 @@ class BIEntry
 	use HasQuantity;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="BorrowedItem")
+     * @ORM\ManyToOne(targetEntity="BorrowedTransaction")
      * @ORM\JoinColumn(name="borrowed_id", referencedColumnName="id")
      */
     protected $borrowed;
@@ -39,7 +39,7 @@ class BIEntry
     	$this->initHasGeneratedID();
     }
 
-    public function setBorrowed(BorrowedItem $borrowed)
+    public function setBorrowed(BorrowedTransaction $borrowed)
     {
     	$this->borrowed = $borrowed;
         $this->borrowed_id = $borrowed->getID();
