@@ -107,15 +107,10 @@ class InventoryManager
     public function getProductVariantsOption($product){
         $products = $product->getVariants();
         $prod_opts = array();
+
         foreach ($products as $prod)
-            if($prod->getSku() == "")
-            {
-                $prod_opts[$prod->getID()] = $prod->getName();
-            }
-            else
-            {
-                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
-            }
+            $prod_opts[$prod->getID()] = $prod->getName();
+
         return $prod_opts;
     }
     
@@ -131,14 +126,8 @@ class InventoryManager
 
         $prod_opts = array();
         foreach ($products as $prod)
-            if($prod->getSku() == "")
-            {
-                $prod_opts[$prod->getID()] = $prod->getName();
-            }
-            else
-            {
-                $prod_opts[$prod->getID()] = $prod->getSku() . ' - ' . $prod->getName();
-            }
+            $prod_opts[$prod->getID()] = $prod->getName();
+
         return $prod_opts;
     }
 
