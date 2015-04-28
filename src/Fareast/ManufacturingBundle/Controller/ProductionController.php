@@ -7,8 +7,18 @@ use Fareast\ManufacturingBundle\Entity\DailyConsumption;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 
+
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
+use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
+
 class ProductionController extends CrudController
 {
+
+    use TrackCreate;
+    use TrackUpdate;
+    use HasGeneratedID;
+
     public function __construct()
     {
         $this->route_prefix = 'feac_mfg_prod_cal';
@@ -195,6 +205,9 @@ class ProductionController extends CrudController
                 ->setSaltConsumption(0)
                 ->setSaltRunningBalance(0);
 
+            $this->updateTrackCreate($consumption, $data, 'true');
+            $this->updateTrackUpdate($consumption, $data);
+
             $em->persist($consumption);
             $em->flush();
         }
@@ -283,6 +296,8 @@ class ProductionController extends CrudController
             ->setPlantManagersMH($data['plant-managers-mh'])
             ->setGuardMH($data['guard-mh'])
             ->setExtraMH($data['extra-mh']);
+            
+        $this->updateTrackUpdate($consumption, $data);
 
         $em->persist($consumption);
         $em->flush();
