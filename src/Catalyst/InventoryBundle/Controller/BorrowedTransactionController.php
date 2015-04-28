@@ -62,7 +62,7 @@ class BorrowedTransactionController extends CrudController
             $data[] =[
                 'id' => $b->getID(),
                 'code' => $b->getCode(),
-                'borrower' => $b->getIssuedTo()->getName(),
+                'dept' => $b->getDepartment()->getName(),
                 'date_issue' => $b->getDateIssue(),
                 'user_create' => $b->getUserCreate()->getName(),
                 'status' => $b->getStatus(),
@@ -129,9 +129,12 @@ class BorrowedTransactionController extends CrudController
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
 
-        $o->setIssuedTo($user->findUser($data['user_opts']));
+        $o->setDepartment($user->findDepartment($data['dept_id']));
         $o->setDateIssue(new DateTime($data['date_issue']));
-        $o->setDateReturned(new DateTime($data['date_return']));
+        if(isset($data['date_return']))
+        {
+            
+        }
         $this->updateTrackCreate($o, $data, $is_new);
         $o->setStatus($data['status']);
 
@@ -151,12 +154,14 @@ class BorrowedTransactionController extends CrudController
 
                 $qty = $data['qty'][$index];
                 $rmk = $data['remarks'][$index];
-                $des = $data['desc'][$index];                
+                $des = $data['desc'][$index];
+                $returned = $data['date_return'][$index];
                 // instantiate
                     $entry = new BorrowedEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty)
                         ->setRemarks($rmk)
+                        ->setDateReturned($returned)
                         ->setDescription($des);
 
                     // add entry

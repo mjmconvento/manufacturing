@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasCode;
-use Catalyst\UserBundle\Entity\User;
+use Catalyst\UserBundle\Entity\Department;
 use DateTime;
 use stdClass;
 

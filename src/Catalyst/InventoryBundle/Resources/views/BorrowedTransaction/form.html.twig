@@ -14,7 +14,7 @@
             <form method="post" class="form-horizontal">
                 <div class="form-body">
                     <h4 class="form-section"> Information </h4>                    
-                    {{ f.group_select('Department','dept_opts',dept_opts,object.getDepartment is not null ? object.getDepartment.getID,3,4, readonly)}}                    
+                    {{ f.group_select('Department','dept_id',dept_opts,object.getDepartment is not null ? object.getDepartment.getID,3,4, readonly)}}                    
                     {{ f.group_date('Date Borrowed', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 4) }}                     
                     {{ f.group_text('Status', 'status', object.getStatus, 3, 4,true) }}
                     {{ f.group_textarea('Description', 'description',object.getDescription,3,3,4)}}
