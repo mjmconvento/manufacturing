@@ -51,22 +51,6 @@ class InventoryManager
         return $this->em->getRepository('CatalystInventoryBundle:Brand')->find($id);
     }
 
-    public function findPColor($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PColor')->find($id);
-    }
-
-    public function findPCondition($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PCondition')->find($id);
-    }
-
-    public function findPMaterial($id)
-    {
-        return $this->em->getRepository('CatalystInventoryBundle:PMaterial')->find($id);
-    }
-
-
     public function findProduct($id)
     {
         return $this->em->getRepository('CatalystInventoryBundle:Product')->find($id);
@@ -204,6 +188,8 @@ class InventoryManager
         return $new;
     }
     
+    // TODO: remove this
+    // inventory service should not be reliant on main warehouse config
     public function itemsIn($product, $quantity,$supplier)
     {
         $conf = new ConfigurationManager($this->container);
@@ -213,6 +199,7 @@ class InventoryManager
         return $this->itemTransfer($product, $quantity, $from, $to);
     }
     
+    // TODO: remove this too. this can be done better
     public function itemTransfer($product,$quantity,$from,$to)
     {
         $entryDebit = $this->newEntry();
