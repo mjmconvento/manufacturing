@@ -16,9 +16,9 @@ class ProductController extends CrudController
     public function __construct()
     {
         $this->route_prefix = 'cat_inv_prod';
-        $this->title = 'Product / Service';
+        $this->title = 'Product';
 
-        $this->list_title = 'Products / Services';
+        $this->list_title = 'Products';
         $this->list_type = 'dynamic';
     }
 
@@ -84,11 +84,15 @@ class ProductController extends CrudController
     protected function padFormParams(&$params, $prod = null)
     {
 
+        $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         $params['pg_opts'] = $inv->getProductGroupOptions();
         $brand_opts = array(0 => '[ Select Brand ]');
 
         $params['brand_opts'] = $brand_opts + $this->getFieldOptions('Brand');
+
+        //TODO: Cleanup later - Terese
+        $params['type_opts'] = array(Product::TYPE_RAW_MATERIAL => 'Raw Material',  Product::TYPE_FINISHED_GOOD=>'Finished Good', Product::TYPE_INVENTORY =>'Inventory');
 
         // images
         if ($prod->getID())
@@ -114,9 +118,12 @@ class ProductController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
+
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         
+
+        $o->setTypeID($data['type_id']);
         $o->setName($data['name']);
 
         // unit of measure

@@ -19,6 +19,7 @@
                 <form method="post" class="form-horizontal">
                     <div class="form-body">
                         <h4 class="form-section">Information</h4>
+                        {{ form.group_select('Type','type_id',type_opts, object.getTypeID,3,4)}}
                         {{ form.group_text('SKU', 'sku', object.getSKU, 3, 4, readonly) }}
                         {{ form.group_text('Name', 'name', object.getName, 3, 4, readonly) }}
                         {{ form.group_select('Product Group', 'prodgroup_id', pg_opts, object.getProductGroup.getID|default(''), 3, 4, readonly) }}
