@@ -1,4 +1,8 @@
 menu_items:
+    - id: cat_inv_brand_index
+      acl: cat_inv_brand.menu
+      label: Brand
+      parent: feac_settings
     - id: menu_inventory
       acl: cat_inv.menu
       label: Inventory

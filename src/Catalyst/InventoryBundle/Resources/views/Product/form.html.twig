@@ -29,13 +29,13 @@
                             <div class="col-md-4">
                                 <div class="checkbox-list">
                                     <div>
-                                    {{ form.checkbox('flag_service', 1, 'Is service?', object.isService, 'chars', readonly) }}
-                                    </div>
-                                    <div>
                                     {{ form.checkbox('flag_sale', 1, 'Can sell?', object.canSell, 'chars', readonly) }}
                                     </div>
                                     <div>
                                     {{ form.checkbox('flag_purchase', 1, 'Can purchase?', object.canPurchase, 'chars', readonly) }}
+                                    </div>
+                                    <div>
+                                    {{ form.checkbox('flag_perishable', 1, 'Perishable?', object.isPerishable, 'chars', readonly) }}
                                     </div>
                                 </div>
                             </div>

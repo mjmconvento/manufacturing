@@ -238,7 +238,6 @@ abstract class CrudController extends BaseController
 
     protected function add()
     {
-        $em = $this->getDoctrine()->getManager();
         $data = $this->getRequest()->request->all();
 
         $obj = $this->newBaseClass();
@@ -246,13 +245,20 @@ abstract class CrudController extends BaseController
         // validate
         $this->validate($data, 'add');
 
-        // update db
+        // run update method of controller
         $this->update($obj, $data, true);
 
+        return $obj;
+    }
+
+    protected function persist($obj)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        // update db
         $em->persist($obj);
         $em->flush();
-        $this->hookPostSave($obj,true);
-        error_log('added');
+        $this->hookPostSave($obj, true);
 
         // log
         // $odata = $obj->toData();
@@ -266,6 +272,7 @@ abstract class CrudController extends BaseController
         try
         {
             $obj = $this->add();
+            $this->persist($obj);
             $odata = $obj->toData();
 
             $res_data = new \stdClass();
@@ -291,9 +298,10 @@ abstract class CrudController extends BaseController
         $this->checkAccess($this->route_prefix . '.add');
 
         $this->hookPreAction();
+        $obj = $this->add();
         try
         {
-            $obj = $this->add();
+            $this->persist($obj);
 
             $this->addFlash('success', $this->title . ' added successfully.');
 

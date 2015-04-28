@@ -8,7 +8,6 @@ use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
 use Catalyst\InventoryBundle\Entity\Account;
-use Catalyst\InventoryBundle\Entity\PriceHistory;
 use Catalyst\ConfigurationBundle\Model\ConfigurationManager;
 use Doctrine\ORM\EntityManager;
 
@@ -231,7 +230,8 @@ class InventoryManager
         return $new;
     }
     
-    public function itemsIn($product, $quantity,$supplier){
+    public function itemsIn($product, $quantity,$supplier)
+    {
         $conf = new ConfigurationManager($this->container);
         $from = $this->findWarehouse($conf->get('catalyst_warehouse_main'))->getInventoryAccount();
         $to = $supplier->getInventoryAccount();
@@ -239,7 +239,8 @@ class InventoryManager
         return $this->itemTransfer($product, $quantity, $from, $to);
     }
     
-    public function itemTransfer($product,$quantity,$from,$to){
+    public function itemTransfer($product,$quantity,$from,$to)
+    {
         $entryDebit = $this->newEntry();
         $entryCredit = $this->newEntry();
         
@@ -256,7 +257,8 @@ class InventoryManager
         return [$entryCredit, $entryDebit];
     }
     
-    public function getWarehouseStock($warehouse){
+    public function getWarehouseStock($warehouse)
+    {
         $stock = $this->em->getRepository('CatalystInventoryBundle:Stock')
                 ->findByAccount($warehouse->getInventoryAccount());
         
@@ -271,7 +273,8 @@ class InventoryManager
      * @return int
      * Returns the total quantity of a product and its variants
      */
-    public function getStock( $warehouse, $product){
+    public function getStock( $warehouse, $product)
+    {
         $stock = $this->em->getRepository('CatalystInventoryBundle:Stock')
                 ->findOneBy(array('product' => $product,
                             'inv_account' => $warehouse->getInventoryAccount()));
@@ -290,18 +293,4 @@ class InventoryManager
             return $qty;
         }
     }
-    
-    public function newPrices(Product $product, $price_sale, $price_purchase){
-        $history = new PriceHistory();
-        
-        $history->setProduct($product)
-                ->setPriceSale($price_sale)
-                ->setPricePurchase($price_purchase)
-                ->setUserCreate($this->user);
-                
-        $this->em->persist($history);
-        $this->em->flush();
-    }
-    
-    
 }

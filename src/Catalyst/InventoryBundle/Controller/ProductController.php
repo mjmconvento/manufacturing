@@ -125,11 +125,13 @@ class ProductController extends CrudController
         else
             $o->setUnitOfMeasure('');
 
+        /*
         // service
         if (isset($data['flag_service']) && $data['flag_service'] == 1)
             $o->setFlagService();
         else
             $o->setFlagService(false);
+        */
 
         // can sell
         if (isset($data['flag_sale']) && $data['flag_sale'] == 1)
@@ -143,6 +145,13 @@ class ProductController extends CrudController
         else
             $o->setFlagPurchase(false);
 
+        // perishable
+        if (isset($data['flag_perishable']) && $data['flag_perishable'] == 1)
+            $o->setFlagPerishable();
+        else
+            $o->setFlagPerishable(false);
+
+
         /*
         // boolean for sell and cost price acl
         $view_sell_price = $this->getUser()->hasAccess($this->route_prefix . '.view_sell_price');
@@ -150,15 +159,9 @@ class ProductController extends CrudController
         $view_cost_price = $this->getUser()->hasAccess($this->route_prefix . '.view_cost_price');
         */
         
-        //Monitor Price Change
-        if($is_new || $o->getPriceSale() != $data['price_sale'] || $o->getPriceSale() != $data['price_purchase']){
-            $inv->newPrices($o, $data['price_sale'],$data['price_purchase']);
-        }
-
         // prices
         $o->setPriceSale($data['price_sale']);
         $o->setPricePurchase($data['price_purchase']);
-        $o->setFlagPerishable($data['flag_perishable']);
 
 
         

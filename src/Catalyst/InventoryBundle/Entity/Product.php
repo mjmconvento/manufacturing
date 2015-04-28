@@ -108,6 +108,8 @@ class Product
         $this->attributes = new ArrayCollection();
         $this->attribute_hash = array();
 
+        $this->type_id = self::TYPE_INVENTORY;
+
         $this->initHasGeneratedID();
         $this->initHasName();
         $this->initTrackCreate();
