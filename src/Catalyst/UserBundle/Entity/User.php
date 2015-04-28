@@ -109,7 +109,11 @@ class User extends BaseUser
     {
         // DEBUG: allow all for admin user
         if ($this->getUsername() == 'admin')
+        {
+            error_log('admin');
             return true;
+        }
+        error_log('not admin');
 
         // check acl cache
         if (isset($this->acl_cache[$acl_key]))
