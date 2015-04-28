@@ -39,6 +39,21 @@ class FixedAssetController extends CrudController
         return $this->render($twig_file, $params);
     }
 
+    protected function setupGridLoader()
+    {
+        $grid = $this->get('catalyst_grid');
+
+        $loader = parent::setupGridLoader();
+
+        $fg = $grid->newFilterGroup();
+        $fg->where('o.type_id = :type_id')
+            ->setParameter('type_id', Product::TYPE_FIXED_ASSET);
+
+        $loader->setQBFilterGroup($fg);
+
+        return $loader;
+    }
+
 
     // TODO : Find delete error
     public function addSubmitAction()
