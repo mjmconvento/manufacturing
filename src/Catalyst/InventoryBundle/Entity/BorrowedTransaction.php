@@ -41,6 +41,12 @@ class BorrowedTransaction
      */
     protected $entries;
 
+    /** @ORM\Column(type="string", length=100, nullable=true) */
+    protected $description;
+
+    /** @ORM\Column(type="string", length=100, nullable=true) */
+    protected $remarks;    
+
 	public function __construct()
 	{
 		$this->initHasGeneratedID();
@@ -52,6 +58,18 @@ class BorrowedTransaction
     public function setDateReturned(DateTime $date)
     {
         $this->date_returned = $date;
+        return $this;
+    }
+
+    public function setDescription($desc)
+    {
+        $this->description = $desc;
+        return $this;
+    }
+
+    public function setRemark($rmk)
+    {
+        $this->remarks = $rmk;
         return $this;
     }
 
@@ -90,6 +108,16 @@ class BorrowedTransaction
     public function getEntries()
     {
         return $this->entries;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getRemark()
+    {
+        return $this->remarks;
     }
 
     public function getTotalItem()
@@ -140,6 +168,8 @@ class BorrowedTransaction
 		$this->dataHasCode($data);
 		$data->status = $this->status;
 		$data->department = $this->department;
+        $data->description = $this->description;
+        $data->remarks = $this->remarks;
 		$data->date_issue = $this->date_issue;
 		$data->date_returned = $this->date_returned->format('Y-m-d H:i:s');
 

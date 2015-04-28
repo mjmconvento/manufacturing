@@ -6,6 +6,7 @@ use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\BorrowedTransaction;
 use Catalyst\InventoryBundle\Entity\BIEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\InventoryBundle\Entity\Product;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,27 +79,6 @@ class BorrowedTransactionController extends CrudController
         return $this->render($twig_file, $params);
     }
 
-    public function getDeptAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $user = $em->getRepository('CatalystUserBundle:User')->findAll();
-
-        $data = array();
-        foreach($user as $u)
-        {
-            if($u->getID() == $id)
-            {
-                $data = [
-                'dept' => $u->getDepartment(),
-
-                ];
-            }
-        }
-
-        return new JsonResponse($data);   
-    }
-
     public function getProductAction($prod_id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -123,12 +103,15 @@ class BorrowedTransactionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $um = $this->get('catalyst_user');
-        $inv = $this->get('catalyst_inventory');
+        $um = $this->get('catalyst_user');        
         $params['dept_opts'] = $um->getDeptOptions(); 
-        $params['prod_opts'] = $inv->getProductOptions();
+        $params['prod_opts'] = $em->getRepository('CatalystInventoryBundle:Product')
+                                ->findBy(array('type_id' => Product::TYPE_FIXED_ASSET));
 
-        $params['status_opts'] = array('Incomplete'=>  BorrowedTransaction::STATUS_INCOMPLETE, 'Complete'=>  BorrowedTransaction::STATUS_COMPLETE);        
+        $params['status_opts'] = array(
+            'Incomplete'=> BorrowedTransaction::STATUS_INCOMPLETE, 
+            'Complete'=> BorrowedTransaction::STATUS_COMPLETE
+        );        
         
         return $params;
     }
@@ -151,6 +134,9 @@ class BorrowedTransactionController extends CrudController
         $o->setDateReturned(new DateTime($data['date_return']));
         $this->updateTrackCreate($o, $data, $is_new);
         $o->setStatus($data['status']);
+
+        $o->setDescription($data['description']);
+        $o->setRemark($data['remark']);
 
         // clear entries
         $ents = $o->getEntries();

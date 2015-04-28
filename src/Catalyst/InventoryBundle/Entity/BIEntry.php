@@ -24,12 +24,6 @@ class BIEntry
      */
     protected $borrowed;
 
-    /** @ORM\Column(type="string", length=80, nullable=true) */
-    protected $description;
-
-    /** @ORM\Column(type="string", length=80, nullable=true) */
-    protected $remarks;
-
     /** @ORM\Column(type="date") */
     protected $date_returned;
 
@@ -45,32 +39,10 @@ class BIEntry
         $this->borrowed_id = $borrowed->getID();
     	return $this;
     }
-
-    public function setRemarks($remarks)
-    {
-    	$this->remarks = $remarks;
-    	return $this;
-    }
-
-    public function setDescription($desc)
-    {
-    	$this->description = $desc;
-    	return $this;
-    }
-
+    
     public function getBorrowed()
     {
     	return $this->borrowed;
-    }
-
-    public function getRemarks()
-    {
-    	return $this->remarks;
-    }
-
-    public function getDescription()
-    {
-    	return $this->description;
     }
 
     public function toData()
