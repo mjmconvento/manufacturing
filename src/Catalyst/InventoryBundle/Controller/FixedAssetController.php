@@ -7,15 +7,19 @@ use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\InventoryBundle\Entity\ServiceTask;
 use Catalyst\ValidationException;
 use Catalyst\InventoryBundle\Model\Gallery;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 
 class FixedAssetController extends CrudController
 {
+    use TrackCreate;
+    use TrackUpdate;
 
     public function __construct()
     {
-        $this->route_prefix = 'feac_inv_fixed_asset';
+        $this->route_prefix = 'cat_inv_fixed_asset';
         $this->title = 'Fixed Assets';
 
         $this->list_title = 'Fixed Assets';
@@ -159,6 +163,7 @@ class FixedAssetController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
+
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
         
@@ -193,7 +198,11 @@ class FixedAssetController extends CrudController
             $o->setSKU($data['sku']);
         }
 
-        $o->setTypeID(6);
+
+        $this->updateTrackCreate($o,$data,$is_new);
+        $this->updateTrackUpdate($o,$data);
+
+        $o->setTypeID(Product::TYPE_FIXED_ASSET);
 
 
     }
