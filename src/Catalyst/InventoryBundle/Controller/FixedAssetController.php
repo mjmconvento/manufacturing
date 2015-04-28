@@ -9,8 +9,11 @@ use Catalyst\ValidationException;
 use Catalyst\InventoryBundle\Model\Gallery;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
+<<<<<<< HEAD
 use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Controller\HasName;
+=======
+>>>>>>> 101b432f877034da82328dd1fa3eecc88d94e621
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 
@@ -18,8 +21,11 @@ class FixedAssetController extends CrudController
 {
     use TrackCreate;
     use TrackUpdate;
+<<<<<<< HEAD
     use HasGeneratedID;
     use HasName;
+=======
+>>>>>>> 101b432f877034da82328dd1fa3eecc88d94e621
 
     public function __construct()
     {
