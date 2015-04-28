@@ -32,6 +32,41 @@ class ProductController extends CrudController
         $this->list_type = 'dynamic';
     }
 
+
+    public function indexAction($filter = null)
+    {
+        $this->checkAccess($this->route_prefix . '.view');
+
+        $this->hookPreAction();
+        $gl = $this->setupGridLoader2($filter = null);
+        $params = $this->getViewParams('List');
+
+        // figure out if dynamic or static
+        if ($this->list_type != 'dynamic')
+        {
+            $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
+            $this->listStatic($params);
+        }
+        else
+        {
+            $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
+        }
+
+        $params['list_title'] = $this->list_title;
+        $params['grid_cols'] = $gl->getColumns();
+
+        $params['filter_type_opts'] = array(
+            Product::TYPE_RAW_MATERIAL => 'Raw Material',
+            Product::TYPE_FINISHED_GOOD => 'Finished Good',
+            Product::TYPE_INVENTORY =>'Inventory'                
+
+        );
+
+
+        return $this->render($twig_file, $params);
+    }
+
+
     protected function newBaseClass()
     {
         return new Product();
@@ -62,8 +97,7 @@ class ProductController extends CrudController
             $grid->newColumn('Group', 'getName', 'name', 'pg'),
         );
     }
-
-    protected function setupGridLoader()
+    protected function setupGridLoader2($filter = null)
     {
         $grid = $this->get('catalyst_grid');
 
@@ -71,12 +105,23 @@ class ProductController extends CrudController
 
         // display only raw materials, finished goods and inventories
         $fg = $grid->newFilterGroup();
-        $fg->where('o.type_id in (:type_ids)')
+        if ($filter == null)
+        {
+            $fg->where('o.type_id in (:type_ids)')
             ->setParameter('type_ids', array(
                 Product::TYPE_RAW_MATERIAL,
                 Product::TYPE_FINISHED_GOOD,
                 Product::TYPE_INVENTORY
             ));
+
+        }
+        else
+        {            
+            $fg->where('o.type_id = filter_id')
+            ->setParameter('filter_id', $filter);
+
+        }
+
 
         $loader->setQBFilterGroup($fg);
 
@@ -118,6 +163,7 @@ class ProductController extends CrudController
             Product::TYPE_INVENTORY =>'Inventory'
         );
 
+
         return $params;
     }
 
@@ -138,6 +184,7 @@ class ProductController extends CrudController
         $inv = $this->get('catalyst_inventory');
         
         $o->setName($data['name']);
+        $o->setTypeID($data['type_id']);
 
         // unit of measure
         if (!empty($data['uom']))

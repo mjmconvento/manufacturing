@@ -1,5 +1,4 @@
 {% extends "CatalystTemplateBundle:Object:list.dynamic.html.twig" %}
-{% import "CatalystTemplateBundle::form.html.twig" as form %}
 
 {% block content %}
 <div class="row">
@@ -17,10 +16,9 @@
                     <a href={{ path("cat_inv_prod_export") }} class="btn green">Export To CSV</a>
                 {% endif %}
                 </div>
-
-
+                
                 <br/>
-                {{ form.group_select('Type:', 'filter_type_opt', filter_type_opts, '', 3, 4)}}
+                {{ form.group_select('Type:','type_id',filter_type_opts, '',3,4)}}
                 <br/><br/><br/>
 
                 <table class="table table-striped table-bordered table-hover" id="list_table">
@@ -44,7 +42,6 @@
 </div>
 {% endblock %}
 
-
 {% block js_datatables %}
 <script>
 $(document).ready(function() {
@@ -65,15 +62,6 @@ $(document).ready(function() {
             { "bSortable": false, "aTargets": [{{ grid_cols|length - 1}}] },
         ]
     });
-
-    $('#cform-filter_type_opt').change(function() {
-        // filter = $('#cform-filter_type_opt option:selected').val();
-
-
-        // {{ path('cat_inv_prod_index_filter', {'filter': filter}) }}
-    });
-
-    
 });
 </script>
 {% endblock %}

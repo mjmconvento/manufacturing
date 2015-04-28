@@ -3,6 +3,12 @@ cat_inv_prod_index:
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:Product:index }
 
+cat_inv_prod_index_filter:
+    pattern: /list/{filter}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:Product:index }
+
+
 cat_inv_prod_add_form:
     pattern: /add
     methods: [GET]
