@@ -131,7 +131,7 @@ abstract class CrudController extends BaseController
         return $params;
     }
 
-    protected function padListParams(&$params, $object = null)
+    protected function padListParams(&$params)
     {
         // override this to add list parameters
         return $params;
@@ -186,6 +186,8 @@ abstract class CrudController extends BaseController
 
         $params['list_title'] = $this->list_title;
         $params['grid_cols'] = $gl->getColumns();
+
+        $this->padListParams($params);
 
         return $this->render($twig_file, $params);
     }

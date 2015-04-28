@@ -33,40 +33,6 @@ class ProductController extends CrudController
     }
 
 
-    public function indexAction($filter = null)
-    {
-        $this->checkAccess($this->route_prefix . '.view');
-
-        $this->hookPreAction();
-        $gl = $this->setupGridLoader2($filter = null);
-        $params = $this->getViewParams('List');
-
-        // figure out if dynamic or static
-        if ($this->list_type != 'dynamic')
-        {
-            $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
-            $this->listStatic($params);
-        }
-        else
-        {
-            $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
-        }
-
-        $params['list_title'] = $this->list_title;
-        $params['grid_cols'] = $gl->getColumns();
-
-        $params['filter_type_opts'] = array(
-            Product::TYPE_RAW_MATERIAL => 'Raw Material',
-            Product::TYPE_FINISHED_GOOD => 'Finished Good',
-            Product::TYPE_INVENTORY =>'Inventory'                
-
-        );
-
-
-        return $this->render($twig_file, $params);
-    }
-
-
     protected function newBaseClass()
     {
         return new Product();
@@ -97,28 +63,70 @@ class ProductController extends CrudController
             $grid->newColumn('Group', 'getName', 'name', 'pg'),
         );
     }
-    protected function setupGridLoader2($filter = null)
+
+    protected function padListParams(&$params)
+    {
+        $filter = $this->getRequest()->get('type');
+        if ($filter == null)
+            $params['filter_type'] = '';
+        else
+            $params['filter_type'] = $filter;
+
+        $params['type_opts'] = array(
+            0 => 'All Types',
+            Product::TYPE_RAW_MATERIAL => 'Raw Material',
+            Product::TYPE_FINISHED_GOOD => 'Finished Good',
+            Product::TYPE_INVENTORY => 'Inventory'
+        );
+
+    }
+
+    public function indexAction()
+    {
+        $this->checkAccess($this->route_prefix . '.view');
+
+        $this->hookPreAction();
+
+        $gl = $this->setupGridLoader();
+
+        $params = $this->getViewParams('List');
+
+        $twig_file = 'CatalystInventoryBundle:Product:index.html.twig';
+
+        $params['list_title'] = $this->list_title;
+        $params['grid_cols'] = $gl->getColumns();
+
+        $this->padListParams($params);
+
+        return $this->render($twig_file, $params);
+    }
+
+    protected function setupGridLoader()
     {
         $grid = $this->get('catalyst_grid');
+
+        // get filter parameter
+        $filter = $this->getRequest()->get('type');
 
         $loader = parent::setupGridLoader();
 
         // display only raw materials, finished goods and inventories
         $fg = $grid->newFilterGroup();
-        if ($filter == null)
+        if ($filter == null || $filter == 0)
         {
+            // error_log('filter - null');
             $fg->where('o.type_id in (:type_ids)')
-            ->setParameter('type_ids', array(
-                Product::TYPE_RAW_MATERIAL,
-                Product::TYPE_FINISHED_GOOD,
-                Product::TYPE_INVENTORY
-            ));
-
+                ->setParameter('type_ids', array(
+                    Product::TYPE_RAW_MATERIAL,
+                    Product::TYPE_FINISHED_GOOD,
+                    Product::TYPE_INVENTORY
+                ));
         }
         else
         {            
-            $fg->where('o.type_id = filter_id')
-            ->setParameter('filter_id', $filter);
+            // error_log('filter - ' . $filter);
+            $fg->where('o.type_id = :filter_id')
+                ->setParameter('filter_id', $filter);
 
         }
 
