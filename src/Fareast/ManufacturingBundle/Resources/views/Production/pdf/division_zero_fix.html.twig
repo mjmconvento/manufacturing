@@ -1,0 +1,11 @@
+
+
+            {% set checker = false %}
+            {% if variable1 == 0 or variable2 == 0 %}
+                {% set checker = true %}
+                {% set total = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}   
+                {% set total = fine_alcohol_today / total_mh %}
+            {% endif %}

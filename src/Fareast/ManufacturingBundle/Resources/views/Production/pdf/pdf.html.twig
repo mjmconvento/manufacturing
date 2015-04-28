@@ -75,12 +75,31 @@
             {% set percent_alcohol = 0 %}
 
             {% for s in shift_reports %}
-                {% set percent_alcohol = s.getHeadsAlcohol / s.getFineAlcohol %}
+                {% set checker = false %}
+                {% if s.getHeadsAlcohol == 0 or s.getFineAlcohol == 0 %}
+                    {% set checker = true %}
+                    {% set percent_alcohol = 0 %}
+                {% endif %} 
+
+                {% if checker == false %}   
+                    {% set percent_alcohol = s.getHeadsAlcohol / s.getFineAlcohol %}
+                {% endif %}
+
                 <td style="width:100px; text-align:center">{{ percent_alcohol|number_format(2) }}</td>
             {% endfor %}
             
             {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
-            {% set percent_alcohol_today = head_alcohol_today / fine_alcohol_today %}
+
+            {% set checker = false %}
+            {% if head_alcohol_today == 0 or fine_alcohol_today == 0 %}
+                {% set checker = true %}
+                {% set percent_alcohol_today = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}   
+                {% set percent_alcohol_today = head_alcohol_today / fine_alcohol_today %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ percent_alcohol_today|number_format(2) }}</td>
             <td style="width:100px; text-align:center">{{ percent_alcohol_today|number_format(2) }}</td>
         </tr>
@@ -118,10 +137,10 @@
 
         <tr>
             <td style="width:200px;">Beginning Balance (liters)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getAlcoholBeginning|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAlcoholBeginning|default(0)|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
             <td style="width:200px; text-align:center" colspan="2">Beginning Balance (liters)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getAldehydeBeginning|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAldehydeBeginning|default(0)|number_format }}</td>
         </tr>
 
         <tr>
@@ -134,19 +153,19 @@
 
         <tr>
             <td style="width:100px;">Out (Sales)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getAlcoholOut|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAlcoholOut|default(0)|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
             <td style="width:100px; text-align:center" colspan="2">Out (Sales)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getAldehydeOut|number_format }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getAldehydeOut|default(0)|number_format }}</td>
         </tr>
 
         <tr>
-            {% set alcohol_stock = (consumption.getAlcoholBeginning + fine_alcohol_today) - consumption.getAlcoholOut %}
+            {% set alcohol_stock = (consumption.getAlcoholBeginning|default(0) + fine_alcohol_today) - consumption.getAlcoholOut|default(0) %}
             <td style="width:100px;">Theoretical Alcohol Stock</td>
             <td style="width:100px; text-align:center">{{ alcohol_stock|number_format }}</td>
             <td style="width:100px; text-align:center"></td>
 
-            {% set aldehyde_stock = (consumption.getAldehydeBeginning + head_alcohol_today) - consumption.getAldehydeOut %}
+            {% set aldehyde_stock = (consumption.getAldehydeBeginning|default(0) + head_alcohol_today) - consumption.getAldehydeOut|default(0) %}
             <td style="width:100px; text-align:center" colspan="2">Theoretical Alcohol Stock</td>
             <td style="width:100px; text-align:center">{{ aldehyde_stock|number_format }}</td>
         </tr>
@@ -407,7 +426,17 @@
             {% endfor %}
             
             {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
-            {% set loa_husk_today = fine_alcohol_today / husk_today %}
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or husk_today == 0 %}
+                {% set checker = true %}
+                {% set loa_husk_today = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set loa_husk_today = fine_alcohol_today / husk_today %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ loa_husk_today|number_format(2) }}</td>
             <td style="width:100px; text-align:center">{{ loa_husk_today|number_format(2) }}</td>
         </tr>
@@ -420,7 +449,18 @@
             {% endfor %}
             
             {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
-            {% set husk_loa_today =  husk_today / fine_alcohol_today %}
+
+            {% set checker = false %}
+            {% if husk_today == 0 or fine_alcohol_today == 0 %}
+                {% set checker = true %}
+                {% set husk_loa_today = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set husk_loa_today =  husk_today / fine_alcohol_today %}
+            {% endif %}
+
+
             <td style="width:100px; text-align:center">{{ husk_loa_today|number_format(2) }}</td>
             <td style="width:100px; text-align:center">{{ husk_loa_today|number_format(2) }}</td>
         </tr>
@@ -434,7 +474,17 @@
             {% endfor %}
             
             {% embed "FareastManufacturingBundle:Production:pdf/filler.html.twig" %}{% endembed %}
-            {% set steam_loa_today =  produced_steam_today / fine_alcohol_today %}
+            
+            {% set checker = false %}
+            {% if produced_steam_today == 0 or fine_alcohol_today == 0 %}
+                {% set checker = true %}
+                {% set steam_loa_today = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set steam_loa_today =  produced_steam_today / fine_alcohol_today %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ steam_loa_today|number_format(2) }}</td>
             <td style="width:100px; text-align:center">{{ steam_loa_today|number_format(2) }}</td>
         </tr>
@@ -463,7 +513,7 @@
 
         <tr>
             <td style="width:200px;">Fermentation Efficiency</td>
-            <td style="width:100px;"> {{ consumption.getFermentationEfficiency }} %</td>
+            <td style="width:100px;"> {{ consumption.getFermentationEfficiency|default(0) }} %</td>
             <th style="width:100px; text-align:center"></th>
             <th style="width:100px; text-align:center">No. of Personnel</th>
             <th style="width:100px; text-align:center">Total M/H</th>
@@ -472,78 +522,189 @@
 
         <tr>
             <td style="width:200px;">Distillation Efficiency</td>
-            <td style="width:100px;"> {{ consumption.getDistillationEfficiency }} %</td>
+            <td style="width:100px;"> {{ consumption.getDistillationEfficiency|default(0) }} %</td>
             <td style="width:100px; text-align:center">Direct Labor</td>
-            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborMH }}</td>
-            {% set direct_labor_mh = fine_alcohol_today / consumption.getDirectLaborMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getDirectLaborMH|default(0) }}</td>
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getDirectLaborMH == 0 %}
+                {% set checker = true %}
+                {% set direct_labor_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set direct_labor_mh = fine_alcohol_today / consumption.getDirectLaborMH %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ direct_labor_mh|number_format }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;">Overall Efficiency</td>
-            <td style="width:100px;"> {{ consumption.getOverallEfficiency }} %</td>
+            <td style="width:100px;"> {{ consumption.getOverallEfficiency|default(0) }} %</td>
             <td style="width:100px; text-align:center">Maintenance</td>
-            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceMH }}</td>
-            {% set maintenance_mh = fine_alcohol_today / consumption.getMaintenanceMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getMaintenanceMH|default(0) }}</td>
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getMaintenanceMH == 0 %}
+                {% set checker = true %}
+                {% set maintenance_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set maintenance_mh = fine_alcohol_today / consumption.getMaintenanceMH %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ maintenance_mh|number_format }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;">Ave. % alcohol in beer</td>
-            <td style="width:100px;"> {{ consumption.getAverageAlcohol }} </td>
+            <td style="width:100px;"> {{ consumption.getAverageAlcohol|default(0) }} </td>
             <td style="width:100px; text-align:center">Support Group</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupMH }}</td>
-            {% set support_group_mh = fine_alcohol_today / consumption.getSupportGroupMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSupportGroupMH|default(0) }}</td>
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getSupportGroupMH == 0 %}
+                {% set checker = true %}
+                {% set support_group_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set support_group_mh = fine_alcohol_today / consumption.getMaintenanceMH %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ support_group_mh|number_format }}</td>
         </tr>
 
         <tr>
-            {% set lfagm = fine_alcohol_today / consumption.getMolProductionGal %}
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getMolProductionGal == 0 %}
+                {% set checker = true %}
+                {% set lfagm = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set lfagm = fine_alcohol_today / consumption.getMolProductionGal %}
+            {% endif %}
+
+
             <td style="width:200px;">Liters fine alc./gal molasses</td>
             <td style="width:100px;">{{ lfagm|number_format(2) }}</td>
             <td style="width:100px; text-align:center">Plant Managers</td>
-            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersMH }}</td>
-            {% set plant_managers_mh = fine_alcohol_today / consumption.getPlantManagersMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getPlantManagersMH|default(0) }}</td>
+            
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getPlantManagersMH == 0 %}
+                {% set checker = true %}
+                {% set plant_managers_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set plant_managers_mh = fine_alcohol_today / consumption.getPlantManagersMH %}
+            {% endif %}
+        
             <td style="width:100px; text-align:center">{{ plant_managers_mh|number_format }}</td>
         </tr>
 
 
         <tr>
-            {% set ltagm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionGal %}
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or head_alcohol_today == 0 or consumption.getMolProductionGal == 0 %}
+                {% set checker = true %}
+                {% set ltagm = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set ltagm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionGal %}
+            {% endif %}
+
             <td style="width:200px;">Liters total alc./gal molasses</td>
             <td style="width:100px;"> {{ ltagm|number_format(2) }} </td>
             <td style="width:100px; text-align:center">Guard</td>
-            <td style="width:100px; text-align:center">{{ consumption.getGuardNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getGuardMH }}</td>
-            {% set guard_mh = fine_alcohol_today / consumption.getGuardMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getGuardNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getGuardMH|default(0) }}</td>
+   
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getGuardMH == 0 %}
+                {% set checker = true %}
+                {% set guard_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set guard_mh = fine_alcohol_today / consumption.getGuardMH %}
+            {% endif %}
+        
             <td style="width:100px; text-align:center">{{ guard_mh|number_format }}</td>
         </tr>
 
         <tr>
-            {% set lfatm = fine_alcohol_today / consumption.getMolProductionTon %}
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getMolProductionTon == 0 %}
+                {% set checker = true %}
+                {% set lfatm = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set lfatm = fine_alcohol_today / consumption.getMolProductionTon %}
+            {% endif %}
+        
+
             <td style="width:200px;">Liters fine alc. /ton molasses</td>
             <td style="width:100px;"> {{ lfatm|number_format(2) }} </td>
             <td style="width:100px; text-align:center">Extra</td>
-            <td style="width:100px; text-align:center">{{ consumption.getExtraNo }}</td>
-            <td style="width:100px; text-align:center">{{ consumption.getExtraMH }}</td>
-            {% set extra_mh = fine_alcohol_today / consumption.getExtraMH %}
+            <td style="width:100px; text-align:center">{{ consumption.getExtraNo|default(0) }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getExtraMH|default(0) }}</td>
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getExtraMH == 0 %}
+                {% set checker = true %}
+                {% set extra_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set extra_mh = fine_alcohol_today / consumption.getExtraMH %}
+            {% endif %}
+
             <td style="width:100px; text-align:center">{{ extra_mh|number_format }}</td>
         </tr>
 
         <tr>
-            {% set ltatm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionTon %}
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or consumption.getMolProductionTon == 0 %}
+                {% set checker = true %}
+                {% set ltatm = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}
+                {% set ltatm = (fine_alcohol_today + head_alcohol_today) / consumption.getMolProductionTon %}
+            {% endif %}
+
+
             <td style="width:200px;">Liters total alc. /ton molasses</td>
             <td style="width:100px;"> {{ ltatm|number_format(2) }} </td>
             
-            {% set total_no = consumption.getDirectLaborNo + consumption.getMaintenanceNo + consumption.getSupportGroupNo + consumption.getPlantManagersNo + consumption.getGuardNo + consumption.getExtraNo %}
+            {% set total_no = consumption.getDirectLaborNo|default(0) + consumption.getMaintenanceNo|default(0) + consumption.getSupportGroupNo|default(0) + consumption.getPlantManagersNo|default(0) + consumption.getGuardNo|default(0) + consumption.getExtraNo|default(0) %}
 
-            {% set total_mh = consumption.getDirectLaborMH + consumption.getMaintenanceMH + consumption.getSupportGroupMH + consumption.getPlantManagersMH + consumption.getGuardMH + consumption.getExtraMH %}
+            {% set total_mh = consumption.getDirectLaborMH|default(0) + consumption.getMaintenanceMH|default(0) + consumption.getSupportGroupMH|default(0) + consumption.getPlantManagersMH|default(0) + consumption.getGuardMH|default(0) + consumption.getExtraMH|default(0) %}
 
-            {% set total_mh_mh = fine_alcohol_today / total_mh %}
+
+            {% set checker = false %}
+            {% if fine_alcohol_today == 0 or total_mh == 0 %}
+                {% set checker = true %}
+                {% set total_mh_mh = 0 %}
+            {% endif %} 
+
+            {% if checker == false %}   
+                {% set total_mh_mh = fine_alcohol_today / total_mh %}
+            {% endif %}
 
 
             <td style="width:100px; text-align:center">Total</td>
@@ -560,73 +721,73 @@
 
         <tr>
             <td style="width:200px;" colspan="2">Molasses Beginning Balance</td>
-            <td style="width:100px;">{{ consumption.getMolBeginningBalance }} gallons</td>
+            <td style="width:100px;">{{ consumption.getMolBeginningBalance|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Caustic Soda Beginning Balance</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSodaBeginningBalance }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaBeginningBalance|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Molasses Purchases  </td>
-            <td style="width:100px;">{{ consumption.getMolPurchases }} gallons</td>
+            <td style="width:100px;">{{ consumption.getMolPurchases|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Add :Purchases</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSodaPurchase }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaPurchase|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Pumped to MDT</td>
-            <td style="width:100px;">{{ consumption.getMolPumpedMDT }} gallons</td>
+            <td style="width:100px;">{{ consumption.getMolPumpedMDT|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSodaConsumption }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaConsumption|default(0) }}</td>
         </tr>
 
 
         <tr>
-            {% set running_balance = (consumption.getMolBeginningBalance + consumption.getMolPurchases) - consumption.getMolPumpedMDT %}
+            {% set running_balance = (consumption.getMolBeginningBalance|default(0) + consumption.getMolPurchases|default(0)) - consumption.getMolPumpedMDT|default(0) %}
             <td style="width:200px;" colspan="2">Running Balance</td>
             <td style="width:100px;">{{ running_balance }} gallons</td>
             <td style="width:200px;" colspan="2">Running Balance (liters)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getSodaRunningBalance }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getSodaRunningBalance|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Less:  Pondo</td>
-            <td style="width:100px;">{{ consumption.getMolPondo }} gallons</td>
+            <td style="width:100px;">{{ consumption.getMolPondo|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2"></td>
             <td style="width:100px; text-align:center"></td>
         </tr>
 
         <tr>
-            {% set mol_working_balance = running_balance - consumption.getMolPondo %}
+            {% set mol_working_balance = running_balance - consumption.getMolPondo|default(0) %}
             <td style="width:200px;" colspan="2">Molasses Working Balance</td>
             <td style="width:100px;">{{ mol_working_balance }} gallons</td>
             <td style="width:200px;" colspan="2">Urea Beginning Balance</td>
-            <td style="width:100px; text-align:center">{{ consumption.getUreaBeginningBalance }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaBeginningBalance|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Molasses used in Production (Gal)</td>
-            <td style="width:100px;">{{ consumption.getMolProductionGal }} gallons</td>
+            <td style="width:100px;">{{ consumption.getMolProductionGal|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Add :Purchases</td>
-            <td style="width:100px; text-align:center">{{ consumption.getUreaPurchase }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaPurchase|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Molasses used in Production (Ton)</td>
-            <td style="width:100px;">{{ consumption.getMolProductionTon }} tons</td>
+            <td style="width:100px;">{{ consumption.getMolProductionTon|default(0) }} tons</td>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
-            <td style="width:100px; text-align:center">{{ consumption.getUreaConsumption }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaConsumption|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">TSAI</td>
-            <td style="width:100px;">{{ consumption.getMolTsai }}</td>
+            <td style="width:100px;">{{ consumption.getMolTsai|default(0) }}</td>
             <td style="width:200px;" colspan="2">Running Balance (bags)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getUreaRunningBalance }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getUreaRunningBalance|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">BRIX</td>
-            <td style="width:100px;">{{ consumption.getMolBrix }}</td>
+            <td style="width:100px;">{{ consumption.getMolBrix|default(0) }}</td>
             <td style="width:200px;" colspan="2"></td>
             <td style="width:100px; text-align:center"></td>
         </tr>
@@ -647,23 +808,23 @@
 
         <tr>
             <td style="width:200px;" colspan="2">Add :Purchases</td>
-            <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
+            <td style="width:100px;">{{ consumption.getSulBeginningBalance|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Electricity final reading(kw)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getElectricityFinal }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityFinal|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Less: Production Consumption</td>
-            <td style="width:100px;">{{ consumption.getSulBeginningBalance }} gallons</td>
+            <td style="width:100px;">{{ consumption.getSulBeginningBalance|default(0) }} gallons</td>
             <td style="width:200px;" colspan="2">Electricity beginning (kw)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getElectricityBeginning }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityBeginning|default(0) }}</td>
         </tr>
 
         <tr>
             <td style="width:200px;" colspan="2">Running Balance (gallons)</td>
             <td style="width:100px;">gallons</td>
             <td style="width:200px;" colspan="2">Electricity used (kw)</td>
-            <td style="width:100px; text-align:center">{{ consumption.getElectricityUsed }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getElectricityUsed|default(0) }}</td>
         </tr>
 
 
@@ -671,7 +832,7 @@
             <td style="width:200px;" colspan="2"></td>
             <td style="width:100px;"></td>
             <td style="width:200px;" colspan="2">kw used/liter of alcohol</td>
-            <td style="width:100px; text-align:center">{{ consumption.getKuLOA }}</td>
+            <td style="width:100px; text-align:center">{{ consumption.getKuLOA|default(0) }}</td>
         </tr>
 
         <tr>
@@ -717,5 +878,7 @@
         </tr>
 
     </table>
+
+
 
 </page>

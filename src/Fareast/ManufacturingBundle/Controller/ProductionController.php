@@ -319,7 +319,7 @@ class ProductionController extends CrudController
     public function printPDFAction($date)
     {
         $pdf = $this->get('catalyst_pdf');
-        $pdf->newPdf('page');
+        $pdf->newPdf('page_legal');
 
         $date_picked = new DateTime($date);
 

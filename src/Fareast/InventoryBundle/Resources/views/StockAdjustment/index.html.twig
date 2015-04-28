@@ -51,25 +51,12 @@
                         <table class="table table-striped table-bordered table-hover" id="list_table">
                             <thead>
                                 <tr>
-                                    <th>Item Code</th>
-                                    <th>Warehouse</th>
-                                    <th>Item Name</th>
-                                    <th>Quantity</th>
-                                    <th>Unit of Measurement</th>                      
-                                    <th>Actual Quantity</th>
+                                {% for col in grid_cols %}
+                                    <th>{{ col.getLabel }}</th>
+                                {% endfor %}
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for d in data %}
-                                    <tr>
-                                        <td><input class="form-control prod_id" type="hidden" name="prod_id[{{ d.prod_id }}][]">{{ d.code }}</td>
-                                        <td><input class="form-control wh_id" type="hidden" name="wh_id[{{ d.wh_id }}][]">{{ d.warehouse }}</td>
-                                        <td>{{ d.name }}</td>
-                                        <td><input class="form-control old_qty" type="hidden" name="old_qty[{{ d.wh_id }}][]">{{ d.quantity }}</td>
-                                        <td>{{ d.uom }}</td>
-                                        <td><input type="text" class="form-control new_qty" name="new_qty[{{ d.wh_id }}][]" value=""></td>
-                                    </tr>
-                                {% endfor %}                                
                             </tbody>
                         </table>
                     </div>
@@ -99,26 +86,33 @@ $(document).ready(function() {
     ComponentsPickers.init();
    var dept;
    var category;
-   $('#list_table').dataTable({
+   var dTable;
+   dTable = $('#list_table').dataTable({
+        "bProcessing": true,
+        "bServerSide": true,
         "iDisplayLength": 10,
         "sPaginationType": "bootstrap",
+        "sAjaxSource": "{{ path('feac_inv_adjust_grid')}}",
         "oLanguage": {
             "sLengthMenu": "_MENU_ records",
             "oPaginate": {
                 "sPrevious": "Prev",
                 "sNext": "Next"
             }
-        }
+        },
+        "aoColumnDefs": [
+            { "bSortable": false, "aTargets": [{{ grid_cols|length - 1}}] },
+        ]
     });
 
    $('#filter_button').click(function(){
         var dept = $('#dept').val();
         var cat = $('#prodgroup_opts').val();
-        var path = "{{ path('feac_inv_adjust_filter', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
+        var path = "{{ path('feac_inv_adjust_grid', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
         path = path.replace('DEPT', dept);
         path = path.replace('CATEGORY', cat);
         // console.log(path)
-        $('#list_table').fnReloadAjax(path);
+        dTable.fnReloadAjax(path);
    });
 
 
