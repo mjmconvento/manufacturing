@@ -148,11 +148,11 @@ class InventoryManager
 
     public function persistTransaction(Transaction $trans)
     {
-        // TODO: lock table
-
         // check balance
         if (!$trans->checkBalance())
             throw new InventoryException('Inventory transaction unbalanced. Incoming entries must be equivalent to outgoing entries.');
+
+        // TODO: lock table
 
         // TODO: check product stock / availability in source warehouse
 
