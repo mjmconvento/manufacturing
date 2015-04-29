@@ -21,10 +21,10 @@
 {% endmacro %}
 
 {% macro checkbox_set(name, fields, checked_arr, disabled = false, prefix = 'c') %}
-{% import _self as form %}
+{% import _self as self %}
 <div class="checkbox-list">
 {% for id,display in fields %}
-    {{ form.checkbox(name ~ '[]', id, display, checked_arr[id] is defined ? true : false, disabled, prefix) }}
+    {{ self.checkbox(name ~ '[]', id, display, checked_arr[id] is defined ? true : false,name, disabled, prefix) }}
 {% endfor %}
 </div>
 {% endmacro %}

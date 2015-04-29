@@ -46,6 +46,7 @@ class User extends BaseUser
         $this->roles = array();
         $this->groups = new ArrayCollection();
         $this->acl_cache = array();
+        $this->initHasDepartment();
     }
 
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasName;
+use Catalyst\InventoryBundle\Template\Entity\HasInventoryAccount;
 
 use stdClass;
 
@@ -18,14 +19,14 @@ class Department
 	use HasGeneratedID;
 	use TrackCreate;
 	use HasName;
-
-    // TODO: hasInventoryAccount trait
+    use HasInventoryAccount;    
 
     public function __construct()
     {
         $this->initHasGeneratedID();
         $this->initTrackCreate();
         $this->initHasName();
+        $this->initHasInventoryAccount();
     }
 
     public function toData()
@@ -35,6 +36,7 @@ class Department
         $this->dataHasGeneratedID($data);
         $this->dataTrackCreate($data);
         $this->dataHasName($data);
+        $this->dataHasInventoryAccount($data);
 
         return $data;
     }

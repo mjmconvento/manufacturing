@@ -24,6 +24,11 @@ trait HasDepartment
         return $this->dept;
     }
 
+    public function initHasDepartment()
+    {
+        $this->dept = '';
+    }
+
 
     public function dataHasDepartment($data)
     {

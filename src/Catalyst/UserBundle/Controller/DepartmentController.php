@@ -7,12 +7,14 @@ use Catalyst\UserBundle\Entity\Department;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Controller\HasName;
+use Catalyst\InventoryBundle\Template\Controller\HasInventoryAccount;
 
 class DepartmentController extends CrudController
 {
     use TrackCreate;
     use HasGeneratedID;
     use HasName;
+    use HasInventoryAccount;
 
 	public function __construct()
     {
@@ -47,6 +49,7 @@ class DepartmentController extends CrudController
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateHasGeneratedID($o, $data, $is_new);
         $this->updateHasName($o, $data, $is_new);
+        $this->updateHasInventoryAccount($o, $data, $is_new);
 
         // validate name
         if (strlen($data['name']) > 0)
