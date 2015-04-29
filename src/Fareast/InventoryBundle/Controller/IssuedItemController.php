@@ -6,6 +6,7 @@ use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\IssuedItem;
 use Catalyst\InventoryBundle\Entity\IIEntry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\InventoryBundle\Entity\Transaction;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,7 @@ class IssuedItemController extends CrudController
 
         $this->list_title = 'Issued Items';
         $this->list_type = 'dynamic';
+        $this->repo = 'CatalystInventoryBundle:IssuedItem';
     }
 
     protected function newBaseClass()
@@ -31,7 +33,6 @@ class IssuedItemController extends CrudController
 
     protected function getObjectLabel($obj)
     {
-        return $obj->getCode();
     }
 
     public function indexAction()
@@ -100,6 +101,9 @@ class IssuedItemController extends CrudController
             $em->remove($ent);
         $o->clearEntries();
 
+        $inv = $this->get('catalyst_inventory');
+
+        
         if(isset($data['prod_opts']))
         {
             foreach ($data['prod_opts'] as $index => $prod_id) {
@@ -109,14 +113,14 @@ class IssuedItemController extends CrudController
                 $rmk = $data['remarks'][$index];
                 $des = $data['desc'][$index];                
                 // instantiate
-                    $entry = new IssuedEntry();
-                    $entry->setProduct($prod)
-                        ->setQuantity($qty)
-                        ->setRemarks($rmk)
-                        ->setDescription($des);
+                $entry = new IIEntry();
+                $entry->setProduct($prod)
+                    ->setQuantity($qty)
+                    ->setRemarks($rmk)
+                    ->setDescription($des);
 
-                    // add entry
-                    $o->addEntry($entry);        
+                // add entry
+                $o->addEntry($entry);        
             }
         }        
     }

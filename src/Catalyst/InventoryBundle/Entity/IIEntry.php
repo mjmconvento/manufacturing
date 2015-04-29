@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\InventoryBundle\Template\Entity\HasProduct;
 use Catalyst\CoreBundle\Template\Entity\HasQuantity;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 
 
 /**
@@ -13,7 +15,7 @@ use Catalyst\CoreBundle\Template\Entity\HasQuantity;
  * @ORM\Table(name="inv_ii_entry")
  */
 class IIEntry
-{
+{    
 	use HasGeneratedID;
 	use HasProduct;
 	use HasQuantity;
