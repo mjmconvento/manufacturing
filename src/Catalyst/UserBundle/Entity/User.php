@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\GroupInterface;
 use Catalyst\InventoryBundle\Template\Entity\HasWarehouse;
-use Catalyst\CoreBundle\Template\Entity\HasDepartment;
 use Catalyst\MediaBundle\Template\Entity\HasUpload;
 use stdClass;
 
@@ -19,7 +18,6 @@ class User extends BaseUser
 {
     use HasWarehouse;
     use HasUpload;
-    use HasDepartment;
 
     /**
      * @ORM\Id
@@ -40,13 +38,18 @@ class User extends BaseUser
 
     protected $acl_cache;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Department")
+     * @ORM\JoinColumn(name="dept_id", referencedColumnName="id")
+     */
+    protected $dept;
+
     public function __construct()
     {
         parent::__construct();
         $this->roles = array();
         $this->groups = new ArrayCollection();
-        $this->acl_cache = array();
-        $this->initHasDepartment();
+        $this->acl_cache = array();        
     }
 
 
@@ -60,6 +63,12 @@ class User extends BaseUser
     public function addGroup(GroupInterface $role)
     {
         $this->groups->add($role);
+        return $this;
+    }
+
+    public function setDepartment(Department $dept)
+    {
+        $this->dept = $dept;
         return $this;
     }
 
@@ -83,6 +92,10 @@ class User extends BaseUser
         return $this->groups;
     }
 
+    public function getDepartment()
+    {
+        return $this->dept;
+    }
 
     public function getGroupsText()
     {
@@ -147,6 +160,7 @@ class User extends BaseUser
         $data->email = $this->email;
         $data->enabled = $this->enabled;
         $data->groups = $groups;
+        $data->dept_id = $this->dept->getID();
 
         return $data;
     }

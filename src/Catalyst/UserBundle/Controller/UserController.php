@@ -90,6 +90,10 @@ class UserController extends CrudController
         $o->setEmail($data['email']);
         $o->setName($data['name']);
 
+        //set Department
+        $dep = $em->getRepository('CatalystUserBundle:Department')->find($data['dept_id']);        
+            $o->setDepartment($dep);
+
         // status / enabled
         if ($data['enabled'] == 1)
             $o->setEnabled(1);
