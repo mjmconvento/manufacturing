@@ -39,10 +39,10 @@
                         {% for d in data %}
                             <tr>
                                 <td>{{ d.code }}</td>
-                                <td>{{ d.dept }}</td>
-                                <td>{{ d.count }}</td>
-                                <td>{{ d.date_issue|date('m/d/Y')}}</td>
-                                <td>{{ d.user_create}}</td>
+                                <td>{{ d.borrower }}</td>
+                                <td>{{ d.getTotalItem }}</td>
+                                <td>{{ d.getDateIssue|date('m/d/Y')}}</td>
+                                <td>{{ d.getUserCreate }}</td>
                                 <td>{{ d.status }}</td>
                                 <td><a href="{{ path('cat_inv_borrowed_edit_form', {'id' : d.id }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View </a></td>
                             </tr>
@@ -74,6 +74,18 @@ $(document).ready(function() {
         }
     });
 
+    function filter_redirect()
+    {
+        var date_from = $('#cform-date_from').val();
+        var date_to = $('#cform-date_to').val();
+
+        var url = '{{ path("cat_inv_borrowed_range", { date_from: ":date_from" , date_to: ":date_to" }) }}';
+            url = url.replace(":date_from", date_from).
+            replace(":date_to", date_to);
+
+            window.location.assign(url);
+    }
+
     $('#daterange').daterangepicker(
             {
                 ranges: {
@@ -91,7 +103,7 @@ $(document).ready(function() {
                 $('#daterange input').val(start.format('MM/DD/YYYY') + '   -   ' + end.format('MM/DD/YYYY'));
                 $('#cform-date_from').val(start.format('YYYYMMDD'));
                 $('#cform-date_to').val(end.format('YYYYMMDD'));
-    
+                filter_redirect();
             }
         );
 

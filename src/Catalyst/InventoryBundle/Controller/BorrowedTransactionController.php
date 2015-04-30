@@ -120,12 +120,26 @@ class BorrowedTransactionController extends CrudController
         return new JsonResponse($data);   
     }
 
-    protected function padFormParams(&$params, $po = null)
+    protected function padFormParams(&$params, $date_from = null, $date_to = null)
     {
         $em = $this->getDoctrine()->getManager();
 
         $um = $this->get('catalyst_user');  
-        $params['user_opts'] = $um->getUserOptions(); 
+        $params['user_opts'] = $um->getUserOptions();
+
+        if ($date_from != null and $date_to != null)
+        {    
+            $date_from = $date_from->format("Y-m-d");
+            $date_to = $date_to->format("Y-m-d");
+        }
+        else
+        {
+            $date_from = new DateTime();
+            $date_to = new DateTime(); 
+        }
+
+        $params['date_from'] = $date_from;
+        $params['date_to'] = $date_to;
         
         // get product options (fixed assets only)
         $products = $em->getRepository('CatalystInventoryBundle:Product')
@@ -141,6 +155,31 @@ class BorrowedTransactionController extends CrudController
         );        
         
         return $params;
+    }
+
+    public function filterAction($date_from, $date_to)
+    {
+        //filter for date range
+        $params = $this->getViewParams('List', $this->route_prefix);
+        $params['list_title'] = $this->list_title;     
+        $date_from = new DateTime($date_from);
+        $date_to = new DateTime($date_to);
+        $params['data'] = $this->getBorrowCreated($date_from,$date_to);
+        $this->padFormParams($params, $date_from, $date_to);
+
+        return $this->render('CatalystInventoryBundle:BorrowedTransaction:index.html.twig', $params);
+    }
+
+    public function getBorrowCreated($date_from, $date_to)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery('SELECT b FROM CatalystInventoryBundle:BorrowedTransaction b
+                    WHERE b.date_issue >= :date_from AND b.date_issue <= :date_to ');
+        $query ->setParameter('date_from', $date_from)
+               ->setParameter('date_to', $date_to);
+
+        return $query->getResult();
     }
 
     protected function update($o, $data, $is_new = false)
