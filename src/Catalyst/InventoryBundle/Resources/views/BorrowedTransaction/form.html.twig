@@ -82,7 +82,7 @@
 <script>
 function appendEntry()
 {
-    var field = '<tr>';        
+    var field = '<tr class="prod_row">';        
         field += '<td><select name="prod_opts[]" class="form-control select2 prod_opts">';
         field += $('.prod_opts').html();   
         field += '</select> </td>';                            
@@ -93,7 +93,28 @@ function appendEntry()
         field += '</tr>';
 
         $('#from_table').append(field);
+
+        var prod_select = $('tr.prod_row:last').find('.prod_opts');
+        product_refresh(prod_select);
 }
+
+function product_refresh(prod_select)
+{
+    var prod_id = prod_select.closest('tr').find('.prod_opts').val();
+
+    var url = "{{ path('cat_inv_borrowed_product', { prod_id: ':prod_id'}) }}";
+    url = url.replace(":prod_id", prod_id);
+
+    var row = prod_select.closest('tr');
+
+    $.getJSON(url, function(data){
+        // console.log(data)
+
+        row.find('.uom').val(data.uom);
+    });
+    // console.log(prod_id)
+}
+
     $(document).ready(function() {
         ComponentsPickers.init();        
 
@@ -107,7 +128,6 @@ function appendEntry()
                     console.log(data)
                     $('#cform-dept_id').val(data.dept);
                 });
-
         });
 
         var add_button = $(".add-field");
