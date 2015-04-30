@@ -62,7 +62,7 @@ class BorrowedTransactionController extends CrudController
             $data[] =[
                 'id' => $b->getID(),
                 'code' => $b->getCode(),
-                'dept' => $b->getDepartment()->getName(),
+                'dept' => $b->getBorrower()->getDepartment()->getName(),
                 'date_issue' => $b->getDateIssue(),
                 'user_create' => $b->getUserCreate()->getName(),
                 'status' => $b->getStatus(),
@@ -77,6 +77,27 @@ class BorrowedTransactionController extends CrudController
 
 
         return $this->render($twig_file, $params);
+    }
+
+    public function getDeptAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = $em->getRepository('CatalystUserBundle:User')->findAll();
+
+        //get the department of user
+        $data = array();
+        foreach($user as $u)
+        {
+            if($u->getID() == $id)
+            {
+                $data = [
+                'dept' => $u->getDepartment()->getName()
+                ];
+            }
+        }
+
+        return new JsonResponse($data);   
     }
 
     public function getProductAction($prod_id)
@@ -103,8 +124,8 @@ class BorrowedTransactionController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        $um = $this->get('catalyst_user');        
-        $params['dept_opts'] = $um->getDeptOptions(); 
+        $um = $this->get('catalyst_user');  
+        $params['user_opts'] = $um->getUserOptions(); 
         
         // get product options (fixed assets only)
         $products = $em->getRepository('CatalystInventoryBundle:Product')
@@ -135,12 +156,10 @@ class BorrowedTransactionController extends CrudController
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
 
-        $o->setDepartment($user->findDepartment($data['dept_id']));
+        //insert data to Borrowed Transaction Entity
+        $o->setBorrower($user->findUser($data['user_opts']));
         $o->setDateIssue(new DateTime($data['date_issue']));
-        if(isset($data['date_return']))
-        {
-            
-        }
+        
         $this->updateTrackCreate($o, $data, $is_new);
         $o->setStatus($data['status']);
 
@@ -153,27 +172,23 @@ class BorrowedTransactionController extends CrudController
             $em->remove($ent);
         $o->clearEntries();
 
+
+        //process each row (saved to BIEntry entity)
         if(isset($data['prod_opts']))
         {
             foreach ($data['prod_opts'] as $index => $prod_id) {
-                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
-
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);                
                 $qty = $data['qty'][$index];
-                $rmk = $data['remarks'][$index];
-                $des = $data['desc'][$index];
-                $returned = $data['date_return'][$index];
                 // instantiate
-                    $entry = new BorrowedEntry();
+                    $entry = new BIEntry();
                     $entry->setProduct($prod)
-                        ->setQuantity($qty)
-                        ->setRemarks($rmk)
-                        ->setDateReturned($returned)
-                        ->setDescription($des);
+                        ->setQuantity($qty)                        
+                        ->setDateReturned(new DateTime($data['date_return'][$index]));                        
 
                     // add entry
                     $o->addEntry($entry);        
             }
-        }        
+        }
     }
 
     protected function hookPostSave($obj, $is_new = false)

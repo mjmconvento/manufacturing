@@ -137,7 +137,7 @@ class IssuedItemController extends CrudController
             if($u->getID() == $id)
             {
                 $data = [
-                'dept' => $u->getWarehouse()->getName()
+                'dept' => $u->getDepartment()->getName()
 
                 ];
             }

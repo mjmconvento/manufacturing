@@ -5,6 +5,7 @@ use Catalyst\InventoryBundle\Entity\Account;
 
 use Catalyst\InventoryBundle\Entity\Warehouse;
 use Catalyst\PurchasingBundle\Entity\Supplier;
+use Catalyst\UserBundle\Entity\Department;
 
 trait HasInventoryAccount
 {
@@ -21,6 +22,11 @@ trait HasInventoryAccount
             }else 
             if($this->newBaseClass() instanceof Supplier){
                 $prefix = 'Supplier: ';
+                $allow = true;
+            }
+            if($this->newBaseClass() instanceof Department)
+            {
+                $prefix = 'Department: ';
                 $allow = true;
             }
                         

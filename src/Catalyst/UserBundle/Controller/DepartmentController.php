@@ -49,7 +49,7 @@ class DepartmentController extends CrudController
         $this->updateTrackCreate($o, $data, $is_new);
         $this->updateHasGeneratedID($o, $data, $is_new);
         $this->updateHasName($o, $data, $is_new);
-        $this->updateHasInventoryAccount($o, $data, $is_new);
+        $this->updateHasInventoryAccount($o,$data,$is_new);
 
         // validate name
         if (strlen($data['name']) > 0)

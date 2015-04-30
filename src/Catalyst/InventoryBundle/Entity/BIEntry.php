@@ -7,7 +7,7 @@ use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\InventoryBundle\Template\Entity\HasProduct;
 use Catalyst\CoreBundle\Template\Entity\HasQuantity;
 
-
+use DateTime;
 /**
  * @ORM\Entity
  * @ORM\Table(name="inv_bi_entry")
@@ -24,13 +24,19 @@ class BIEntry
      */
     protected $borrowed;
 
-    /** @ORM\Column(type="date") */
+    /** @ORM\Column(type="date", nullable=true) */
     protected $date_returned;
 
     public function __construct()
     {
         $this->initHasQuantity();        
     	$this->initHasGeneratedID();
+    }
+
+    public function setDateReturned(DateTime $date)
+    {
+        $this->date_returned = $date;
+        return $this;
     }
 
     public function setBorrowed(BorrowedTransaction $borrowed)
@@ -45,6 +51,16 @@ class BIEntry
     	return $this->borrowed;
     }
 
+    public function getDateReturned()
+    {
+        return $this->date_returned;
+    }
+
+    public function getDateReturnedFormatted()
+    {
+        return $this->date_returned->format('m/d/Y');
+    }
+
     public function toData()
     {
     	$data = new \stdClass();
@@ -52,9 +68,8 @@ class BIEntry
     	$this->dataHasGeneratedID($data);
     	$this->dataHasProduct($data);
     	$this->dataHasQuantity($data);
-    	$data->description = $this->description;
-		$data->remarks = $this->remarks;
         $data->borrowed_id = $this->getBorrowed()->getID();
+        $data->date_returned = $this->date_returned->format('Y-m-d H:i:s');
 
 		return $data;
     }

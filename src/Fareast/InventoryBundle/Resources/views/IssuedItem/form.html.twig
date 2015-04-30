@@ -15,7 +15,7 @@
                 <div class="form-body">
                     <h4 class="form-section"> Information </h4>                    
                     {{ f.group_select('Issued To','user_opts',user_opts,object.getIssuedTo is not null ? object.getIssuedTo.getID,3,4, readonly)}}
-                    {{ f.group_text('Department','dept',object.getIssuedTo.getWarehouse.getName|default(),3,4,true)}}
+                    {{ f.group_text('Department','dept',object.getIssuedTo.getDepartment.getName|default(),3,4,true)}}
                     {{ f.group_date('Date Issued', 'date_issue', object.getDateIssue|date('m/d/Y'), 3, 4) }}                                        
 
                     <h4 class="form-section"> Item Entries </h4>

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasCode;
-use Catalyst\UserBundle\Entity\Department;
+use Catalyst\UserBundle\Entity\User;
 use DateTime;
 use stdClass;
 
@@ -28,10 +28,10 @@ class BorrowedTransaction
     protected $date_issue;
 
     /** 
-     * @ORM\ManyToOne(targetEntity="\Catalyst\UserBundle\Entity\Department")
-     * @ORM\JoinColumn(name="dept_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\Catalyst\UserBundle\Entity\User")
+     * @ORM\JoinColumn(name="borrower_id", referencedColumnName="id")
      */
-    protected $department;
+    protected $borrower;
 
     /** @ORM\Column(type="string", length=30, nullable=true) */
     protected $status;
@@ -55,12 +55,6 @@ class BorrowedTransaction
 		$this->status = self::STATUS_INCOMPLETE;
 	}	
 
-    public function setDateReturned(DateTime $date)
-    {
-        $this->date_returned = $date;
-        return $this;
-    }
-
     public function setDescription($desc)
     {
         $this->description = $desc;
@@ -73,9 +67,9 @@ class BorrowedTransaction
         return $this;
     }
 
-    public function setDepartment(Department $dept)
+    public function setBorrower(User $user)
     {
-        $this->department = $dept;
+        $this->borrower = $user;
         return $this;
     }
 
@@ -135,24 +129,14 @@ class BorrowedTransaction
         return $this->date_issue;
     }
 
-    public function getDepartment()
+    public function getBorrower()
     {
-        return $this->department;
-    }
-
-    public function getDateReturned()
-    {
-        return $this->date_returned;
+        return $this->borrower;
     }
 
     public function getDateIssueFormat()
     {
         return $this->date_issue->format('m/d/Y');
-    }
-
-    public function getDateReturnedFormatted()
-    {
-        return $this->date_returned->format('m/d/Y');
     }
 
     public function generateCode()
@@ -167,11 +151,10 @@ class BorrowedTransaction
 		$this->dataTrackCreate($data);
 		$this->dataHasCode($data);
 		$data->status = $this->status;
-		$data->department = $this->department;
+		$data->borrower = $this->borrower;
         $data->description = $this->description;
         $data->remarks = $this->remarks;
 		$data->date_issue = $this->date_issue;
-		$data->date_returned = $this->date_returned->format('Y-m-d H:i:s');
 
 		$entries = array();
         foreach ($this->entries as $entry)
