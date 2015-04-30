@@ -55,22 +55,10 @@ class BorrowedTransactionController extends CrudController
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
 
+        //fetch the data
         $em = $this->getDoctrine()->getManager();
         $borrowed = $em->getRepository('CatalystInventoryBundle:BorrowedTransaction')->findAll();
-        $data = array();
-        foreach ($borrowed as $b) {
-            $data[] =[
-                'id' => $b->getID(),
-                'code' => $b->getCode(),
-                'dept' => $b->getBorrower()->getDepartment()->getName(),
-                'date_issue' => $b->getDateIssue(),
-                'user_create' => $b->getUserCreate()->getName(),
-                'status' => $b->getStatus(),
-                'count' => $b->getTotalItem(),
-            ];
-        }
-
-        $params['data'] = $data;
+        $params['data'] = $this->getBorrowCreated($date_from,$date_to);
 
         $this->padFormParams($params, $date_from, $date_to);
 

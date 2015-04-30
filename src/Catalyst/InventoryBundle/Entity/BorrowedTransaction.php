@@ -18,7 +18,7 @@ use stdClass;
 class BorrowedTransaction
 {
 	use HasGeneratedID;
-	use Hascode;
+	use HasCode;
 	use TrackCreate;
 
 	const STATUS_INCOMPLETE = 'Incomplete';
@@ -51,6 +51,7 @@ class BorrowedTransaction
 	{
 		$this->initHasGeneratedID();
 		$this->initTrackCreate();
+        $this->initHasCode();
 		$this->entries = new ArrayCollection();
 		$this->status = self::STATUS_INCOMPLETE;
 	}	

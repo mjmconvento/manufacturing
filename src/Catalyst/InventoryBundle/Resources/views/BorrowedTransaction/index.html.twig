@@ -38,12 +38,12 @@
                         <tbody>
                         {% for d in data %}
                             <tr>
-                                <td>{{ d.code }}</td>
-                                <td>{{ d.borrower }}</td>
+                                <td>{{ d.getCode }}</td>
+                                <td>{{ d.getBorrower }}</td>
                                 <td>{{ d.getTotalItem }}</td>
                                 <td>{{ d.getDateIssue|date('m/d/Y')}}</td>
                                 <td>{{ d.getUserCreate }}</td>
-                                <td>{{ d.status }}</td>
+                                <td>{{ d.getStatus }}</td>
                                 <td><a href="{{ path('cat_inv_borrowed_edit_form', {'id' : d.id }) }}" class="btn default btn-xs blue-madison"><i class="fa fa-edit"></i> View </a></td>
                             </tr>
                         {% endfor %}

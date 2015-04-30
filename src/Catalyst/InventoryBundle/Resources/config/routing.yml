@@ -131,3 +131,7 @@ cat_inv_borrowed_export:
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:exportCSV }
 
+cat_inv_borrowed_range:
+    pattern: /borrowed/{date_from}/{date_to}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:filter }
