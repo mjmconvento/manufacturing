@@ -1,0 +1,8 @@
+config:
+    - category: "User"
+      entries:
+        - id: catalyst_main_warehouse_default
+          label: "Default Main Warehouse"
+          type: select
+          options_service: catalyst_user
+          options_method: getGroupOptions

@@ -160,8 +160,11 @@ class InventoryManager
 
         // update inventory stock
         $entries = $trans->getEntries();
+
         foreach ($entries as $entry)
+        {
             $this->updateStock($entry);
+        }
 
         // TODO: end doctrine transaction
 

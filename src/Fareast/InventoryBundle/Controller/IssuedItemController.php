@@ -5,8 +5,10 @@ namespace Fareast\InventoryBundle\Controller;
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\IssuedItem;
 use Catalyst\InventoryBundle\Entity\IIEntry;
-use Catalyst\CoreBundle\Template\Controller\TrackCreate;
+use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
+use Catalyst\InventoryBundle\Entity\Stock;
+use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,31 +98,92 @@ class IssuedItemController extends CrudController
         $this->updateTrackCreate($o, $data, $is_new);
 
         // clear entries
-        $ents = $o->getEntries();
-        foreach($ents as $ent)
-            $em->remove($ent);
-        $o->clearEntries();
+        // $ents = $o->getEntries();
+        // foreach($ents as $ent)
+        //     $em->remove($ent);
+        // $o->clearEntries();
 
-        $inv = $this->get('catalyst_inventory');
 
-        
         if(isset($data['prod_opts']))
         {
-            foreach ($data['prod_opts'] as $index => $prod_id) {
+            // transaction
+            $transaction = new Transaction();
+            $transaction->setDescription('Issued Item')
+                ->setDateCreate(new DateTime)
+                ->setUserCreate($this->getUSer());
+
+                $em->persist($transaction);
+
+
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
 
                 $qty = $data['qty'][$index];
                 $rmk = $data['remarks'][$index];
-                $des = $data['desc'][$index];                
-                // instantiate
-                $entry = new IIEntry();
-                $entry->setProduct($prod)
-                    ->setQuantity($qty)
-                    ->setRemarks($rmk)
-                    ->setDescription($des);
+                $des = $data['desc'][$index];    
+                $id = $data['id'][$index];    
 
-                // add entry
-                $o->addEntry($entry);        
+                // main warehouse account
+                $config = $this->get('catalyst_configuration');
+                $main_warehouse = $config->get('catalyst_warehouse_main');
+                $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+                $wh_acc = $wh->getInventoryAccount();
+
+                // adijustment stock warehouse
+                $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
+                $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
+                $adj_acc = $adj_warehouse->getInventoryAccount();
+
+
+                $entry = $em->getRepository('CatalystInventoryBundle:IIEntry')->find($id);
+                if ($entry == null)
+                {
+                    // Issued Item entry
+                    $entry = new IIEntry();
+                    $entry->setProduct($prod)
+                        ->setQuantity($qty)
+                        ->setRemarks($rmk)
+                        ->setDescription($des);
+
+                    $o->addEntry($entry);
+
+                    // update stock
+                    $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                    $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+                    $old_quantity = $stock->getQuantity();
+                    $new_quantity = $old_quantity - $qty;
+                    $stock->setQuantity($new_quantity);
+                    $em->persist($stock);
+
+
+                    // entry for warehouse
+                    $wh_entry = new Entry();
+                    $wh_entry->setInventoryAccount($wh_acc)
+                        ->setProduct($prod)
+                        ->setCredit($data['qty'][$index])
+                        ->setTransaction($transaction);
+
+                    $em->persist($wh_entry);
+
+                    // entry for adjustment
+                    $adj_entry = new Entry();
+                    $adj_entry->setInventoryAccount($adj_acc)
+                        ->setProduct($prod)
+                        ->setDebit($data['qty'][$index])
+                        ->setTransaction($transaction);
+
+                    $em->persist($adj_entry);
+                }   
+                else
+                {
+                    $entry->setProduct($prod)
+                        ->setQuantity($qty)
+                        ->setRemarks($rmk)
+                        ->setDescription($des);
+
+                    $em->persist($entry);
+                }
             }
         }        
     }
@@ -158,7 +221,8 @@ class IssuedItemController extends CrudController
             if($u->getID() == $prod_id)
             {
                 $data = [
-                'uom' => $u->getUnitOfMeasure()
+                    'uom' => $u->getUnitOfMeasure(),
+                    'prod_id' => $u->getID(),
                 ];
             }
         }

@@ -100,7 +100,8 @@ class BorrowedTransactionController extends CrudController
             if($u->getID() == $prod_id)
             {
                 $data = [
-                'uom' => $u->getUnitOfMeasure()
+                    'uom' => $u->getUnitOfMeasure(),
+                    'prod_id' => $u->getID()
                 ];
             }
         }
