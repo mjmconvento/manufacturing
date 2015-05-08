@@ -55,7 +55,7 @@ class BorrowedTransactionController extends CrudController
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
 
-        //fetch the data
+        //fetch the data based on date range
         $em = $this->getDoctrine()->getManager();
         $borrowed = $em->getRepository('CatalystInventoryBundle:BorrowedTransaction')->findAll();
         $params['data'] = $this->getBorrowCreated($date_from,$date_to);
@@ -148,7 +148,7 @@ class BorrowedTransactionController extends CrudController
     public function filterAction($date_from, $date_to)
     {
         //filter for date range
-        $params = $this->getViewParams('List', $this->route_prefix);
+        $params = $this->getViewParams('List');
         $params['list_title'] = $this->list_title;     
         $date_from = new DateTime($date_from);
         $date_to = new DateTime($date_to);
@@ -160,6 +160,8 @@ class BorrowedTransactionController extends CrudController
 
     public function getBorrowCreated($date_from, $date_to)
     {
+
+        //filter by date range
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery('SELECT b FROM CatalystInventoryBundle:BorrowedTransaction b
@@ -174,10 +176,9 @@ class BorrowedTransactionController extends CrudController
     {
         // echo "<pre>";
         // print_r($data);
-        // // print_r($ctr);
-        // // print_r($date);
         // echo "</pre>";
         // die();
+        
         
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('catalyst_user');
@@ -209,9 +210,12 @@ class BorrowedTransactionController extends CrudController
                 // instantiate
                     $entry = new BIEntry();
                     $entry->setProduct($prod)
-                        ->setQuantity($qty)                        
-                        ->setDateReturned(new DateTime($data['date_return'][$index]));                        
-
+                        ->setQuantity($qty);
+                        if($data['date_return'][$index] != null)
+                        {              
+                            $entry->setDateReturned(new DateTime($data['date_return'][$index]));
+                        }
+                
                     // add entry
                     $o->addEntry($entry);        
             }
@@ -227,5 +231,42 @@ class BorrowedTransactionController extends CrudController
             $em->persist($obj);
             $em->flush();
         }
+    }
+
+    public function printPDFAction($id)
+    {
+        $pdf = $this->get('catalyst_pdf');
+        $pdf->newPdf('page_receipt');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $borrowed = $em->getRepository('CatalystInventoryBundle:BIEntry')->findBy(array('borrowed' => $id ));
+
+        $data = array();
+        foreach ($borrowed as $b) 
+        {
+            $data[] =[
+                'name' => $b->getProduct()->getName(),
+                'created' => $b->getBorrowed()->getDateIssue(),
+                'quantity' => $b->getQuantity(),
+                'create' => $b->getBorrowed()->getUserCreate(),
+                'borrower' => $b->getBorrowed()->getBorrower()->getName(),
+                'remark' => $b->getBorrowed()->getRemark(),
+                'description' => $b->getBorrowed()->getDescription(),
+                'code' => $b->getBorrowed()->getCode(),
+            ];
+        }
+
+        $params['data'] = $data;
+
+        $html = $this->render('CatalystInventoryBundle:BorrowedTransaction:print.html.twig', $params);
+        return $pdf->printPdf($html->getContent());
+    }
+
+    public function getStockReport()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT o.code, w.dept as w_dept FROM CatalystInventoryBundle:BorrowedTransaction o INNER JOIN o.borrower w');
+        return $query->getResult();
     }
 }

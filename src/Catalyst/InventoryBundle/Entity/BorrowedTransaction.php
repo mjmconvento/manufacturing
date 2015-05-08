@@ -135,6 +135,11 @@ class BorrowedTransaction
         return $this->borrower;
     }
 
+    public function getBorrowerDepartment()
+    {
+        return $this->borrower->getDepartment()->getName();
+    }
+
     public function getDateIssueFormat()
     {
         return $this->date_issue->format('m/d/Y');

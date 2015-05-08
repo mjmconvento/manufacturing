@@ -25,7 +25,9 @@
 
                     <div>
                         <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
-                        <a id="btn_from_add" href="" class="btn green">Print</a>
+                        {% if (object.getID != null) %}
+                        <a id="btn_from_add" href="{{ path('cat_inv_borrowed_print',{'id':object.getID}) }}" class="btn green">Print</a>
+                        {% endif %}
                     </div>
 
                     <div class="row table-responsive" style="padding-top:10px">
@@ -46,10 +48,10 @@
                                     <tr>                                        
                                         <input type="hidden" name="prod_opts[]" value="{{ entry.getProduct.getID }}">
                                         <td><input class="form-control prod_opts[{{ entry.getProduct.getID }}]" value="{{ entry.getProduct.getName }}" readonly></td>
-                                        <td><input type="text" readonly value="{{ entry.getDateReturned|date('m/d/Y') }}" class="form-control date-picker date_return[]" name="date_return[]"></td>
+                                        <td><input type="text" readonly value="{{ entry.getDateReturned is not null ? entry.getDateReturned|date('m/d/Y') }}" class="form-control date-picker date_return[]" name="date_return[]"></td>
                                         <td><input type="text" name="uom[]" class="form-control uom" value="{{ entry.getProduct.getUnitOfMeasure }}" readonly></td>                                        
                                         <td><input type="text" name="qty[]" class="form-control qty" value="{{ entry.getQuantity }}" ></td>
-                                        <td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>
+                                        <td><a href="javascript:void(0)" class="remove_field btn default btn-xs red"><i class="fa fa-times"></i> Delete</a></td>
                                     </tr>
                                 {% endfor %}
                                 {% endif %}
