@@ -56,7 +56,7 @@ class IssuedItemController extends CrudController
                 'id' => $i->getID(),
                 'code' => $i->getCode(),                
                 'date_issue' => $i->getDateIssue(),
-                'user_create' => $i->getUserCreate()->getName(),
+                'user_create' => $i->getUserCreate(),
                 'count' => $i->getTotalItem(),
             ];
         }
@@ -175,6 +175,35 @@ class IssuedItemController extends CrudController
             $em->persist($obj);
             $em->flush();
         }
+    }
+
+    public function printPDFAction($id)
+    {
+        $pdf = $this->get('catalyst_pdf');
+        $pdf->newPdf('page_receipt');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $issued = $em->getRepository('CatalystInventoryBundle:IIEntry')->findBy(array('issued' => $id ));
+
+        $data = array();
+        foreach ($issued as $i) 
+        {
+            $data[] =[
+                'name' => $i->getProduct()->getName(),
+                'description' => $i->getDescription(),
+                'remark' => $i->getRemarks(),
+                'quantity' => $i->getQuantity(),
+                'create' => $i->getIssued()->getUserCreate(),
+                'created' => $i->getIssued()->getDateIssue(),
+                'code' => $i->getIssued()->getCode(),
+            ];
+        }
+
+        $params['data'] = $data;
+
+        $html = $this->render('FareastInventoryBundle:IssuedItem:print.html.twig', $params);
+        return $pdf->printPdf($html->getContent());
     }
 
 }

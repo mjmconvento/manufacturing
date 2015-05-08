@@ -22,7 +22,9 @@
 
                     <div>
                         <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
-                        <a id="btn_from_add" href="" class="btn green">Print</a>
+                    {% if object.getID != null %}
+                        <a id="btn_from_add" href="{{ path('feac_inv_issued_print',{'id':object.getID}) }}" class="btn green">Print</a>
+                    {% endif %}
                     </div>
 
                     <div class="row table-responsive" style="padding-top:10px">
