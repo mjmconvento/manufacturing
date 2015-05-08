@@ -6,3 +6,8 @@ config:
           type: select
           options_service: catalyst_inventory
           options_method: getWarehouseOptions
+        - id: catalyst_warehouse_stock_adjustment
+          label: "Stock Adjustment Warehouse"
+          type: select
+          options_service: catalyst_inventory
+          options_method: getWarehouseOptions

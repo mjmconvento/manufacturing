@@ -109,14 +109,14 @@ class StockAdjustmentController extends CrudController
             if ($new_qty > $old_qty)
             {
                 $qty = $new_qty - $old_qty;
-                $wh_entry->setDebit($qty);
-                $adj_entry->setCredit($qty);
+                $wh_entry->setDebit($new_qty);
+                $adj_entry->setCredit($new_qty);
             }
             else
             {
                 $qty = $old_qty - $new_qty;
-                $wh_entry->setCredit($qty);
-                $adj_entry->setDebit($qty);
+                $wh_entry->setCredit($new_qty);
+                $adj_entry->setDebit($new_qty);
             }
 
             $entries[] = $wh_entry;
