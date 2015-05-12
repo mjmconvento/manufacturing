@@ -135,3 +135,8 @@ cat_inv_borrowed_range:
     pattern: /borrowed/{date_from}/{date_to}
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:filter }
+
+cat_inv_borrowed_print:
+    pattern: /borrow/print/{id}
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:BorrowedTransaction:printPDF }

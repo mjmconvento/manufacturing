@@ -51,6 +51,11 @@ feac_inv_issued_product:
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:IssuedItem:getProduct }
 
+feac_inv_issued_print:
+    pattern: /issued/print/{id}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:IssuedItem:printPDF }
+
 
 feac_inv_adjust_index:
     path:     /stock/adjust

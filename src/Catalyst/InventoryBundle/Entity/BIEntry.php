@@ -19,7 +19,7 @@ class BIEntry
 	use HasQuantity;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="BorrowedTransaction")
+     * @ORM\ManyToOne(targetEntity="BorrowedTransaction", inversedBy="entries")
      * @ORM\JoinColumn(name="borrowed_id", referencedColumnName="id")
      */
     protected $borrowed;

@@ -25,7 +25,9 @@
 
                     <div>
                         <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
-                        <a id="btn_from_add" href="" class="btn green">Print</a>
+                        {% if (object.getID != null) %}
+                        <a id="btn_from_add" href="{{ path('cat_inv_borrowed_print',{'id':object.getID}) }}" class="btn green">Print</a>
+                        {% endif %}
                     </div>
 
                     <div class="row table-responsive" style="padding-top:10px">
@@ -43,6 +45,7 @@
                                 </thead>
                                 <tbody id="from_table">
                                 {% if (object.getID != null) %}
+
                                     {% for entry in object.getEntries %}
                                             <tr class="borrowed_items_table">                                        
                                                 <input type="hidden" name="prod_opts[]" value="{{ entry.getProduct.getID }}">
@@ -60,6 +63,7 @@
                                                 </td>
                                             </tr>
                                     {% endfor %}
+
                                 {% endif %}
                                 </tbody>
                             </table>
