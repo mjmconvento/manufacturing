@@ -7,6 +7,7 @@ use Catalyst\InventoryBundle\Entity\BorrowedTransaction;
 use Catalyst\InventoryBundle\Entity\BIEntry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Entry;
+use Catalyst\InventoryBundle\Entity\ReturnedItem;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\InventoryBundle\Entity\Product;
 
@@ -177,6 +178,11 @@ class BorrowedTransactionController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
+        //TODO: check if returned item is equals to number of borrowed
+        //TODO: clean up the 90 percent of the code  
+        //TODO: borrowed transaction adding when no new is found
+
+
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
@@ -216,10 +222,10 @@ class BorrowedTransactionController extends CrudController
 
             $em->persist($transaction);
 
-            foreach ($data['prod_opts'] as $index => $prod_id) {
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
 
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);   
-
 
                 $qty = $data['qty'][$index];  
                 $id = $data['id'][$index];
@@ -244,11 +250,7 @@ class BorrowedTransactionController extends CrudController
                     $entry = new BIEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty);
-                        if($data['date_return'][$index] != null)
-                        {              
-                            $entry->setDateReturned(new DateTime($data['date_return'][$index]));
-                        }
-                
+
                     // add entry
                     $o->addEntry($entry);   
 
@@ -283,10 +285,83 @@ class BorrowedTransactionController extends CrudController
                     $em->persist($adj_entry);
 
                 }
+            }            
+        }
+
+        // main warehouse account
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
+
+
+        if(isset($data['date_returned']))
+        {
+            // transaction
+            $transaction = new Transaction();
+            $transaction->setDescription('Returned Item')
+                ->setDateCreate(new DateTime)
+                ->setUserCreate($this->getUser());
+
+            $em->persist($transaction);
+
+
+            foreach ($data['date_returned'] as $index => $id) 
+            {
+
+                $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($data['entry_id'][$index]);
+                $date_returned = new DateTime($data['date_returned'][$index]);
+                $qty_returned = $data['qty_returned'][$index];
+
+                $returned_item = new ReturnedItem;
+                $returned_item->setBIEntry($entry)
+                    ->setDateReturned($date_returned)
+                    ->setQuantity($qty_returned);
+
+                $em->persist($returned_item);
+                
+
+
+
+                // update stock
+                $inv = $this->get('catalyst_inventory');
+                $old_qty = $inv->getStockCount($wh_acc, $prod);
+                $new_quantity = bcadd($old_qty, $qty_returned, 2);
+
+
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($data['prod_id'][$index]);   
+
+                $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+
+                $stock->setQuantity($new_quantity);
+                $em->persist($stock);
+
+
+                // entry for adjustment
+                $adj_entry = new Entry();
+                $adj_entry->setInventoryAccount($o->getBorrower()->getDepartment()->getInventoryAccount())
+                    ->setProduct($prod)
+                    ->setCredit($qty_returned)
+                    ->setTransaction($transaction);
+
+                $em->persist($adj_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($prod)
+                    ->setDebit($qty_returned)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
 
 
             }
-        }
+        }            
+        
+
+
     }
 
     protected function hookPostSave($obj, $is_new = false)
