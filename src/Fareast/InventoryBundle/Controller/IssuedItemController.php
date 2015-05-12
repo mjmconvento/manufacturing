@@ -106,13 +106,17 @@ class IssuedItemController extends CrudController
 
         if(isset($data['prod_opts']))
         {
+            // TODO: return stock if deleted
+            // TODO: check if stock is existing
+            
+
             // transaction
             $transaction = new Transaction();
             $transaction->setDescription('Issued Item')
                 ->setDateCreate(new DateTime)
-                ->setUserCreate($this->getUSer());
+                ->setUserCreate($this->getUser());
 
-                $em->persist($transaction);
+            $em->persist($transaction);
 
 
             foreach ($data['prod_opts'] as $index => $prod_id) 
@@ -135,8 +139,8 @@ class IssuedItemController extends CrudController
                 $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
                 $adj_acc = $adj_warehouse->getInventoryAccount();
 
-
                 $entry = $em->getRepository('CatalystInventoryBundle:IIEntry')->find($id);
+
                 if ($entry == null)
                 {
                     // Issued Item entry
@@ -149,28 +153,30 @@ class IssuedItemController extends CrudController
                     $o->addEntry($entry);
 
                     // update stock
+                    $inv = $this->get('catalyst_inventory');
+                    $old_qty = $inv->getStockCount($wh_acc, $prod);
+                    $new_quantity = bcsub($old_qty, $qty, 2);
+
                     $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
                     $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
-                    $old_quantity = $stock->getQuantity();
-                    $new_quantity = $old_quantity - $qty;
+
                     $stock->setQuantity($new_quantity);
                     $em->persist($stock);
-
 
                     // entry for warehouse
                     $wh_entry = new Entry();
                     $wh_entry->setInventoryAccount($wh_acc)
                         ->setProduct($prod)
-                        ->setCredit($data['qty'][$index])
+                        ->setCredit($qty)
                         ->setTransaction($transaction);
 
                     $em->persist($wh_entry);
 
                     // entry for adjustment
                     $adj_entry = new Entry();
-                    $adj_entry->setInventoryAccount($adj_acc)
+                    $adj_entry->setInventoryAccount($o->getIssuedTo()->getDepartment()->getInventoryAccount())
                         ->setProduct($prod)
-                        ->setDebit($data['qty'][$index])
+                        ->setDebit($qty)
                         ->setTransaction($transaction);
 
                     $em->persist($adj_entry);

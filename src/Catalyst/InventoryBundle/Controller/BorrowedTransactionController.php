@@ -5,6 +5,8 @@ namespace Catalyst\InventoryBundle\Controller;
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\BorrowedTransaction;
 use Catalyst\InventoryBundle\Entity\BIEntry;
+use Catalyst\InventoryBundle\Entity\Transaction;
+use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\InventoryBundle\Entity\Product;
 
@@ -195,26 +197,90 @@ class BorrowedTransactionController extends CrudController
         $o->setRemark($data['remark']);
 
         // clear entries
-        $ents = $o->getEntries();
-        foreach($ents as $ent)
-            $em->remove($ent);
-        $o->clearEntries();
+        // $ents = $o->getEntries();
+        // foreach($ents as $ent)
+        //     $em->remove($ent);
+        // $o->clearEntries();
 
 
         //process each row (saved to BIEntry entity)
         if(isset($data['prod_opts']))
         {
+
+            // transaction
+            $transaction = new Transaction();
+            $transaction->setDescription('Borrowed Item')
+                ->setDateCreate(new DateTime)
+                ->setUserCreate($this->getUser());
+
+            $em->persist($transaction);
+
             foreach ($data['prod_opts'] as $index => $prod_id) {
-                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);                
-                $qty = $data['qty'][$index];
-                // instantiate
+
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);   
+
+
+                $qty = $data['qty'][$index];  
+                $id = $data['id'][$index];
+                
+                // main warehouse account
+                $config = $this->get('catalyst_configuration');
+                $main_warehouse = $config->get('catalyst_warehouse_main');
+                $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+                $wh_acc = $wh->getInventoryAccount();
+
+                // adjustment stock warehouse
+                $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
+                $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
+                $adj_acc = $adj_warehouse->getInventoryAccount();
+
+
+                $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($id);
+                if ($entry == null)
+                {
+
+                    // instantiate
                     $entry = new BIEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty)                        
                         ->setDateReturned(new DateTime($data['date_return'][$index]));                        
 
                     // add entry
-                    $o->addEntry($entry);        
+                    $o->addEntry($entry);   
+
+                    // update stock
+                    $inv = $this->get('catalyst_inventory');
+                    $old_qty = $inv->getStockCount($wh_acc, $prod);
+                    $new_quantity = bcsub($old_qty, $qty, 2);
+
+                    $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                    $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+
+                    $stock->setQuantity($new_quantity);
+                    $em->persist($stock);
+
+
+                    // entry for warehouse
+                    $wh_entry = new Entry();
+                    $wh_entry->setInventoryAccount($wh_acc)
+                        ->setProduct($prod)
+                        ->setCredit($qty)
+                        ->setTransaction($transaction);
+
+                    $em->persist($wh_entry);
+
+                    // entry for adjustment
+                    $adj_entry = new Entry();
+                    $adj_entry->setInventoryAccount($o->getBorrower()->getDepartment()->getInventoryAccount())
+                        ->setProduct($prod)
+                        ->setDebit($qty)
+                        ->setTransaction($transaction);
+
+                    $em->persist($adj_entry);
+
+                }
+
+
             }
         }
     }
