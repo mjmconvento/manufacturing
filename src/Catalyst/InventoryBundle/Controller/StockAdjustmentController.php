@@ -35,8 +35,11 @@ class StockAdjustmentController extends CrudController
     {
         $em = $this->getDoctrine()->getManager();
 
-        // NOTE: hardcoded to id = 3 for now
-        $acc = $em->getRepository('CatalystInventoryBundle:Account')->find(3);
+        $config = $this->get('catalyst_configuration');
+        $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
+        $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
+
+        $acc = $em->getRepository('CatalystInventoryBundle:Account')->find($adj_warehouse->getInventoryAccount()->getID());
 
         return $acc;
     }

@@ -22,6 +22,9 @@ class DailyConsumption
     /** @ORM\Column(type="date") */
     protected $date_produced;
 
+    /** @ORM\Column(type="boolean", nullable=true) */
+    protected $generated;
+
     /**
      * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
      */
@@ -295,6 +298,12 @@ class DailyConsumption
     public function setDateProduced(DateTime $date_produced)
     {
         $this->date_produced = $date_produced;
+        return $this;
+    }
+
+    public function setIsGenerated($flag = false)
+    {
+        $this->generated = $flag;
         return $this;
     }
 
@@ -623,6 +632,11 @@ class DailyConsumption
     public function getDateProduced()
     {
         return $this->date_produced;
+    }
+
+    public function getIsGenerated()
+    {
+        return $this->generated;
     }
 
     public function getMolBeginningBalance()

@@ -24,14 +24,19 @@
                                 </div>
                                 <div id="collapse_1" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Mollases Beginning Balance', 'begin-mol', consumption.getMolBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Mollases Beginning Balance', 'begin-mol', mollases_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Mollases Purchase', 'purchase', consumption.getMolPurchases, 3, 4) }}
                                         {{ form_tools.group_text('Pumped to MDT', 'pumped', consumption.getMolPumpedMDT, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance', 'run-mol', consumption.getMolRunningBalance, 3, 4, true) }}
+
+                                        {% if consumption.getMolRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance', 'run-mol', mollases_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance', 'run-mol', consumption.getMolRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
                                         {{ form_tools.group_text('Less: Pondo', 'pondo', consumption.getMolPondo, 3, 4) }}
 
                                         <h4 class="bold">Mollases Working Balance</h4>
-
                                         {{ form_tools.group_text('Mollases used in Production (Gal)', 'mol-gal', consumption.getMolProductionGal, 3, 4) }}
                                         {{ form_tools.group_text('Mollases used in Production (Ton)', 'mol-ton', consumption.getMolProductionTon, 3, 4) }}
                                         {{ form_tools.group_text('TSAI', 'tsai', consumption.getMolTsai, 3, 4) }}
@@ -47,10 +52,16 @@
                                 </div>
                                 <div id="collapse_2" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Bunker Beginning Balance', 'begin-bunk', consumption.getBunkerBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Bunker Beginning Balance', 'begin-bunk', bunker_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Bunker Purchase', 'bunk-pur', consumption.getBunkerPurchase, 3, 4) }}
                                         {{ form_tools.group_text('Less: Production Consumption', 'consumed', consumption.getBunkerConsumption, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance (liters)', 'run-bunk', consumption.getBunkerRunningBalance, 3, 4, true) }}
+
+                                        {% if consumption.getBunkerRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-bunk', bunker_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-bunk', consumption.getBunkerRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -62,10 +73,18 @@
                                 </div>
                                 <div id="collapse_3" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Sulfuric Acid Beginning Balance', 'begin-acid', consumption.getSulBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Sulfuric Acid Beginning Balance', 'begin-acid', sulfuric_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Add: Purchase', 'acid-purchase', consumption.getSulPurchase, 3, 4) }}
                                         {{ form_tools.group_text('Less: Production Consumption', 'acid-consumed', consumption.getSulConsumption, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance (liters)', 'run-acid', consumption.getSulRunningBalance, 3, 4, true) }}
+
+
+                                        {% if consumption.getSulRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-acid', sulfuric_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-acid', consumption.getSulRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
+
                                     </div>
                                 </div>
                             </div>
@@ -77,10 +96,16 @@
                                 </div>
                                 <div id="collapse_4" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Caustic Soda Beginning Balance', 'begin-soda', consumption.getSodaBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Caustic Soda Beginning Balance', 'begin-soda', caustic_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Add: Purchase', 'soda-purchase', consumption.getSodaPurchase, 3, 4) }}
                                         {{ form_tools.group_text('Less: Production Consumption', 'soda-consumed', consumption.getSodaConsumption, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance (liters)', 'run-soda', consumption.getSodaRunningBalance, 3, 4, true) }}
+
+                                        {% if consumption.getSodaRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-soda', caustic_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance (liters)', 'run-soda', consumption.getSodaRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -92,10 +117,16 @@
                                 </div>
                                 <div id="collapse_5" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Urea Balance', 'begin-urea', consumption.getUreaBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Urea Balance', 'begin-urea', urea_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Add: Purchase', 'urea-purchase', consumption.getUreaPurchase, 3, 4) }}
                                         {{ form_tools.group_text('Less: Production Consumption', 'urea-consumed', consumption.getUreaConsumption, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance (bags)', 'run-urea', consumption.getUreaRunningBalance, 3, 4, true) }}
+
+                                        {% if consumption.getUreaRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance (bags)', 'run-urea', urea_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance (bags)', 'run-urea', consumption.getUreaRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -107,10 +138,16 @@
                                 </div>
                                 <div id="collapse_6" class="panel-collapse collapse in" style="height: auto;">
                                     <div class="panel-body">
-                                        {{ form_tools.group_text('Salt Balance', 'begin-salt', consumption.getSaltBeginningBalance, 3, 4) }}
+                                        {{ form_tools.group_text('Salt Balance', 'begin-salt', salt_count, 3, 4, true) }}
                                         {{ form_tools.group_text('Add: Purchase', 'salt-purchase', consumption.getSaltPurchase, 3, 4) }}
                                         {{ form_tools.group_text('Less: Production Consumption', 'salt-consumed', consumption.getSaltConsumption, 3, 4) }}
-                                        {{ form_tools.group_text('Running Balance (bags)', 'run-salt', consumption.getSaltRunningBalance, 3, 4, true) }}
+
+                                        {% if consumption.getSaltRunningBalance == 0 %}
+                                            {{ form_tools.group_text('Running Balance (bags)', 'run-salt', salt_count, 3, 4, true) }}
+                                        {% else %}
+                                            {{ form_tools.group_text('Running Balance (bags)', 'run-salt', consumption.getSaltRunningBalance, 3, 4, true) }}
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>

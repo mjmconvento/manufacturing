@@ -4,10 +4,10 @@ namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Fareast\ManufacturingBundle\Entity\DailyConsumption;
+use Catalyst\InventoryBundle\Entity\Entry;
+use Catalyst\InventoryBundle\Entity\Transaction;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
-
-
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
@@ -220,6 +220,40 @@ class ProductionController extends CrudController
         $params['date'] = $date;
         $params['consumption'] = $consumption;
 
+        // main warehouse account
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
+        
+        $inv = $this->get('catalyst_inventory');
+        $product_repo = $em->getRepository('CatalystInventoryBundle:Product');
+
+        $prod = $product_repo->findOneBy(array('name' => 'Mollases'));
+        $mollases_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Bunker'));
+        $bunker_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Sulfuric Acid'));
+        $sulfuric_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Caustic Soda'));
+        $caustic_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Urea'));
+        $urea_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Salt'));
+        $salt_count = $inv->getStockCount($wh_acc, $prod);
+
+        $params['mollases_count'] = $mollases_count;
+        $params['bunker_count'] = $bunker_count;
+        $params['sulfuric_count'] = $sulfuric_count;
+        $params['caustic_count'] = $caustic_count;
+        $params['urea_count'] = $urea_count;
+        $params['salt_count'] = $salt_count;
+
         return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
     }
 
@@ -307,6 +341,40 @@ class ProductionController extends CrudController
         $date = new DateTime($date);
         $params['date'] = $date;
 
+        // main warehouse account
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
+        
+        $inv = $this->get('catalyst_inventory');
+        $product_repo = $em->getRepository('CatalystInventoryBundle:Product');
+
+        $prod = $product_repo->findOneBy(array('name' => 'Mollases'));
+        $mollases_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Bunker'));
+        $bunker_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Sulfuric Acid'));
+        $sulfuric_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Caustic Soda'));
+        $caustic_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Urea'));
+        $urea_count = $inv->getStockCount($wh_acc, $prod);
+
+        $prod = $product_repo->findOneBy(array('name' => 'Salt'));
+        $salt_count = $inv->getStockCount($wh_acc, $prod);
+
+        $params['mollases_count'] = $mollases_count;
+        $params['bunker_count'] = $bunker_count;
+        $params['sulfuric_count'] = $sulfuric_count;
+        $params['caustic_count'] = $caustic_count;
+        $params['urea_count'] = $urea_count;
+        $params['salt_count'] = $salt_count;
+
         return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
     }
 
@@ -343,6 +411,100 @@ class ProductionController extends CrudController
         $params['consumption'] = $data;
         $params['date'] = $date_picked;
         $params['shift_reports'] = $this->getShiftReports($date);
+
+        if ($data != NULL)
+        {
+            $old_generated_status = $data->getIsGenerated();
+            // setting is generated to true
+            $em = $this->getDoctrine()->getManager();
+            $consumption = $em->getRepository('FareastManufacturingBundle:DailyConsumption')->find($data->getID());
+            $consumption->setIsGenerated(true);
+            $em->persist($consumption);
+            $em->flush();
+        }
+
+
+        if ($data != NULL and $old_generated_status == NULL)
+        {
+            $transaction = new Transaction;
+            $transaction->setUserCreate($this->getUser())
+                ->setDateCreate(new DateTime())
+                ->setDescription('Daily Consumption');
+            $em->persist($transaction);
+
+            $product_repo = $em->getRepository('CatalystInventoryBundle:Product');
+            $mollases = $product_repo->findOneBy(array('name' => 'Mollases'));
+            $bunker = $product_repo->findOneBy(array('name' => 'Bunker'));
+            $sulfur = $product_repo->findOneBy(array('name' => 'Sulfuric Acid'));
+            $caustic = $product_repo->findOneBy(array('name' => 'Caustic Soda'));
+            $urea = $product_repo->findOneBy(array('name' => 'Urea'));
+            $salt = $product_repo->findOneBy(array('name' => 'Salt'));
+
+            $config = $this->get('catalyst_configuration');
+            $main_warehouse = $config->get('catalyst_warehouse_main');
+            $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+            $wh_acc = $wh->getInventoryAccount();
+
+
+            $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+            
+            $mollases = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $mollases
+                ));
+            $mollases->setQuantity($data->getMolRunningBalance());
+            $em->persist($mollases);
+
+
+
+            $bunker = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $bunker
+                ));
+            $bunker->setQuantity($data->getBunkerRunningBalance());
+            $em->persist($bunker);
+
+
+
+            $sulfur = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $sulfur
+                ));
+            $sulfur->setQuantity($data->getSulRunningBalance());
+            $em->persist($sulfur);
+
+
+
+            $caustic = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $caustic
+                ));
+            $caustic->setQuantity($data->getSodaRunningBalance());
+            $em->persist($caustic);
+
+
+
+            $urea = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $urea
+                ));
+            $urea->setQuantity($data->getUreaRunningBalance());
+            $em->persist($urea);
+
+
+
+            $salt = $stock_repo->findOneBy(array(   
+                    'inv_account' => $wh_acc,
+                    'product' => $salt
+                ));
+            $salt->setQuantity($data->getSaltRunningBalance());
+            $em->persist($salt);
+
+
+
+            $em->flush();
+        }
+
 
         $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);
 
