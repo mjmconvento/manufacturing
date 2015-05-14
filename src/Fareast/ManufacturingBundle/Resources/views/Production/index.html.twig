@@ -26,17 +26,17 @@
 
                                             <div class="col-md-4">
                                                 <div class="form-horizontal">
-                                                    {{ form_tools.group_text('Mollases', 'mollases', consumption.getMolRunningBalance|default(0), 5, 7, true) }}
-                                                    {{ form_tools.group_text('Bunker', 'bunker', consumption.getBunkerRunningBalance|default(0), 5, 7, true) }}
-                                                    {{ form_tools.group_text('Sulfuric Acid', 'acid', consumption.getSulRunningBalance|default(0), 5, 7, true) }}
+                                                    {{ form_tools.group_text('Mollases', 'mollases', consumption.getMolRunningBalance|default(0) ~ ' gal', 5, 7, true) }}
+                                                    {{ form_tools.group_text('Bunker', 'bunker', consumption.getBunkerRunningBalance|default(0) ~ ' L', 5, 7, true) }}
+                                                    {{ form_tools.group_text('Sulfuric Acid', 'acid', consumption.getSulRunningBalance|default(0) ~ ' gal', 5, 7, true) }}
                                                 </div>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <div class="form-horizontal">
-                                                    {{ form_tools.group_text('Caustic Soda', 'soda', consumption.getSodaRunningBalance|default(0), 5, 7, true) }}
-                                                    {{ form_tools.group_text('Urea', 'urea', consumption.getUreaRunningBalance|default(0), 5, 7, true) }}
-                                                    {{ form_tools.group_text('Salt', 'salt', consumption.getSaltRunningBalance|default(0), 5, 7, true) }}
+                                                    {{ form_tools.group_text('Caustic Soda', 'soda', consumption.getSodaRunningBalance|default(0) ~ ' L', 5, 7, true) }}
+                                                    {{ form_tools.group_text('Urea', 'urea', consumption.getUreaRunningBalance|default(0) ~ ' bags', 5, 7, true) }}
+                                                    {{ form_tools.group_text('Salt', 'salt', consumption.getSaltRunningBalance|default(0) ~ ' bags', 5, 7, true) }}
                                                 </div>
                                             </div>
 
@@ -146,7 +146,7 @@
 
 <script>
 
-jQuery(document).ready(function() {       
+jQuery(document).ready(function() {  
     ComponentsPickers.init();
 });   
 </script>

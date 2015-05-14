@@ -84,7 +84,7 @@
 function appendEntry()
 {
     var field = '<tr class="prod_row">';   
-        field += '<input type="hidden" name="id[]" class="form-control">';     
+        field += '<input type="hidden" name="is_new[]""> <input type="hidden" name="id[]" class="form-control">';     
         field += '<td> <select name="prod_opts[]" class="form-control select2 prod_opts">';
         field += $('.prod_opts').html();   
         field += '</select> </td>';                    

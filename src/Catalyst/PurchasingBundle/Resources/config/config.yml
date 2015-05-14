@@ -11,3 +11,8 @@ config:
           type: select
           options_service: catalyst_inventory
           options_method: getWarehouseOptions
+        - id: catalyst_warehouse_production_tank
+          label: "Production Tank Warehouse"
+          type: select
+          options_service: catalyst_inventory
+          options_method: getWarehouseOptions

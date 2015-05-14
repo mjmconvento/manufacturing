@@ -81,12 +81,12 @@ class ProductionController extends CrudController
         {
             $consumption = $data;
             $running_balance = array(
-                    'balance_mollases' => $consumption->getMolRunningBalance(),
-                    'balance_bunker' => $consumption->getBunkerRunningBalance(),
-                    'balance_acid' => $consumption->getSulRunningBalance(),
-                    'balance_soda' => $consumption->getSodaRunningBalance(),
-                    'balance_urea' => $consumption->getUreaRunningBalance(),
-                    'balance_salt' => $consumption->getSaltRunningBalance(),
+                    'balance_mollases' => $consumption->getMolRunningBalance().' gal',
+                    'balance_bunker' => $consumption->getBunkerRunningBalance().' L',
+                    'balance_acid' => $consumption->getSulRunningBalance().' gal',
+                    'balance_soda' => $consumption->getSodaRunningBalance().' L',
+                    'balance_urea' => $consumption->getUreaRunningBalance().' bags',
+                    'balance_salt' => $consumption->getSaltRunningBalance().' bags',
                     'shift_reports_id' => $shift_reports_id,
                     'shift_reports_fermentations' => $shift_reports_fermentations,
                     'shift_reports_biogas' => $shift_reports_biogas,
@@ -99,12 +99,12 @@ class ProductionController extends CrudController
         elseif ($data == null and $shift_reports != null)
         {
             $running_balance = array(
-                    'balance_mollases' => 0,
-                    'balance_bunker' => 0,
-                    'balance_acid' => 0,
-                    'balance_soda' => 0,
-                    'balance_urea' => 0,
-                    'balance_salt' => 0,
+                    'balance_mollases' => '0 gal',
+                    'balance_bunker' => '0 L',
+                    'balance_acid' => '0 gal',
+                    'balance_soda' => '0 L',
+                    'balance_urea' => '0 bags',
+                    'balance_salt' => '0 bags',
                     'shift_reports_id' => $shift_reports_id,
                     'shift_reports_fermentations' => $shift_reports_fermentations,
                     'shift_reports_biogas' => $shift_reports_biogas,
@@ -118,12 +118,12 @@ class ProductionController extends CrudController
         {
             $consumption = $data;
             $running_balance = array(
-                    'balance_mollases' => $consumption->getMolRunningBalance(),
-                    'balance_bunker' => $consumption->getBunkerRunningBalance(),
-                    'balance_acid' => $consumption->getSulRunningBalance(),
-                    'balance_soda' => $consumption->getSodaRunningBalance(),
-                    'balance_urea' => $consumption->getUreaRunningBalance(),
-                    'balance_salt' => $consumption->getSaltRunningBalance(),
+                    'balance_mollases' => $consumption->getMolRunningBalance().' gal',
+                    'balance_bunker' => $consumption->getBunkerRunningBalance().' L',
+                    'balance_acid' => $consumption->getSulRunningBalance().' gal',
+                    'balance_soda' => $consumption->getSodaRunningBalance().' L',
+                    'balance_urea' => $consumption->getUreaRunningBalance().' bags',
+                    'balance_salt' => $consumption->getSaltRunningBalance().' bags',
                     'shift_reports_id' => '',
                     'shift_reports_fermentations' => '',
                     'shift_reports_biogas' => '',
@@ -136,12 +136,12 @@ class ProductionController extends CrudController
         else
         {
             $running_balance = array(
-                    'balance_mollases' => 0,
-                    'balance_bunker' => 0,
-                    'balance_acid' => 0,
-                    'balance_soda' => 0,
-                    'balance_urea' => 0,
-                    'balance_salt' => 0,
+                    'balance_mollases' => '0 gal',
+                    'balance_bunker' => '0 L',
+                    'balance_acid' => '0 gal',
+                    'balance_soda' => '0 L',
+                    'balance_urea' => '0 bags',
+                    'balance_salt' => '0 bags',
                     'shift_reports_id' => '',
                     'shift_reports_fermentations' => '',
                     'shift_reports_biogas' => '',
@@ -445,60 +445,284 @@ class ProductionController extends CrudController
             $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
             $wh_acc = $wh->getInventoryAccount();
 
+            $prod_warehouse = $config->get('catalyst_warehouse_production_tank');
+            $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($prod_warehouse);
+            $prod_acc = $wh->getInventoryAccount();
 
             $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
             
-            $mollases = $stock_repo->findOneBy(array(   
+            // molasses 
+            $mollases_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $mollases
                 ));
-            $mollases->setQuantity($data->getMolRunningBalance());
-            $em->persist($mollases);
+            $mollases_stock->setQuantity($data->getMolRunningBalance());
+            $em->persist($mollases_stock);
+
+            $new_qty = bcsub($data->getMolRunningBalance(), $data->getMolBeginningBalance() ,2);
+
+            // molasses prod stock
+            $mollases_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $mollases
+                ));
+
+            $prod_qty = bcsub($mollases_prod_stock->getQuantity(), $new_qty ,2);
+            $mollases_prod_stock->setQuantity($prod_qty);
+            $em->persist($mollases_prod_stock);
+
+
+            if($data->getMolRunningBalance() != $data->getMolBeginningBalance())
+            {
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($mollases_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($mollases_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
 
 
 
-            $bunker = $stock_repo->findOneBy(array(   
+
+
+            // bunker
+            $bunker_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $bunker
                 ));
-            $bunker->setQuantity($data->getBunkerRunningBalance());
+            $bunker_stock->setQuantity($data->getBunkerRunningBalance());
             $em->persist($bunker);
 
+            $new_qty = bcsub($data->getBunkerRunningBalance(), $data->getBunkerBeginningBalance() ,2);
+
+            // molasses prod stock
+            $bunker_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $bunker
+                ));
 
 
-            $sulfur = $stock_repo->findOneBy(array(   
+            $prod_qty = bcsub($bunker_prod_stock->getQuantity(), $new_qty ,2);
+
+            $bunker_prod_stock->setQuantity($prod_qty);
+            $em->persist($bunker_prod_stock);
+
+            if($data->getBunkerRunningBalance() != $data->getBunkerBeginningBalance())
+            {
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($bunker_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($bunker_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
+
+
+
+
+
+            // sulfur
+            $sulfur_prod_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $sulfur
                 ));
-            $sulfur->setQuantity($data->getSulRunningBalance());
-            $em->persist($sulfur);
+            $sulfur_prod_stock->setQuantity($data->getSulRunningBalance());
+            $em->persist($sulfur_prod_stock);
+
+            $new_qty = bcsub($data->getSulRunningBalance(), $data->getSulBeginningBalance() ,2);
+
+            // sulfur prod stock
+            $sulfur_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $sulfur
+                ));
+
+
+            $prod_qty = bcsub($sulfur_prod_stock->getQuantity(), $new_qty ,2);
+
+            $sulfur_prod_stock->setQuantity($prod_qty);
+            $em->persist($sulfur_prod_stock);
+
+
+            if($data->getSulRunningBalance() != $data->getSulBeginningBalance())
+            {
+
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($sulfur_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($sulfur_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
 
 
 
-            $caustic = $stock_repo->findOneBy(array(   
+            // caustic
+            $caustic_prod_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $caustic
                 ));
-            $caustic->setQuantity($data->getSodaRunningBalance());
-            $em->persist($caustic);
+            $caustic_prod_stock->setQuantity($data->getSodaRunningBalance());
+            $em->persist($caustic_prod_stock);
+
+
+            $new_qty = bcsub($data->getSodaRunningBalance(), $data->getSodaBeginningBalance() ,2);
+
+            // sulfur prod stock
+            $caustic_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $caustic
+                ));
+            $prod_qty = bcsub($caustic_prod_stock->getQuantity(), $new_qty ,2);
+            $caustic_prod_stock->setQuantity($prod_qty);
+            $em->persist($caustic_prod_stock);
+
+            if($data->getSodaRunningBalance() != $data->getSodaBeginningBalance())
+            {
+
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($caustic_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($caustic_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
 
 
 
-            $urea = $stock_repo->findOneBy(array(   
+            // urea
+            $urea_prod_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $urea
                 ));
-            $urea->setQuantity($data->getUreaRunningBalance());
-            $em->persist($urea);
+            $urea_prod_stock->setQuantity($data->getUreaRunningBalance());
+            $em->persist($urea_prod_stock);
+
+
+            $new_qty = bcsub($data->getUreaRunningBalance(), $data->getUreaBeginningBalance() ,2);
+
+            // urea prod stock
+            $urea_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $urea
+                ));
+
+            $prod_qty = bcsub($urea_prod_stock->getQuantity(), $new_qty ,2);
+
+            $urea_prod_stock->setQuantity($prod_qty);
+            $em->persist($urea_prod_stock);
+
+            if($data->getUreaRunningBalance() != $data->getUreaBeginningBalance())
+            {
+
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($urea_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($urea_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
 
 
 
-            $salt = $stock_repo->findOneBy(array(   
+            // salt
+            $salt_prod_stock = $stock_repo->findOneBy(array(   
                     'inv_account' => $wh_acc,
                     'product' => $salt
                 ));
-            $salt->setQuantity($data->getSaltRunningBalance());
-            $em->persist($salt);
+            $salt_prod_stock->setQuantity($data->getSaltRunningBalance());
+            $em->persist($salt_prod_stock);
+
+            // urea prod stock
+            $salt_prod_stock = $stock_repo->findOneBy(array(   
+                    'inv_account' => $prod_acc,
+                    'product' => $salt
+                ));
+
+
+            $prod_qty = bcsub($salt_prod_stock->getQuantity(), $new_qty ,2);
+
+            $salt_prod_stock->setQuantity($prod_qty);
+            $em->persist($salt_prod_stock);
+
+            if($data->getSaltRunningBalance() != $data->getSaltBeginningBalance())
+            {
+                $new_qty = bcsub($data->getSaltRunningBalance(), $data->getSaltBeginningBalance() ,2);
+
+                // entry for adjustment
+                $prod_entry = new Entry();
+                $prod_entry->setInventoryAccount($prod_acc)
+                    ->setProduct($salt_prod_stock->getProduct())
+                    ->setCredit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($prod_entry);
+
+                // entry for warehouse
+                $wh_entry = new Entry();
+                $wh_entry->setInventoryAccount($wh_acc)
+                    ->setProduct($salt_prod_stock->getProduct())
+                    ->setDebit($new_qty)
+                    ->setTransaction($transaction);
+
+                $em->persist($wh_entry);
+            }
 
 
 

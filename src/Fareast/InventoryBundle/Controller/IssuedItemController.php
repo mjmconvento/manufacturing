@@ -8,6 +8,7 @@ use Catalyst\InventoryBundle\Entity\IIEntry;
 use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
+use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -75,7 +76,16 @@ class IssuedItemController extends CrudController
         $um = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
         $params['user_opts'] = $um->getUserOptions(); 
-        $params['prod_opts'] = $inv->getProductOptions();
+
+
+        // get product options (fixed assets only)
+        $products = $em->getRepository('CatalystInventoryBundle:Product')
+            ->findBy(array('type_id' => Product::TYPE_FIXED_ASSET));
+        $prod_opts = array();
+        foreach ($products as $prod)
+            $prod_opts[$prod->getID()] = $prod->getName();
+
+        $params['prod_opts'] = $prod_opts;
         
         return $params;
     }
@@ -103,13 +113,24 @@ class IssuedItemController extends CrudController
         //     $em->remove($ent);
         // $o->clearEntries();
 
-
+        // checking if theres new borrowed entry
+        $checker = false;
         if(isset($data['prod_opts']))
         {
-            // TODO: return stock if deleted
-            // TODO: check if stock is existing
-            
 
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+
+                if(isset($data['is_new'][$index]))
+                {
+                    $checker = true;
+                }
+
+            }            
+        }
+
+        if ($checker == true)
+        {
             // transaction
             $transaction = new Transaction();
             $transaction->setDescription('Issued Item')
@@ -117,6 +138,17 @@ class IssuedItemController extends CrudController
                 ->setUserCreate($this->getUser());
 
             $em->persist($transaction);
+        }
+
+
+
+        if(isset($data['prod_opts']))
+        {
+            // TODO: return stock if deleted
+            // TODO: check if stock is existing
+            
+
+
 
 
             foreach ($data['prod_opts'] as $index => $prod_id) 
@@ -180,6 +212,21 @@ class IssuedItemController extends CrudController
                         ->setTransaction($transaction);
 
                     $em->persist($adj_entry);
+
+
+                    // update borower account
+                    $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
+                    $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
+          
+                    if ($dept_stock == null)
+                    {
+                        $dept_stock = new Stock($borrower_acc, $prod);
+                    }
+                        
+                    $dept_stock_total = bcadd($dept_stock->getQuantity(), $qty , 2);
+                    $dept_stock->setQuantity($dept_stock_total);
+                    $em->persist($dept_stock);
+
                 }   
                 else
                 {

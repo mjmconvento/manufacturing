@@ -7,6 +7,7 @@ use Catalyst\InventoryBundle\Entity\BorrowedTransaction;
 use Catalyst\InventoryBundle\Entity\BIEntry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Entry;
+use Catalyst\InventoryBundle\Entity\Stock;
 use Catalyst\InventoryBundle\Entity\ReturnedItem;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\InventoryBundle\Entity\Product;
@@ -54,6 +55,10 @@ class BorrowedTransactionController extends CrudController
         $date_to = new DateTime();
         $date_from->format("Y-m-d");
         $date_to->format("Y-m-d");
+
+        $date_from = new DateTime($date_from->format("Y-m-d")." 00:00:00");
+        $date_to =  new DateTime($date_to->format("Y-m-d")." 23:59:59");
+        
 
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
@@ -210,10 +215,25 @@ class BorrowedTransactionController extends CrudController
         // $o->clearEntries();
 
 
-        //process each row (saved to BIEntry entity)
+
+        // checking if theres new borrowed entry
+        $checker = false;
         if(isset($data['prod_opts']))
         {
 
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+
+                if(isset($data['is_new'][$index]))
+                {
+                    $checker = true;
+                }
+
+            }            
+        }
+
+        if ($checker == true)
+        {
             // transaction
             $transaction = new Transaction();
             $transaction->setDescription('Borrowed Item')
@@ -221,6 +241,14 @@ class BorrowedTransactionController extends CrudController
                 ->setUserCreate($this->getUser());
 
             $em->persist($transaction);
+        }
+
+
+
+        //process each row (saved to BIEntry entity)
+        if(isset($data['prod_opts']))
+        {
+
 
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
@@ -284,6 +312,23 @@ class BorrowedTransactionController extends CrudController
 
                     $em->persist($adj_entry);
 
+
+                    // update borower account
+                    $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
+                    $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
+          
+                    if ($dept_stock == null)
+                    {
+                        $dept_stock = new Stock($borrower_acc, $prod);
+                    }
+                        
+                    $dept_stock_total = bcadd($dept_stock->getQuantity(), $qty , 2);
+                    $dept_stock->setQuantity($dept_stock_total);
+                    $em->persist($dept_stock);
+
+
+
+
                 }
             }            
         }
@@ -320,22 +365,34 @@ class BorrowedTransactionController extends CrudController
 
                 $em->persist($returned_item);
                 
-
-
-
                 // update stock
                 $inv = $this->get('catalyst_inventory');
-                $old_qty = $inv->getStockCount($wh_acc, $prod);
+                // $old_qty = $inv->getStockCount($wh_acc, $prod);
+
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($data['prod_id'][$index]); 
+
+                $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                $stock_prod = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+                $old_qty = $stock_prod->getQuantity();
+
                 $new_quantity = bcadd($old_qty, $qty_returned, 2);
 
 
-                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($data['prod_id'][$index]);   
-
-                $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
                 $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
 
                 $stock->setQuantity($new_quantity);
                 $em->persist($stock);
+
+
+                // update stock 2
+
+                $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
+                $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
+                                  
+                $dept_stock_total = bcsub($dept_stock->getQuantity(), $qty_returned , 2);
+                $dept_stock->setQuantity($dept_stock_total);
+                $em->persist($dept_stock);
+
 
 
                 // entry for adjustment
