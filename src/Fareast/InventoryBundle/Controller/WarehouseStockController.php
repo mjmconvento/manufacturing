@@ -20,12 +20,16 @@ class WarehouseStockController extends BaseController
 
         $params = $this->getViewParams('','feac_inv_warehouse_index');
 
-        $params['grid_cols'] = $this->getGridColumns();
-        $em = $this->getDoctrine()->getManager();
+        $params['grid_cols'] = $this->getGridColumns();        
 
-        $inv = $this->get('catalyst_inventory');
-        $params['dept'] = $inv->getWarehouseOptions();
-        $params['prodgroup_opts'] = $inv->getProductGroupOptions();        
+        $inv = $this->get('catalyst_inventory');        
+        $params['dept'] = $inv->getInventoryAccountWarehouseOptions();
+        $params['prodgroup_opts'] = $inv->getProductGroupOptions();
+        
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // die(); 
 
         return $this->render('FareastInventoryBundle:WarehouseStock:index.html.twig', $params);
     }
@@ -33,10 +37,11 @@ class WarehouseStockController extends BaseController
     protected function getGridColumns()
     {
         return array(
-            new GCol('Item Code', 'getSKU', 'sku', 'p'),
-            new GCol('Item Name', 'getName', 'name', 'p'),
+            new GCol('Item Code', 'getSKU', 'sku','p'),
+            new GCol('Warehouse', 'getName','name','w'),
+            new GCol('Item Name', 'getName', 'name','p'),
             new GCol('Quantity', 'getQuantity', 'qty'),
-            new GCol('Unit of Measure', 'getUnitOfMeasure', 'uom', 'p'),
+            new GCol('Unit of Measure', 'getUnitOfMeasure', 'uom','p'),
         );
     }
 
@@ -53,7 +58,6 @@ class WarehouseStockController extends BaseController
             ->addJoin($grid->newJoin('p', 'product', 'getProduct'))
             ->addJoin($grid->newJoin('w', 'inv_account', 'getInventoryAccount'))
             ->enableCountFilter();
-            // ->setQBFilterGroup($fg);
 
         // columns
         $stock_cols = $this->getGridColumns();
@@ -61,37 +65,42 @@ class WarehouseStockController extends BaseController
             $gl->addColumn($col);
 
         return $gl;
-    }
+    }    
 
-    public function gridAction($dept = null, $category = null)
+    public function gridAction($warehouse = null, $category = null)
     {
         $gl = $this->setupGrid();
-        $qry = array();
-        
-        
+        // $qry = array();
+
         $grid = $this->get('catalyst_grid');
         $fg = $grid->newFilterGroup();
 
-        if($dept != null and $dept != 'null' ){
-            $aw_id = explode(',',$dept);
-            $qry[] = 'w.id IN ('. implode(', ', $aw_id).')';
-        }
-
-        if ($category != null and $category != 'null' )
+        //filter warehouses
+        if($warehouse != null and $warehouse != 'null')
         {
-            $aw_id = explode(',',$category);
-            $qry[] = 'p.prodgroup IN ('. implode(', ', $aw_id).')';
+            $wh_id = explode(',',$warehouse);
+            $fg->andWhere('w.id IN (:wh_id)')
+                ->setParameter('wh_id', $wh_id);
         }
 
-        $qry[] = 'o.quantity > 0';
-        
-        if(!empty($qry)){
-            $filter = implode(' AND ', $qry);
-            $fg->where($filter);
-            $gl->setQBFilterGroup($fg);
+        //filter category
+        if($category != null and $category != 'null')
+        {
+            $cat_id = explode(',',$category);
+            $fg->andWhere('p.prodgroup IN (:cat_id)')
+                ->setParameter('cat_id', $cat_id);
         }
-        $gres = $gl->load();
 
+        $fg->andWhere('o.quantity >= 0');
+
+        // if(!empty($qry)){
+        //     $filter = implode(' AND ', $qry);
+        //     $fg->where($filter);
+        //     $gl->setQBFilterGroup($fg);
+        // }
+
+        $gl->setQBFilterGroup($fg);
+        $gres = $gl->load4();
         $resp = new Response($gres->getJSON());
         $resp->headers->set('Content-Type', 'application/json');
 

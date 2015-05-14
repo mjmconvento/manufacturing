@@ -98,6 +98,11 @@ feac_inv_warehouse_index:
     defaults: { _controller: FareastInventoryBundle:WarehouseStock:index }
 
 feac_inv_warehouse_grid:
-    path:    /warehouse/stock/grid/{dept}/{category}
+    path:    /warehouse/stock/grid/{warehouse}/{category}
     methods: [GET]
-    defaults: { _controller: FareastInventoryBundle:WarehouseStock:grid, dept: null, category: null }
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:grid, warehouse: null, category: null }
+
+feac_inv_warehouse_filter:
+    path:   /warehouse/filter/{warehouse}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:filter, warehouse: null, category: null }

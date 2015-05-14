@@ -16,7 +16,7 @@
                         <div class="table-toolbar" style="height:40px">
                             <form id="date_form" method="post" class="form-horizontal">
                             <label class="col-md-3 control-label">Source Warehouse</label>
-                            <div class ="col-md-7">
+                            <div class ="col-md-5">
                                 <select id="dept" class="form-control select_2" name="dept" multiple>
                                 {{ f.options(dept, 0) }}
                                 </select>
@@ -27,7 +27,7 @@
                         <div class="table-toolbar" style="height:40px">
                             <form id="date_form" method="post" class="form-horizontal">
                             <label class="col-md-3 control-label">Category</label>
-                            <div class ="col-md-7">
+                            <div class ="col-md-5">
                                 <select id="prodgroup_opts" class="form-control select_2" name="prodgroup_opts" multiple>
                                 {{ f.options(prodgroup_opts, 0) }}
                                 </select>
@@ -37,26 +37,26 @@
                             </div>
                             </form>
                         </div>
-
+{# 
                         <h4 class="form-section">Summary Details</h4>
 
                         {{ f.group_text('Total Item Count','count', object.getCode|default(''), 3,4,true) }}
                         {{ f.group_text('Total Quantity','qty', object.getCode|default(''), 3,4,true) }}
-
+ #}
                         <div class="table-toolbar">
                             <a href="{# path('feac_inv_borrowed_add') #}" class="btn green">Export to CSV</a>
                             <a href="{# path(ser_inv_prod_export) #}" class="btn green">Print</a>
                         </div>
 
                         <table class="table table-striped table-bordered table-hover" id="list_table">
-                            <thead>
+                            <thead>                                
                                 <tr>
                                 {% for col in grid_cols %}
                                     <th>{{ col.getLabel }}</th>
                                 {% endfor %}
-                                </tr>
+                                </tr> 
                             </thead>
-                            <tbody>
+                            <tbody>                                
                             </tbody>
                         </table>
                     </div>
@@ -77,12 +77,12 @@
 
 <script>
 $(document).ready(function() {
-    ComponentsPickers.init();
-   var dept;
-   var category;
-   var dTable;
+    // ComponentsPickers.init();
+    var wh;
+    var cat;
+    var dTable;
 
-   dTable = $('#list_table').dataTable({
+    dTable = $('#list_table').dataTable({
         "bProcessing": true,
         "bServerSide": true,
         "sAjaxSource": "{{ path('feac_inv_warehouse_grid')}}",
@@ -100,16 +100,27 @@ $(document).ready(function() {
         ]
     });
 
-   $('#filter_button').click(function(){
-        var dept = $('#dept').val();
-        var cat = $('#prodgroup_opts').val();
-        var path = "{{ path('feac_inv_warehouse_grid', { 'dept' : 'DEPT', 'category' : 'CATEGORY'}) }}";
-        path = path.replace('DEPT', dept);
-        path = path.replace('CATEGORY', cat);
-        // console.log(path)
-        dTable.fnReloadAjax(path);
-   });
+    $('#filter_button').click(function() 
+    {
 
+        var wh = $('#dept').val();
+        var cat = $('#prodgroup_opts').val();
+
+        var path = "{{ path('feac_inv_warehouse_grid', {'warehouse' : 'WAREHOUSE', 'category' : 'CATEGORY'}) }}";
+        path = path.replace('WAREHOUSE', wh);
+        path = path.replace('CATEGORY', cat);
+
+        // console.log(wh)
+        // console.log(cat)
+
+        dTable.fnReloadAjax(path);
+
+        // var url = '{{ path("feac_inv_warehouse_filter", { warehouse: ":warehouse", category: ":category" }) }}';
+        // url = url.replace(":warehouse", wh).
+        // replace(":category", cat);
+
+        // dTable.fnReloadAjax(url);
+    });
 
 
     $('#list_table_wrapper .dataTables_filter input').addClass("form-control input-small input-inline"); // modify table search input

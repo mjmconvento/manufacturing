@@ -55,6 +55,11 @@ class InventoryManager
     {
         return $this->em->getRepository('CatalystInventoryBundle:Product')->find($id);
     }
+
+    public function findInventoryAccount($id)
+    {
+        return $this->em->getRepository('CatalystInventoryBundle:Account')->find($id);
+    }
     
     public function getWarehouseOptions($filter = array())
     {
@@ -68,6 +73,22 @@ class InventoryManager
         $wh_opts = array();
         foreach ($whs as $wh)
             $wh_opts[$wh->getID()] = $wh->getName();
+
+        return $wh_opts;
+    }
+
+    public function getInventoryAccountWarehouseOptions($filter = array())
+    {
+        $whs = $this->em
+            ->getRepository('CatalystInventoryBundle:Warehouse')
+            ->findBy(
+                $filter,
+                array('name' => 'ASC')
+            );
+
+        $wh_opts = array();
+        foreach ($whs as $wh)
+            $wh_opts[$wh->getInventoryAccount()->getID()] = $wh->getName();
 
         return $wh_opts;
     }
