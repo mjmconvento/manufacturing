@@ -109,7 +109,8 @@ function appendEntry()
         field += '</select> </td>'; 
         field += '<td><input type="text" name="uom[]" class="form-control uom" readonly></td>';        
         field += '<td><input type="number" name="qty[]" min="0" class="form-control qty"></td>';
-        field += '<td><a href="#" class="btn red btn-xs remove_field"><i class="fa fa-times"></i> Delete</a></td>';
+        field += '<td><a href="javascript:void(0)" class="btn_en_del btn_dim_del btn default btn-xs red-sunglo"><i class="fa fa-times"></i> Delete</a></td>';
+        field += '<td></td>';
         field += '</tr>';
 
         $('#from_table').append(field);
@@ -204,7 +205,7 @@ function product_refresh(prod_select)
 
 
         //remove row
-        $(document).on("click",".remove_field", function(e){
+        $(document).on("click",".btn_en_del", function(e){
             e.preventDefault();            
             var tr = $(this).closest('tr');
             tr.remove();

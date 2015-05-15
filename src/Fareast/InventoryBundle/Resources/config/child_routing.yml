@@ -56,6 +56,11 @@ feac_inv_issued_print:
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:IssuedItem:printPDF }
 
+feac_inv_issued_export:
+    pattern: /issued/list/csv
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:IssuedItem:exportCSV }
+
 
 feac_inv_adjust_index:
     path:     /stock/adjust
@@ -106,3 +111,13 @@ feac_inv_warehouse_filter:
     path:   /warehouse/filter/{warehouse}/{category}
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:WarehouseStock:filter, warehouse: null, category: null }
+
+feac_inv_warehouse_export:
+    pattern: /warehouse/stock/csv/{warehouse}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:exportCSV, warehouse: null, category: null  }
+
+feac_inv_warehouse_print:
+    pattern: /warehouse/stock/print/{warehouse}/{category}
+    methods: [GET]
+    defaults: { _controller: FareastInventoryBundle:WarehouseStock:print, warehouse: null, category: null  }

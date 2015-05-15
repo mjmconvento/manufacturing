@@ -129,7 +129,7 @@ class BorrowedItemController extends CrudController
         $params['user_opts'] = $um->getUserOptions(); 
         $params['prod_opts'] = $inv->getProductOptions();
 
-        $params['status_opts'] = array('Incomplete'=>  BorrowedItem::STATUS_INCOMPLETE, 'Complete'=>  BorrowedItem::STATUS_COMPLETE);        
+        // $params['status_opts'] = array('Incomplete'=>  BorrowedItem::STATUS_INCOMPLETE, 'Complete'=>  BorrowedItem::STATUS_COMPLETE);        
         
         return $params;
     }
@@ -149,8 +149,16 @@ class BorrowedItemController extends CrudController
 
         $o->setIssuedTo($user->findUser($data['user_opts']));
         $o->setDateIssue(new DateTime($data['date_issue']));
-        $o->setDateReturned(new DateTime($data['date_return']));
+        if ($data['date_return'] != null)
+        {
+            $o->setDateReturned(($data['date_return']));
+        }
+        else
+        {
+            $o->setDateReturned('');
+        }
         $this->updateTrackCreate($o, $data, $is_new);
+
         $o->setStatus($data['status']);
 
         // clear entries

@@ -122,7 +122,8 @@ class BorrowedTransactionController extends CrudController
         $em = $this->getDoctrine()->getManager();
 
         $um = $this->get('catalyst_user');  
-        $params['user_opts'] = $um->getUserOptions();
+        $user_opts = array(0 => '[Select User]');
+        $params['user_opts'] = $user_opts + $um->getUserOptions();
 
         if ($date_from != null and $date_to != null)
         {    
@@ -465,7 +466,10 @@ class BorrowedTransactionController extends CrudController
     public function getStockReport()
     {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT o.code, w.dept as w_dept FROM CatalystInventoryBundle:BorrowedTransaction o INNER JOIN o.borrower w');
+        $query = $em->createQuery('SELECT o.code, d.name, LOWER(o.date_issue), o.status  
+            FROM CatalystInventoryBundle:BorrowedTransaction o 
+            INNER JOIN o.borrower u 
+            INNER JOIN u.dept d');
         return $query->getResult();
     }
 }

@@ -106,4 +106,73 @@ class WarehouseStockController extends BaseController
 
         return $resp;
     }
+
+    public function exportCSVAction($warehouse = null, $category = null)
+    {
+        $filename = 'wh_stock_report.csv';
+        $data = $this->getStockReport($warehouse, $category);
+
+        // redirect file to stdout, store in output buffer and place in $csv
+        $file = fopen('php://output', 'w');
+        ob_start();
+
+        fputcsv($file, $this->headers());
+
+        foreach ($data as $dt)
+            fputcsv($file, $dt);
+        fclose($file);
+        $csv = ob_get_contents();
+        ob_end_clean();
+
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->setContent($csv);
+
+        return $response;
+    }
+
+    public function headers()
+    {
+        // csv headers
+        $headers = [
+            'Item Code',
+            'Warehouse',
+            'Item Name',
+            'Quantity',
+            'Unit',
+        ];
+        return $headers;
+    }
+
+    public function getStockReport($warehouse = null, $category = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($warehouse != null or $category != null)
+        {
+            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom FROM CatalystInventoryBundle:Stock o INNER JOIN o.product p INNER JOIN o.inv_account w
+                WHERE p.prodgroup = :prod_group or w.id = :invaccount and o.quantity >= 0')
+                    ->setParameter('prod_group', $category)
+                    ->setParameter('invaccount', $warehouse);
+        }
+        else
+        {
+            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom FROM CatalystInventoryBundle:Stock o INNER JOIN o.product p INNER JOIN o.inv_account w 
+                WHERE o.quantity >= 0');
+        }
+        return $query->getResult();
+    }
+
+    public function printAction($warehouse = null, $category = null)
+    {
+        $this->title = 'Warehouse Stock';
+        $params = $this->getViewParams('', 'feac_inv_warehouse_index');
+
+        $params['grid_cols'] = $this->getGridColumns();
+        $params['data'] = $this->getStockReport($warehouse, $category);
+
+        return $this->render(
+            'FareastInventoryBundle:WarehouseStock:print.html.twig', $params);
+    }
 }

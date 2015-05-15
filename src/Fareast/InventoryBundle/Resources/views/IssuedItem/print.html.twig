@@ -3,11 +3,10 @@
 	<div style="text-align:center; font-family:arial; padding-bottom: 7px; font-size: 15px;">ISSUANCE SLIP</div>
 	<br>
 	
-	<table>
-		{% for d in data %}
+	<table>	
 		<tr>
-			<td style="width:150px">No. {{ d.code }}</td>
-			<td>Date: {{ d.created|date('Y-m-d') }}</td>
+			<td style="width:150px">No. {{ data[0].code }}</td>
+			<td>Date: {{ data[0].created|date('Y-m-d') }}</td>
 		</tr>
 	</table>
 	<br>
@@ -22,23 +21,23 @@
 		<tr>
 			<td></td>
 		</tr>
-		<tbody>		
+		<tbody>
+		{% for d in data %}	
 			<tr>
 				<td style="width:60px">{{ d.name }}</td>
 				<td style="width:100px">{{d.description}}</td>
 				<td style="width:80px">{{d.remark}}</td>
 				<td>{{d.quantity}}</td>
 			</tr>
-		
+		{% endfor %}
 		</tbody>
 	</table>
 	<page_footer>
-		<table>
+		<table>			
 			<tr>
 				<td style="width:200px">Received By:</td>			
-				<td>Issued By: {{ d.create }}</td>
-			{% endfor %}
-			</tr>
+				<td>Issued By: {{ data[0].create }}</td>			
+			</tr>			
 		</table>
 	</page_footer>
 </page>

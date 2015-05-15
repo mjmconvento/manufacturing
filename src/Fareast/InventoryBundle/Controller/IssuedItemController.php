@@ -75,7 +75,8 @@ class IssuedItemController extends CrudController
 
         $um = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
-        $params['user_opts'] = $um->getUserOptions(); 
+        $user_opts = array(0 => '[Select User]');
+        $params['user_opts'] = $user_opts + $um->getUserOptions(); 
 
 
         // get product options (fixed assets only)
@@ -321,6 +322,15 @@ class IssuedItemController extends CrudController
 
         $html = $this->render('FareastInventoryBundle:IssuedItem:print.html.twig', $params);
         return $pdf->printPdf($html->getContent());
+    }
+
+    public function getStockReport()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT o.code, LOWER(o.date_issue), u.name  
+            FROM CatalystInventoryBundle:IssuedItem o             
+            INNER JOIN o.issued_to u');
+        return $query->getResult();
     }
 
 }
