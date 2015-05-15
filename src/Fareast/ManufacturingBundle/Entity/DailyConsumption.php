@@ -15,6 +15,13 @@ use DateTime;
  */
 class DailyConsumption
 {
+    const PROD_MOLLASES             = "Mollases";
+    const PROD_BUNKER               = "Bunker";
+    const PROD_SULFURIC_ACID        = "Sulfuric Acid";
+    const PROD_CAUSTIC_SODA         = "Caustic Soda"; 
+    const PROD_UREA                 = "Urea";
+    const PROD_SALT                 = "Salt";
+
     use HasGeneratedID;
     use TrackCreate;
     use TrackUpdate;
@@ -26,152 +33,152 @@ class DailyConsumption
     protected $generated;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_purchases;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_pumped_mdt;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_pondo;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_production_gal;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_production_ton;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_tsai;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $mol_brix;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $bunker_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $bunker_purchase;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $bunker_consumption;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $bunker_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $sul_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $sul_purchase;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $sul_consumption;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $sul_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $soda_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $soda_purchase;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $soda_consumption;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $soda_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $urea_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $urea_purchase;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $urea_consumption;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $urea_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $salt_beginning_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $salt_purchase;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $salt_consumption;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $salt_running_balance;
 
     /**
-     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true)
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
     protected $electricity_final;
 
@@ -291,7 +298,38 @@ class DailyConsumption
     protected $extra_mh;
 
     public function __construct()
-    {
+    {        
+        $this->mol_beginning_balance = 0;
+        $this->mol_purchases = 0;
+        $this->mol_pumped_mdt = 0;
+        $this->mol_running_balance = 0;
+        $this->mol_pondo = 0;
+        $this->mol_production_gal = 0;
+        $this->mol_production_ton = 0;
+        $this->mol_tsai = 0;
+        $this->mol_brix = 0;
+        $this->bunker_beginning_balance = 0;
+        $this->bunker_purchase = 0;
+        $this->bunker_consumption = 0;
+        $this->bunker_running_balance = 0;
+        $this->sul_beginning_balance = 0;
+        $this->sul_purchase = 0;
+        $this->sul_consumption = 0;
+        $this->sul_running_balance = 0;
+        $this->soda_beginning_balance = 0;
+        $this->soda_purchase = 0;
+        $this->soda_consumption = 0;
+        $this->soda_running_balance = 0;
+        $this->urea_beginning_balance = 0;
+        $this->urea_purchase = 0;
+        $this->urea_purchase = 0;
+        $this->urea_consumption = 0;
+        $this->urea_running_balance = 0;
+        $this->salt_beginning_balance = 0;
+        $this->salt_purchase = 0;
+        $this->salt_purchase = 0;
+        $this->salt_consumption = 0;
+        $this->salt_running_balance = 0;
         
     }
 

@@ -56,11 +56,25 @@ class InventoryManager
         return $this->em->getRepository('CatalystInventoryBundle:Product')->find($id);
     }
 
+    public function findProductByName($name)
+    {
+        return $this->em->getRepository('CatalystInventoryBundle:Product')->findOneByName($name);
+    }
+
     public function findInventoryAccount($id)
     {
         return $this->em->getRepository('CatalystInventoryBundle:Account')->find($id);
     }
     
+    public function getProductStock($wh_inv_acc, $product)
+    {
+        return $this->em->getRepository('CatalystInventoryBundle:Stock')->findOneBy(array(   
+                    'inv_account' => $wh_inv_acc,
+                    'product' => $product
+                ));
+
+    }
+
     public function getWarehouseOptions($filter = array())
     {
         $whs = $this->em
