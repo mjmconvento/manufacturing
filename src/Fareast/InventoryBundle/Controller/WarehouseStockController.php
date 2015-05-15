@@ -149,17 +149,32 @@ class WarehouseStockController extends BaseController
     public function getStockReport($warehouse = null, $category = null)
     {
         $em = $this->getDoctrine()->getManager();
-        if($warehouse != null or $category != null)
+        if($warehouse != null)
         {
-            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom FROM CatalystInventoryBundle:Stock o INNER JOIN o.product p INNER JOIN o.inv_account w
-                WHERE p.prodgroup = :prod_group or w.id = :invaccount and o.quantity >= 0')
-                    ->setParameter('prod_group', $category)
+            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+                FROM CatalystInventoryBundle:Stock o 
+                INNER JOIN o.product p 
+                INNER JOIN o.inv_account w
+                WHERE p.prodgroup = :prod_group or w.id = :invaccount and o.quantity >= 0')                    
                     ->setParameter('invaccount', $warehouse);
         }
         else
         {
-            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom FROM CatalystInventoryBundle:Stock o INNER JOIN o.product p INNER JOIN o.inv_account w 
+            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+                FROM CatalystInventoryBundle:Stock o 
+                INNER JOIN o.product p 
+                INNER JOIN o.inv_account w 
                 WHERE o.quantity >= 0');
+        }
+
+        if($category != null)
+        {
+            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+                FROM CatalystInventoryBundle:Stock o 
+                INNER JOIN o.product p 
+                INNER JOIN o.inv_account w
+                WHERE p.prodgroup = :prod_group and o.quantity >= 0')
+                    ->setParameter('prod_group', $category);                    
         }
         return $query->getResult();
     }
