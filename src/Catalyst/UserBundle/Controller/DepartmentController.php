@@ -46,15 +46,17 @@ class DepartmentController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
-        $this->updateTrackCreate($o, $data, $is_new);
-        $this->updateHasGeneratedID($o, $data, $is_new);
-        $this->updateHasName($o, $data, $is_new);
-        $this->updateHasInventoryAccount($o,$data,$is_new);
 
         // validate name
         if (strlen($data['name']) > 0)
             $o->setName($data['name']);
         else
-            throw new ValidationException('Cannot leave name blank');       
+            throw new ValidationException('Cannot leave name blank'); 
+        
+        $this->updateTrackCreate($o, $data, $is_new);
+        $this->updateHasGeneratedID($o, $data, $is_new);
+        $this->updateHasName($o, $data, $is_new);
+        $this->updateHasInventoryAccount($o,$data,$is_new);
+      
     }
 }

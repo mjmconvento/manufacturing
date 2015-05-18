@@ -92,14 +92,7 @@ class IssuedItemController extends CrudController
     }
 
     protected function update($o, $data, $is_new = false)
-    {
-        // echo "<pre>";
-        // print_r($data);
-        // // print_r($ctr);
-        // // print_r($date);
-        // echo "</pre>";
-        // die();
-        
+    {        
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
@@ -107,12 +100,6 @@ class IssuedItemController extends CrudController
         $o->setIssuedTo($user->findUser($data['user_opts']));
         $o->setDateIssue(new DateTime($data['date_issue']));        
         $this->updateTrackCreate($o, $data, $is_new);
-
-        // clear entries
-        // $ents = $o->getEntries();
-        // foreach($ents as $ent)
-        //     $em->remove($ent);
-        // $o->clearEntries();
 
         // checking if theres new borrowed entry
         $checker = false;
@@ -142,15 +129,10 @@ class IssuedItemController extends CrudController
         }
 
 
-
         if(isset($data['prod_opts']))
         {
             // TODO: return stock if deleted
             // TODO: check if stock is existing
-            
-
-
-
 
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
@@ -167,11 +149,6 @@ class IssuedItemController extends CrudController
                 $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
                 $wh_acc = $wh->getInventoryAccount();
 
-                // adijustment stock warehouse
-                $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
-                $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
-                $adj_acc = $adj_warehouse->getInventoryAccount();
-
                 $entry = $em->getRepository('CatalystInventoryBundle:IIEntry')->find($id);
 
                 if ($entry == null)
@@ -185,17 +162,6 @@ class IssuedItemController extends CrudController
 
                     $o->addEntry($entry);
 
-                    // update stock
-                    $inv = $this->get('catalyst_inventory');
-                    $old_qty = $inv->getStockCount($wh_acc, $prod);
-                    $new_quantity = bcsub($old_qty, $qty, 2);
-
-                    $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
-                    $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
-
-                    $stock->setQuantity($new_quantity);
-                    $em->persist($stock);
-
                     // entry for warehouse
                     $wh_entry = new Entry();
                     $wh_entry->setInventoryAccount($wh_acc)
@@ -203,30 +169,16 @@ class IssuedItemController extends CrudController
                         ->setCredit($qty)
                         ->setTransaction($transaction);
 
-                    $em->persist($wh_entry);
+                    $transaction->addEntry($wh_entry);
 
-                    // entry for adjustment
+                    // entry for department
                     $adj_entry = new Entry();
                     $adj_entry->setInventoryAccount($o->getIssuedTo()->getDepartment()->getInventoryAccount())
                         ->setProduct($prod)
                         ->setDebit($qty)
                         ->setTransaction($transaction);
+                    $transaction->addEntry($adj_entry);
 
-                    $em->persist($adj_entry);
-
-
-                    // update borower account
-                    $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
-                    $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
-          
-                    if ($dept_stock == null)
-                    {
-                        $dept_stock = new Stock($borrower_acc, $prod);
-                    }
-                        
-                    $dept_stock_total = bcadd($dept_stock->getQuantity(), $qty , 2);
-                    $dept_stock->setQuantity($dept_stock_total);
-                    $em->persist($dept_stock);
 
                 }   
                 else
@@ -239,7 +191,15 @@ class IssuedItemController extends CrudController
                     $em->persist($entry);
                 }
             }
-        }        
+
+
+        }     
+
+        if ($checker == true)
+        {
+            $inv->persistTransaction($transaction);
+        }
+
     }
 
     public function getDeptAction($id)
