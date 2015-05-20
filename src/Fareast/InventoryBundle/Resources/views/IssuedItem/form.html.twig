@@ -50,8 +50,8 @@
                                             <td><input type="text" name="desc[]" class="form-control desc" value="{{ entry.getDescription }}"></td>
                                             <td><input type="text" name="uom[]" class="form-control uom" value="{{ entry.getProduct.getUnitOfMeasure }}" readonly></td>
                                             <td><input type="text" name="remarks[]" class="form-control remarks" value="{{ entry.getRemarks }}" ></td>
-                                            <td><input type="text" name="qty[]" class="form-control qty" value="{{ entry.getQuantity }}" ></td>
-                                            <td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i></a></td>
+                                            <td><input type="text" name="qty[]" class="form-control qty" value="{{ entry.getQuantity }}" readonly></td>
+                                            <td><a href="{{ path('feac_inv_issued_entry_delete', { issued_id: object.getID, entry_id: entry.getID }) }}" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"> Delete</i></a></td>
                                         </tr>
                                     {% endfor %}
                                     {% endif %}
@@ -81,42 +81,42 @@
 
 {% block js %}
 <script>
-function appendEntry()
-{
-    var field = '<tr class="prod_row">';   
-        field += '<input type="hidden" name="is_new[]"> <input type="hidden" name="id[]" class="form-control">';     
-        field += '<td> <select name="prod_opts[]" class="form-control select2 prod_opts">';
-        field += $('.prod_opts').html();   
-        field += '</select> </td>';                    
-        field += '<td> <input type="text" name="desc[]" class="form-control desc"></td>';
-        field += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
-        field += '<td> <input type="text" name="remarks[]" class="form-control remarks"></td>';
-        field += '<td> <input type="number" name="qty[]" min="0" class="form-control qty"></td>';
-        field += '<td><a href="#" class="btn_en_del btn_dim_del btn default btn-xs red-sunglo"><i class="fa fa-times"></i> Delete</a></td>';
-        field += '</tr>';
+    function appendEntry()
+    {
+        var field = '<tr class="prod_row">';   
+            field += '<input type="hidden" name="is_new[]"> <input type="hidden" name="id[]" class="form-control">';     
+            field += '<td> <select name="prod_opts[]" class="form-control select2 prod_opts">';
+            field += $('.prod_opts').html();   
+            field += '</select> </td>';                    
+            field += '<td> <input type="text" name="desc[]" class="form-control desc"></td>';
+            field += '<td> <input type="text" name="uom[]" class="form-control uom" readonly></td>';
+            field += '<td> <input type="text" name="remarks[]" class="form-control remarks"></td>';
+            field += '<td> <input type="number" name="qty[]" value="1" min="1" class="form-control qty"></td>';
+            field += '<td><a href="#" class="btn_en_del btn_dim_del btn default btn-xs red-sunglo"><i class="fa fa-times"></i></a></td>';
+            field += '</tr>';
 
-        $('#from_table').append(field);
+            $('#from_table').append(field);
 
-        var prod_select = $('tr.prod_row:last').find('.prod_opts');
-        product_refresh(prod_select);
-}
+            var prod_select = $('tr.prod_row:last').find('.prod_opts');
+            product_refresh(prod_select);
+    }
 
-function product_refresh(prod_select)
-{
-    var prod_id = prod_select.closest('tr').find('.prod_opts').val();
+    function product_refresh(prod_select)
+    {
+        var prod_id = prod_select.closest('tr').find('.prod_opts').val();
 
-    var url = "{{ path('cat_inv_borrowed_product', { prod_id: ':prod_id'}) }}";
-    url = url.replace(":prod_id", prod_id);
+        var url = "{{ path('cat_inv_borrowed_product', { prod_id: ':prod_id'}) }}";
+        url = url.replace(":prod_id", prod_id);
 
-    var row = prod_select.closest('tr');
+        var row = prod_select.closest('tr');
 
-    $.getJSON(url, function(data){
-        // console.log(data)
+        $.getJSON(url, function(data){
+            // console.log(data)
 
-        row.find('.uom').val(data.uom);
-    });
-    // console.log(prod_id)
-}
+            row.find('.uom').val(data.uom);
+        });
+        // console.log(prod_id)
+    }
 
 
     $(document).ready(function() {

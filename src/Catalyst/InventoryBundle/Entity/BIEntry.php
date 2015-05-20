@@ -26,7 +26,7 @@ class BIEntry
     protected $borrowed;
 
     /**
-     * @ORM\OneToMany(targetEntity="ReturnedItem", mappedBy="bientry", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ReturnedItem", mappedBy="bientry", cascade={"persist", "remove"})
      */
     protected $returned;
 

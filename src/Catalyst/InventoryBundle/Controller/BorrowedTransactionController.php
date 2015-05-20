@@ -117,6 +117,8 @@ class BorrowedTransactionController extends CrudController
         return new JsonResponse($data);   
     }
 
+
+
     protected function padFormParams(&$params, $date_from = null, $date_to = null)
     {
         $em = $this->getDoctrine()->getManager();
@@ -229,16 +231,11 @@ class BorrowedTransactionController extends CrudController
 
 
         // main warehouse account
-        $config = $this->get('catalyst_configuration');
-        $main_warehouse = $config->get('catalyst_warehouse_main');
-        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
-        $wh_acc = $wh->getInventoryAccount();
+        $wh_acc = $this->getMainWarehouseAccount();
 
         //process each row (saved to BIEntry entity)
         if(isset($data['prod_opts']))
         {
-
-
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
 
@@ -278,9 +275,7 @@ class BorrowedTransactionController extends CrudController
                         ->setDebit($qty)
                         ->setTransaction($transaction);
 
-
                     $transaction->addEntry($adj_entry);
-
                 }
             }        
 
@@ -343,12 +338,262 @@ class BorrowedTransactionController extends CrudController
             }
 
             $inv->persistTransaction($transaction);
-
         }            
-        
-
-
     }
+
+
+    public function addSubmitAction()
+    {
+        $this->checkAccess($this->route_prefix . '.add');
+        $data = $this->getRequest()->request->all();
+        $url = $this->generateUrl('cat_inv_borrowed_add_form');
+
+        // Checking if user is selected
+        if($data['user_opts'] == 0)
+        {
+            $this->addFlash('error', 'Select a User.');
+            return $this->redirect($url);
+        }
+
+
+        $this->hookPreAction();
+        $obj = $this->add();
+        try
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            $checker = $this->validate($data, 'edit');
+
+            if ($checker == true)
+            {
+                $this->addFlash('error', 'Not enough stock in main warehouse.');
+                return $this->redirect($url);
+
+            }
+            else
+            {
+                $this->persist($obj);
+
+                $this->addFlash('success', $this->title . ' added successfully.');
+
+                return $this->redirect($this->generateUrl($this->getRouteGen()->getList()));
+            }
+
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
+    }
+
+    public function editSubmitAction($id)
+    {
+        $this->checkAccess($this->route_prefix . '.edit');
+
+        $data = $this->getRequest()->request->all();
+        $url = $this->generateUrl('cat_inv_borrowed_edit_form',
+            array('id' => $id));
+
+        // Checking if user is selected
+        if($data['user_opts'] == 0)
+        {
+            $this->addFlash('error', 'Select a User.');
+            return $this->redirect($url);
+        }
+
+
+        $this->hookPreAction();
+        try
+        {
+            $em = $this->getDoctrine()->getManager();
+            $object = $em->getRepository($this->repo)->find($id);
+
+            // validate
+            $checker = $this->validate($data, 'edit');
+
+
+
+            if ($checker == true)
+            {
+                $this->addFlash('error', 'Not enough stock in main warehouse.');
+                return $this->redirect($url);
+
+            }
+            else
+            {
+                // update db
+                $this->update($object, $data);
+
+
+                // exceed checker
+     
+                // $exceed_checker = false;
+
+                // foreach($object->getEntries() as $entry)
+                // {
+                //     $borrowed_qty = $entry->getQuantity();
+                //     $returned_qty = 0;
+
+                //     if(count($entry->getReturned()) != 0 )
+                //     {    
+                //         foreach($entry->getReturned() as $returned)
+                //         {
+                //             $returned_qty += $returned->getQuantity();
+                //         }
+                //     }
+
+                //     if ($borrowed_qty < $returned_qty)
+                //     {   
+                //         $exceed_checker = true;
+                //     }
+                // }
+
+                // echo $returned_qty;
+                // die();
+                // if ($exceed_checker == true)
+                // {                
+                //     $this->addFlash('error', 'Returned quantity exceeds borrowed quantity.');
+                //     return $this->redirect($url);
+                // }
+
+
+
+
+
+                $em->flush();
+                $this->hookPostSave($object);
+                // log
+                $odata = $object->toData();
+                $this->logUpdate($odata);
+
+                $this->addFlash('success', $this->title . ' ' . $this->getObjectLabel($object) . ' edited successfully.');
+
+                return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
+            }
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->editError($object, $id);
+        }
+        catch (DBALException $e)
+        {
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($object);
+        }
+    }
+
+    protected function validate($data, $type)
+    {            
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+        $checker = false;
+        if(isset($data['prod_opts']))
+        {
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+                $qty = $data['qty'][$index]; 
+                    
+                // Main warehouse account
+                $wh_acc = $this->getMainWarehouseAccount();
+
+                // Checking if there are enough stock
+                $stock_count = $inv->getStockCount($wh_acc, $prod);
+                if ($stock_count < $qty or $stock_count == null)
+                {
+                    $checker = true;
+                }
+            }
+        }
+
+        return $checker;
+    }
+
+    public function deleteEntryAction($borrow_id, $entry_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($entry_id);
+        $qty = $entry->getquantity();
+        $prod = $entry->getProduct();
+
+        $returned_qty = 0;
+
+        foreach ($entry->getReturned() as $returned)
+        {
+            $returned_qty += $returned->getQuantity();
+        }
+
+
+        $total_qty = bcsub($qty, $returned_qty, 2);
+
+
+        // Main warehouse account
+        $inv = $this->get('catalyst_inventory');
+        $wh_acc = $this->getMainWarehouseAccount();
+
+        // transaction
+        $transaction = new Transaction();
+        $transaction->setDescription('Deleted Borrowed Item')
+            ->setDateCreate(new DateTime)
+            ->setUserCreate($this->getUser());
+
+        $em->persist($transaction);
+
+        // Entry for warehouse
+        $wh_entry = new Entry();
+        $wh_entry->setInventoryAccount($wh_acc)
+            ->setProduct($prod)
+            ->setDebit($total_qty)
+            ->setTransaction($transaction);
+
+        $transaction->addEntry($wh_entry);
+
+        // Entry for department
+        $adj_entry = new Entry();
+        $adj_entry->setInventoryAccount($entry->getBorrowed()->getBorrower()->getDepartment()->getInventoryAccount())
+            ->setProduct($prod)
+            ->setCredit($total_qty)
+            ->setTransaction($transaction);
+
+        $transaction->addEntry($adj_entry);
+
+        $em->remove($entry);
+
+        $inv->persistTransaction($transaction);
+        $em->flush();
+
+
+        $this->addFlash('success', 'Entry Deleted');
+        $url = $this->generateUrl('cat_inv_borrowed_edit_form',
+            array('id' => $borrow_id));
+
+        return $this->redirect($url);
+    }
+
+
+    protected function getMainWarehouseAccount()
+    {            
+        $em = $this->getDoctrine()->getManager();
+
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
+
+        return $wh_acc;
+    }
+
 
     protected function hookPostSave($obj, $is_new = false)
     {
