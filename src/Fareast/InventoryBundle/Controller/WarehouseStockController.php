@@ -37,8 +37,8 @@ class WarehouseStockController extends BaseController
     protected function getGridColumns()
     {
         return array(
-            new GCol('Item Code', 'getSKU', 'sku','p'),
             new GCol('Warehouse', 'getName','name','w'),
+            new GCol('Item Code', 'getSKU', 'sku','p'),            
             new GCol('Item Name', 'getName', 'name','p'),
             new GCol('Quantity', 'getQuantity', 'qty'),
             new GCol('Unit of Measure', 'getUnitOfMeasure', 'uom','p'),
@@ -137,8 +137,8 @@ class WarehouseStockController extends BaseController
     {
         // csv headers
         $headers = [
-            'Item Code',
             'Warehouse',
+            'Item Code',            
             'Item Name',
             'Quantity',
             'Unit',
@@ -149,27 +149,27 @@ class WarehouseStockController extends BaseController
     public function getStockReport($warehouse = null, $category = null)
     {
         $em = $this->getDoctrine()->getManager();
-        if($warehouse != null)
+        if($warehouse != null and $warehouse != 'null')
         {
-            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.id,p.sku, p.name, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w
-                WHERE p.prodgroup = :prod_group or w.id = :invaccount and o.quantity >= 0')                    
+                WHERE w.id = :invaccount and o.quantity >= 0')                    
                     ->setParameter('invaccount', $warehouse);
         }
         else
         {
-            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.id, p.sku,  p.name, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w 
                 WHERE o.quantity >= 0');
         }
 
-        if($category != null)
+        if($category != null and $category != 'null')
         {
-            $query = $em->createQuery('SELECT p.sku, w.name, p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.id ,p.sku, p.name, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w
