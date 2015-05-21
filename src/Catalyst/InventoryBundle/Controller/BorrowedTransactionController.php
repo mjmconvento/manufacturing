@@ -335,9 +335,6 @@ class BorrowedTransactionController extends CrudController
                     $transaction->addEntry($adj_entry);
                 }
             }        
-
-                }
-            }            
         }
 
         // main warehouse account
@@ -653,9 +650,6 @@ class BorrowedTransactionController extends CrudController
             ->setTransaction($transaction);
 
         $transaction->addEntry($adj_entry);
-
-            }
-        }                    
 
         $em->remove($entry);
 
