@@ -109,7 +109,9 @@ class BorrowedTransactionController extends CrudController
             {
                 $data = [
                     'uom' => $u->getUnitOfMeasure(),
-                    'prod_id' => $u->getID()
+                    'prod_type' => $u->getTypeText(),
+                    'prod_id' => $u->getID(),
+                    'sku' => $u->getSku(),
                 ];
             }
         }
@@ -186,6 +188,14 @@ class BorrowedTransactionController extends CrudController
     {
         //TODO: check if returned item is equals to number of borrowed
         //TODO: clean up the 90 percent of the code  
+        //TODO: borrowed transaction adding when no new is found
+
+
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // die();
+        
         
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('catalyst_user');
@@ -201,10 +211,19 @@ class BorrowedTransactionController extends CrudController
         $o->setDescription($data['description']);
         $o->setRemark($data['remark']);
 
-        // checking if there is a new borrowed entry
+        // clear entries
+        // $ents = $o->getEntries();
+        // foreach($ents as $ent)
+        //     $em->remove($ent);
+        // $o->clearEntries();
+
+
+
+        // checking if theres new borrowed entry
         $checker = false;
         if(isset($data['prod_opts']))
         {
+
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
 
@@ -228,11 +247,6 @@ class BorrowedTransactionController extends CrudController
         }
 
 
-        // main warehouse account
-        $config = $this->get('catalyst_configuration');
-        $main_warehouse = $config->get('catalyst_warehouse_main');
-        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
-        $wh_acc = $wh->getInventoryAccount();
 
         //process each row (saved to BIEntry entity)
         if(isset($data['prod_opts']))
@@ -247,6 +261,17 @@ class BorrowedTransactionController extends CrudController
                 $qty = $data['qty'][$index];  
                 $id = $data['id'][$index];
                 
+                // main warehouse account
+                $config = $this->get('catalyst_configuration');
+                $main_warehouse = $config->get('catalyst_warehouse_main');
+                $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+                $wh_acc = $wh->getInventoryAccount();
+
+                // adjustment stock warehouse
+                $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
+                $adj_warehouse = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($adj_warehouse_id);
+                $adj_acc = $adj_warehouse->getInventoryAccount();
+
 
                 $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($id);
                 if ($entry == null)
@@ -260,6 +285,17 @@ class BorrowedTransactionController extends CrudController
                     // add entry
                     $o->addEntry($entry);   
 
+                    // update stock
+                    $inv = $this->get('catalyst_inventory');
+                    $old_qty = $inv->getStockCount($wh_acc, $prod);
+                    $new_quantity = bcsub($old_qty, $qty, 2);
+
+                    $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                    $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+
+                    $stock->setQuantity($new_quantity);
+                    $em->persist($stock);
+
 
                     // entry for warehouse
                     $wh_entry = new Entry();
@@ -268,8 +304,7 @@ class BorrowedTransactionController extends CrudController
                         ->setCredit($qty)
                         ->setTransaction($transaction);
 
-                    $transaction->addEntry($wh_entry);
-                    // $em->persist($wh_entry);
+                    $em->persist($wh_entry);
 
                     // entry for adjustment
                     $adj_entry = new Entry();
@@ -278,23 +313,36 @@ class BorrowedTransactionController extends CrudController
                         ->setDebit($qty)
                         ->setTransaction($transaction);
 
+                    $em->persist($adj_entry);
 
-                    $transaction->addEntry($adj_entry);
+
+                    // update borower account
+                    $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
+                    $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
+          
+                    if ($dept_stock == null)
+                    {
+                        $dept_stock = new Stock($borrower_acc, $prod);
+                    }
+                        
+                    $dept_stock_total = bcadd($dept_stock->getQuantity(), $qty , 2);
+                    $dept_stock->setQuantity($dept_stock_total);
+                    $em->persist($dept_stock);
+
+
+
 
                 }
-            }        
-
-
+            }            
         }
 
-        if ($checker == true)
-        {
+        // main warehouse account
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
 
-            $inv->persistTransaction($transaction);    
-        }
 
-
-        // Returning of items
         if(isset($data['date_returned']))
         {
             // transaction
@@ -319,8 +367,36 @@ class BorrowedTransactionController extends CrudController
                     ->setQuantity($qty_returned);
 
                 $em->persist($returned_item);
+                
+                // update stock
+                $inv = $this->get('catalyst_inventory');
+                // $old_qty = $inv->getStockCount($wh_acc, $prod);
 
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($data['prod_id'][$index]); 
+
+                $stock_repo = $em->getRepository('CatalystInventoryBundle:Stock');
+                $stock_prod = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+                $old_qty = $stock_prod->getQuantity();
+
+                $new_quantity = bcadd($old_qty, $qty_returned, 2);
+
+
+                $stock = $stock_repo->findOneBy(array('inv_account' => $wh_acc, 'product' => $prod));
+
+                $stock->setQuantity($new_quantity);
+                $em->persist($stock);
+
+
+                // update stock 2
+
+                $borrower_acc = $this->getUser()->getDepartment()->getInventoryAccount();
+                $dept_stock = $stock_repo->findOneBy(array('inv_account' => $borrower_acc, 'product' => $prod));
+                                  
+                $dept_stock_total = bcsub($dept_stock->getQuantity(), $qty_returned , 2);
+                $dept_stock->setQuantity($dept_stock_total);
+                $em->persist($dept_stock);
+
+
 
                 // entry for adjustment
                 $adj_entry = new Entry();
@@ -329,7 +405,7 @@ class BorrowedTransactionController extends CrudController
                     ->setCredit($qty_returned)
                     ->setTransaction($transaction);
 
-                $transaction->addEntry($adj_entry);
+                $em->persist($adj_entry);
 
                 // entry for warehouse
                 $wh_entry = new Entry();
@@ -338,16 +414,11 @@ class BorrowedTransactionController extends CrudController
                     ->setDebit($qty_returned)
                     ->setTransaction($transaction);
 
+                $em->persist($wh_entry);
 
-                $transaction->addEntry($wh_entry);
+
             }
-
-            $inv->persistTransaction($transaction);
-
-        }            
-        
-
-
+        }                    
     }
 
     protected function hookPostSave($obj, $is_new = false)
@@ -370,22 +441,22 @@ class BorrowedTransactionController extends CrudController
 
         $borrowed = $em->getRepository('CatalystInventoryBundle:BIEntry')->findBy(array('borrowed' => $id ));
 
-        $data = array();
-        foreach ($borrowed as $b) 
-        {
-            $data[] =[
-                'name' => $b->getProduct()->getName(),
-                'created' => $b->getBorrowed()->getDateIssue(),
-                'quantity' => $b->getQuantity(),
-                'create' => $b->getBorrowed()->getUserCreate(),
-                'borrower' => $b->getBorrowed()->getBorrower()->getName(),
-                'remark' => $b->getBorrowed()->getRemark(),
-                'description' => $b->getBorrowed()->getDescription(),
-                'code' => $b->getBorrowed()->getCode(),
-            ];
-        }
+        // $data = array();
+        // foreach ($borrowed as $b) 
+        // {
+        //     $data[] =[
+        //         'name' => $b->getProduct()->getName(),
+        //         'created' => $b->getBorrowed()->getDateIssue(),
+        //         'quantity' => $b->getQuantity(),
+        //         'create' => $b->getBorrowed()->getUserCreate(),
+        //         'borrower' => $b->getBorrowed()->getBorrower()->getName(),
+        //         'remark' => $b->getBorrowed()->getRemark(),
+        //         'description' => $b->getBorrowed()->getDescription(),
+        //         'code' => $b->getBorrowed()->getCode(),
+        //     ];
+        // }
 
-        $params['data'] = $data;
+        $params['data'] = $borrowed;
 
         $html = $this->render('CatalystInventoryBundle:BorrowedTransaction:print.html.twig', $params);
         return $pdf->printPdf($html->getContent());
@@ -399,5 +470,43 @@ class BorrowedTransactionController extends CrudController
             INNER JOIN o.borrower u 
             INNER JOIN u.dept d');
         return $query->getResult();
+    }
+
+    public function exportCSVAction()
+    {
+        $filename = 'borrowed_items_report.csv';
+        $data = $this->getStockReport();
+
+        // redirect file to stdout, store in output buffer and place in $csv
+        $file = fopen('php://output', 'w');
+        ob_start();
+
+        fputcsv($file, $this->headers());
+
+        foreach ($data as $dt)
+            fputcsv($file, $dt);
+        fclose($file);
+        $csv = ob_get_contents();
+        ob_end_clean();
+
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->setContent($csv);
+
+        return $response;
+    }
+
+    public function headers()
+    {
+        // csv headers
+        $headers = [
+            'Transaction Code',
+            'Department',
+            'Date Create',
+            'Status',        
+        ];
+        return $headers;
     }
 }
