@@ -283,8 +283,11 @@ class BorrowedTransactionController extends CrudController
 
     protected function itemReturn($o, $data)
     {            
+
+
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
+
 
         // main warehouse account
         $wh_acc = $this->getMainWarehouseAccount();
