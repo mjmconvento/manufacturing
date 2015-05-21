@@ -185,15 +185,15 @@ class ProductionController extends CrudController
 
         // main warehouse account
         $config = $this->get('catalyst_configuration');
-        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($config->get('catalyst_warehouse_main'));
-        $wh_acc = $wh->getInventoryAccount();
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($config->get('catalyst_warehouse_production_tank'));
+        $prod_acc = $wh->getInventoryAccount();
     
-        $params['mollases_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_MOLLASES);
-        $params['bunker_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_BUNKER);
-        $params['sulfuric_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_SULFURIC_ACID);
-        $params['caustic_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_CAUSTIC_SODA);
-        $params['urea_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_UREA);
-        $params['salt_count'] = $this->getProductStockCount($wh_acc, DailyConsumption::PROD_SALT);
+        $params['mollases_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_MOLLASES);
+        $params['bunker_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_BUNKER);
+        $params['sulfuric_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_SULFURIC_ACID);
+        $params['caustic_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_CAUSTIC_SODA);
+        $params['urea_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_UREA);
+        $params['salt_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_SALT);
 
         return $params;
     }
@@ -214,28 +214,28 @@ class ProductionController extends CrudController
         $config = $this->get('catalyst_configuration');
 
         // Getting warehouse inventory account
-        $wh = $inv->findWarehouse($config->get('catalyst_warehouse_main'));
-        $wh_acc = $wh->getInventoryAccount();
+        $wh = $inv->findWarehouse($config->get('catalyst_warehouse_stock_adjustment'));
+        $stock_adj_acc = $wh->getInventoryAccount();
 
         // Getting warehouse production account
         $wh = $inv->findWarehouse($config->get('catalyst_warehouse_production_tank'));
         $prod_acc = $wh->getInventoryAccount();
 
         // entry for adjustment
-        $prod_entry = new Entry();
-        $prod_entry->setInventoryAccount($prod_acc)
+        $stock_adj_entry = new Entry();
+        $stock_adj_entry->setInventoryAccount($stock_adj_acc)
             ->setProduct($product)
             ->setCredit($qty);
 
-        $transaction->addEntry($prod_entry);
+        $transaction->addEntry($stock_adj_entry);
 
         // entry for warehouse
-        $wh_entry = new Entry();
-        $wh_entry->setInventoryAccount($wh_acc)
+        $prod_entry = new Entry();
+        $prod_entry->setInventoryAccount($prod_acc)
             ->setProduct($product)
             ->setDebit($qty);
 
-        $transaction->addEntry($wh_entry);
+        $transaction->addEntry($prod_entry);
 
 
     }

@@ -20,7 +20,7 @@ class ReturnedItem
     use HasQuantity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="BIEntry", inversedBy="returned", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="BIEntry", inversedBy="returned", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="entry_id", referencedColumnName="id")
      */
     protected $bientry;

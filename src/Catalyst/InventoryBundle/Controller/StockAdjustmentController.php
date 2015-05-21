@@ -8,6 +8,8 @@ use Catalyst\InventoryBundle\Entity\Entry;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Catalyst\ValidationException;
+use Catalyst\InventoryBundle\Model\InventoryException;
 
 
 class StockAdjustmentController extends CrudController
@@ -131,17 +133,27 @@ class StockAdjustmentController extends CrudController
 
     public function addSubmitAction()
     {
+
+
         $inv = $this->get('catalyst_inventory');
         $log = $this->get('catalyst_log');
 
         $em = $this->getDoctrine()->getManager();
-
         $url = $this->generateUrl('cat_inv_adjust_index');
+
+        $data = $this->getRequest()->request->all();
+
+        $config = $this->get('catalyst_configuration');
+        $adj_warehouse_id = $config->get('catalyst_warehouse_stock_adjustment');
+
+        if ($data['from_wh_id'] == $adj_warehouse_id)
+        {
+            $this->addFlash('error', 'Cannot add to Adjustment Warehouse.');
+            return $this->redirect($url);
+        }
 
         try
         {
-            $data = $this->getRequest()->request->all();
-
             // process entries
             $entries = $this->generateAdjustmentEntries($data);
 

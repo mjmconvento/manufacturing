@@ -10,10 +10,10 @@ use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
 use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Catalyst\ValidationException;
 use DateTime;
 
 class IssuedItemController extends CrudController
@@ -101,14 +101,12 @@ class IssuedItemController extends CrudController
         $o->setDateIssue(new DateTime($data['date_issue']));        
         $this->updateTrackCreate($o, $data, $is_new);
 
-        // checking if theres new borrowed entry
+        // Checking if theres new issued entry
         $checker = false;
         if(isset($data['prod_opts']))
         {
-
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
-
                 if(isset($data['is_new'][$index]))
                 {
                     $checker = true;
@@ -117,6 +115,7 @@ class IssuedItemController extends CrudController
             }            
         }
 
+        // New Transaction if there are new entries
         if ($checker == true)
         {
             // transaction
@@ -132,8 +131,6 @@ class IssuedItemController extends CrudController
         if(isset($data['prod_opts']))
         {
             // TODO: return stock if deleted
-            // TODO: check if stock is existing
-
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
@@ -143,17 +140,14 @@ class IssuedItemController extends CrudController
                 $des = $data['desc'][$index];    
                 $id = $data['id'][$index];    
 
-                // main warehouse account
-                $config = $this->get('catalyst_configuration');
-                $main_warehouse = $config->get('catalyst_warehouse_main');
-                $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
-                $wh_acc = $wh->getInventoryAccount();
+                // Main warehouse account
+                $wh_acc = $this->getMainWarehouseAccount();
 
                 $entry = $em->getRepository('CatalystInventoryBundle:IIEntry')->find($id);
 
                 if ($entry == null)
                 {
-                    // Issued Item entry
+                    // Issued item entry
                     $entry = new IIEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty)
@@ -162,7 +156,7 @@ class IssuedItemController extends CrudController
 
                     $o->addEntry($entry);
 
-                    // entry for warehouse
+                    // Entry for warehouse
                     $wh_entry = new Entry();
                     $wh_entry->setInventoryAccount($wh_acc)
                         ->setProduct($prod)
@@ -171,15 +165,13 @@ class IssuedItemController extends CrudController
 
                     $transaction->addEntry($wh_entry);
 
-                    // entry for department
+                    // Entry for department
                     $adj_entry = new Entry();
                     $adj_entry->setInventoryAccount($o->getIssuedTo()->getDepartment()->getInventoryAccount())
                         ->setProduct($prod)
                         ->setDebit($qty)
                         ->setTransaction($transaction);
                     $transaction->addEntry($adj_entry);
-
-
                 }   
                 else
                 {
@@ -201,6 +193,204 @@ class IssuedItemController extends CrudController
         }
 
     }
+
+
+    public function deleteEntryAction($issued_id, $entry_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $entry = $em->getRepository('CatalystInventoryBundle:IIEntry')->find($entry_id);
+        $qty = $entry->getquantity();
+        $prod = $entry->getProduct();
+
+        // Main warehouse account
+        $inv = $this->get('catalyst_inventory');
+        $wh_acc = $this->getMainWarehouseAccount();
+
+        // transaction
+        $transaction = new Transaction();
+        $transaction->setDescription('Deleted Issued Item')
+            ->setDateCreate(new DateTime)
+            ->setUserCreate($this->getUser());
+
+        $em->persist($transaction);
+
+        // Entry for warehouse
+        $wh_entry = new Entry();
+        $wh_entry->setInventoryAccount($wh_acc)
+            ->setProduct($prod)
+            ->setDebit($qty)
+            ->setTransaction($transaction);
+
+        $transaction->addEntry($wh_entry);
+
+        // Entry for department
+        $adj_entry = new Entry();
+        $adj_entry->setInventoryAccount($entry->getIssued()->getIssuedTo()->getDepartment()->getInventoryAccount())
+            ->setProduct($prod)
+            ->setCredit($qty)
+            ->setTransaction($transaction);
+
+        $transaction->addEntry($adj_entry);
+
+        $em->remove($entry);
+
+        $inv->persistTransaction($transaction);
+        $em->flush();
+
+
+        $this->addFlash('success', 'Entry Deleted');
+        $url = $this->generateUrl('feac_inv_issued_edit_form',
+            array('id' => $issued_id));
+
+        return $this->redirect($url);
+    }
+
+    protected function getMainWarehouseAccount()
+    {            
+        $em = $this->getDoctrine()->getManager();
+
+        $config = $this->get('catalyst_configuration');
+        $main_warehouse = $config->get('catalyst_warehouse_main');
+        $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($main_warehouse);
+        $wh_acc = $wh->getInventoryAccount();
+
+        return $wh_acc;
+    }
+
+
+    public function addSubmitAction()
+    {
+        $data = $this->getRequest()->request->all();
+        $url = $this->generateUrl('feac_inv_issued_add_form');
+        if($data['user_opts'] == 0)
+        {
+            $this->addFlash('error', 'Select a User.');
+            return $this->redirect($url);
+        }
+
+        $this->checkAccess($this->route_prefix . '.add');
+
+        $this->hookPreAction();
+        $obj = $this->add();
+        
+        try
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            $checker = $this->validate($data, 'edit');
+
+            if ($checker == true)
+            {
+                $this->addFlash('error', 'Not enough stock in main warehouse.');
+                return $this->redirect($url);
+            }
+            else
+            {
+                $this->persist($obj);
+                $this->addFlash('success', $this->title . ' added successfully.');
+                return $this->redirect($this->generateUrl($this->getRouteGen()->getList()));
+            }
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
+    }
+
+    public function editSubmitAction($id)
+    {
+        $data = $this->getRequest()->request->all();
+        $url = $this->generateUrl('feac_inv_issued_edit_form',
+                array('id' => $id));
+
+        // Checking if user is
+        if($data['user_opts'] == 0)
+        {
+            $this->addFlash('error', 'Select a User.');
+            return $this->redirect($url);
+        }
+
+        $this->checkAccess($this->route_prefix . '.edit');
+
+        $this->hookPreAction();
+        try
+        {
+            $em = $this->getDoctrine()->getManager();
+
+            $object = $em->getRepository($this->repo)->find($id);
+
+            // validate
+            $checker = $this->validate($data, 'edit');
+
+
+            if ($checker == true)
+            {
+                $this->addFlash('error', 'Not enough stock in main warehouse.');
+                return $this->redirect($url);
+            }
+            else
+            {
+                // update db
+                $this->update($object, $data);
+                $em->flush();
+                $this->hookPostSave($object);
+                // log
+                $odata = $object->toData();
+                $this->logUpdate($odata);
+
+                $this->addFlash('success', $this->title . ' ' . $this->getObjectLabel($object) . ' edited successfully.');
+
+                return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
+            }
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->editError($object, $id);
+        }
+        catch (DBALException $e)
+        {
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($object);
+        }
+    }
+
+    protected function validate($data, $type)
+    {            
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+        $checker = false;
+        if(isset($data['prod_opts']))
+        {
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+                $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+                $qty = $data['qty'][$index]; 
+                    
+                $wh_acc = $this->getMainWarehouseAccount();
+
+                // Checking if there are enough stock
+                $stock_count = $inv->getStockCount($wh_acc, $prod);
+                if ($stock_count < $qty or $stock_count == null)
+                {
+                    $checker = true;
+                }
+            }
+        }
+
+        return $checker;
+    }
+
 
     public function getDeptAction($id)
     {

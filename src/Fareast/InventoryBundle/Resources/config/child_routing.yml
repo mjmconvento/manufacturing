@@ -51,6 +51,10 @@ feac_inv_issued_product:
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:IssuedItem:getProduct }
 
+feac_inv_issued_entry_delete:
+    pattern: /issued/entry/delete/{issued_id}/{entry_id}
+    defaults: { _controller: FareastInventoryBundle:IssuedItem:deleteEntry }
+
 feac_inv_issued_print:
     pattern: /issued/print/{id}
     methods: [GET]
