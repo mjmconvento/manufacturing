@@ -59,7 +59,6 @@ class BorrowedTransactionController extends CrudController
         $date_from = new DateTime($date_from->format("Y-m-d")." 00:00:00");
         $date_to =  new DateTime($date_to->format("Y-m-d")." 23:59:59");
         
-
         $params['date_from'] = $date_from;
         $params['date_to'] = $date_to;
 
@@ -69,8 +68,6 @@ class BorrowedTransactionController extends CrudController
         $params['data'] = $this->getBorrowCreated($date_from,$date_to);
 
         $this->padFormParams($params, $date_from, $date_to);
-
-
 
         return $this->render($twig_file, $params);
     }
@@ -159,7 +156,6 @@ class BorrowedTransactionController extends CrudController
 
     public function filterAction($date_from, $date_to)
     {
-        //filter for date range
         $params = $this->getViewParams('List');
         $params['list_title'] = $this->list_title;     
         $date_from = new DateTime($date_from);
@@ -172,10 +168,7 @@ class BorrowedTransactionController extends CrudController
 
     public function getBorrowCreated($date_from, $date_to)
     {
-
-        //filter by date range
         $em = $this->getDoctrine()->getManager();
-
         $query = $em->createQuery('SELECT b FROM CatalystInventoryBundle:BorrowedTransaction b
                     WHERE b.date_issue >= :date_from AND b.date_issue <= :date_to ');
         $query ->setParameter('date_from', $date_from)
@@ -186,9 +179,8 @@ class BorrowedTransactionController extends CrudController
 
     protected function update($o, $data, $is_new = false)
     {
-        //TODO: check if returned item is equals to number of borrowed
-        //TODO: clean up the 90 percent of the code  
-        
+        //TODO: check if borrowed equals to returned
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
@@ -203,13 +195,22 @@ class BorrowedTransactionController extends CrudController
         $o->setDescription($data['description']);
         $o->setRemark($data['remark']);
 
+        $this->addBorrowEntry($o, $data);
+        $this->itemReturn($o, $data);
+    }
+
+    protected function addBorrowEntry($o, $data)
+    {            
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('catalyst_user');
+        $inv = $this->get('catalyst_inventory');
+
         // checking if there is a new borrowed entry
         $checker = false;
         if(isset($data['prod_opts']))
         {
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
-
                 if(isset($data['is_new'][$index]))
                 {
                     $checker = true;
@@ -238,17 +239,13 @@ class BorrowedTransactionController extends CrudController
         {
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
-
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);   
-
                 $qty = $data['qty'][$index];  
                 $id = $data['id'][$index];
                 
-
                 $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($id);
                 if ($entry == null)
                 {
-
                     // instantiate
                     $entry = new BIEntry();
                     $entry->setProduct($prod)
@@ -256,7 +253,6 @@ class BorrowedTransactionController extends CrudController
 
                     // add entry
                     $o->addEntry($entry);   
-
 
                     // entry for warehouse
                     $wh_entry = new Entry();
@@ -266,7 +262,6 @@ class BorrowedTransactionController extends CrudController
                         ->setTransaction($transaction);
 
                     $transaction->addEntry($wh_entry);
-                    // $em->persist($wh_entry);
 
                     // entry for adjustment
                     $adj_entry = new Entry();
@@ -278,21 +273,25 @@ class BorrowedTransactionController extends CrudController
                     $transaction->addEntry($adj_entry);
                 }
             }        
-
-
         }
 
         if ($checker == true)
         {
-
             $inv->persistTransaction($transaction);    
         }
+    }
 
+    protected function itemReturn($o, $data)
+    {            
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+
+        // main warehouse account
+        $wh_acc = $this->getMainWarehouseAccount();
 
         // Returning of items
         if(isset($data['date_returned']))
         {
-            // transaction
             $transaction = new Transaction();
             $transaction->setDescription('Returned Item')
                 ->setDateCreate(new DateTime)
@@ -300,10 +299,8 @@ class BorrowedTransactionController extends CrudController
 
             $em->persist($transaction);
 
-
             foreach ($data['date_returned'] as $index => $id) 
             {
-
                 $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($data['entry_id'][$index]);
                 $date_returned = new DateTime($data['date_returned'][$index]);
                 $qty_returned = $data['qty_returned'][$index];
@@ -317,7 +314,6 @@ class BorrowedTransactionController extends CrudController
 
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($data['prod_id'][$index]); 
 
-                // entry for adjustment
                 $adj_entry = new Entry();
                 $adj_entry->setInventoryAccount($o->getBorrower()->getDepartment()->getInventoryAccount())
                     ->setProduct($prod)
@@ -326,19 +322,17 @@ class BorrowedTransactionController extends CrudController
 
                 $transaction->addEntry($adj_entry);
 
-                // entry for warehouse
                 $wh_entry = new Entry();
                 $wh_entry->setInventoryAccount($wh_acc)
                     ->setProduct($prod)
                     ->setDebit($qty_returned)
                     ->setTransaction($transaction);
 
-
                 $transaction->addEntry($wh_entry);
             }
 
             $inv->persistTransaction($transaction);
-        }            
+        }   
     }
 
 
@@ -432,42 +426,6 @@ class BorrowedTransactionController extends CrudController
                 // update db
                 $this->update($object, $data);
 
-
-                // exceed checker
-     
-                // $exceed_checker = false;
-
-                // foreach($object->getEntries() as $entry)
-                // {
-                //     $borrowed_qty = $entry->getQuantity();
-                //     $returned_qty = 0;
-
-                //     if(count($entry->getReturned()) != 0 )
-                //     {    
-                //         foreach($entry->getReturned() as $returned)
-                //         {
-                //             $returned_qty += $returned->getQuantity();
-                //         }
-                //     }
-
-                //     if ($borrowed_qty < $returned_qty)
-                //     {   
-                //         $exceed_checker = true;
-                //     }
-                // }
-
-                // echo $returned_qty;
-                // die();
-                // if ($exceed_checker == true)
-                // {                
-                //     $this->addFlash('error', 'Returned quantity exceeds borrowed quantity.');
-                //     return $this->redirect($url);
-                // }
-
-
-
-
-
                 $em->flush();
                 $this->hookPostSave($object);
                 // log
@@ -515,7 +473,6 @@ class BorrowedTransactionController extends CrudController
                 }
             }
         }
-
         return $checker;
     }
 
@@ -534,9 +491,7 @@ class BorrowedTransactionController extends CrudController
             $returned_qty += $returned->getQuantity();
         }
 
-
         $total_qty = bcsub($qty, $returned_qty, 2);
-
 
         // Main warehouse account
         $inv = $this->get('catalyst_inventory');

@@ -60,6 +60,17 @@ class BIEntry
         return $this->borrowed;
     }
 
+    public function getReturnedCount()
+    {
+        $counter = 0;
+        foreach ($this->getReturned() as $returned)
+        {
+            $counter += $returned->getQuantity();
+        }
+
+        return $counter;
+    }
+
 
     public function toData()
     {

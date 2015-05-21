@@ -14,6 +14,10 @@ use DateTime;
  */
 class ShiftReport
 {
+
+    const PROD_FINE_ALCOHOL             = "Fine Alcohol";
+    const PROD_HEADS_ALCOHOL            = "Heads Alcohol";
+
     use HasGeneratedID;
     use TrackCreate;
 

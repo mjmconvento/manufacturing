@@ -4,6 +4,7 @@ namespace Fareast\ManufacturingBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Fareast\ManufacturingBundle\Entity\DailyConsumption;
+use Fareast\ManufacturingBundle\Entity\ShiftReport;
 use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Symfony\Component\HttpFoundation\Response;
@@ -236,8 +237,73 @@ class ProductionController extends CrudController
             ->setDebit($qty);
 
         $transaction->addEntry($prod_entry);
+    }
+
+    protected function addShiftReportEntries($transaction, $shift_reports)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $inv = $this->get('catalyst_inventory');
+        $config = $this->get('catalyst_configuration');
+
+        $heads_alcohol = $inv->findProductByName(ShiftReport::PROD_HEADS_ALCOHOL);
+        $fine_alcohol = $inv->findProductByName(ShiftReport::PROD_FINE_ALCOHOL);
+
+        $wh = $inv->findWarehouse($config->get('catalyst_warehouse_stock_adjustment'));
+        $stock_adj_acc = $wh->getInventoryAccount();
+
+        $wh = $inv->findWarehouse($config->get('catalyst_warehouse_main'));
+        $wh_acc = $wh->getInventoryAccount();
 
 
+        $heads_alcohol_total = 0;
+        $fine_alcohol_total = 0;
+
+        foreach ($shift_reports as $s)
+        {
+            $heads_alcohol_total += intval($s->getHeadsAlcohol());
+            $fine_alcohol_total += intval($s->getFineAlcohol());
+        }
+
+
+        if ($heads_alcohol_total != 0)
+        {
+            // entry for adjustment
+            $stock_adj_entry = new Entry();
+            $stock_adj_entry->setInventoryAccount($stock_adj_acc)
+                ->setProduct($heads_alcohol)
+                ->setCredit($heads_alcohol_total);
+
+            $transaction->addEntry($stock_adj_entry);
+
+            // entry for warehouse
+            $wh_entry = new Entry();
+            $wh_entry->setInventoryAccount($wh_acc)
+                ->setProduct($heads_alcohol)
+                ->setDebit($heads_alcohol_total);
+
+            $transaction->addEntry($wh_entry);
+        }
+
+
+        if ($fine_alcohol_total != 0)
+        {
+            // entry for adjustment
+            $stock_adj_entry = new Entry();
+            $stock_adj_entry->setInventoryAccount($stock_adj_acc)
+                ->setProduct($fine_alcohol)
+                ->setCredit($fine_alcohol_total);
+
+            $transaction->addEntry($stock_adj_entry);
+
+            // entry for warehouse
+            $wh_entry = new Entry();
+            $wh_entry->setInventoryAccount($wh_acc)
+                ->setProduct($fine_alcohol)
+                ->setDebit($fine_alcohol_total);
+
+            $transaction->addEntry($wh_entry);
+        }
     }
 
 
@@ -274,7 +340,6 @@ class ProductionController extends CrudController
 
             $inv = $this->get('catalyst_inventory');
             $config = $this->get('catalyst_configuration');
-        
 
             // Getting warehouse inventory account
             $wh = $inv->findWarehouse($config->get('catalyst_warehouse_main'));
@@ -294,8 +359,6 @@ class ProductionController extends CrudController
             
             // MOLASSES
             $added_qty = bcsub($data->getMolRunningBalance(), $data->getMolBeginningBalance() ,2);
-
-            // updating molasses entries
             if($data->getMolRunningBalance() != $data->getMolBeginningBalance())
             {
                 $this->addEntries($mollases, $added_qty, $transaction);
@@ -304,8 +367,6 @@ class ProductionController extends CrudController
             // BUNKER
             // updating bunker warehouse stock
             $added_qty = bcsub($data->getBunkerRunningBalance(), $data->getBunkerBeginningBalance() ,2);
-
-            // updating bunker entries
             if($data->getBunkerRunningBalance() != $data->getBunkerBeginningBalance())
             {
                 $this->addEntries($bunker, $added_qty, $transaction);
@@ -313,49 +374,37 @@ class ProductionController extends CrudController
 
             // SULFUR
             $added_qty = bcsub($data->getSulRunningBalance(), $data->getSulBeginningBalance() ,2);
-
-            // updating sulfur entries
             if($data->getSulRunningBalance() != $data->getSulBeginningBalance())
             {
                 $this->addEntries($sulfur, $added_qty, $transaction);
             }
 
-
-
             // CAUSTIC
             $added_qty = bcsub($data->getSodaRunningBalance(), $data->getSodaBeginningBalance() ,2);
-
-            // updating caustic entries
             if($data->getSodaRunningBalance() != $data->getSodaBeginningBalance())
             {
                 $this->addEntries($caustic, $added_qty, $transaction);
             }
 
-
-
             // UREA
             $added_qty = bcsub($data->getUreaRunningBalance(), $data->getUreaBeginningBalance() ,2);
-
-            // updating urea entries
             if($data->getUreaRunningBalance() != $data->getUreaBeginningBalance())
             {
                 $this->addEntries($urea, $added_qty, $transaction);
             }
 
-
-
             // SALT
             $added_qty = bcsub($data->getSaltRunningBalance(), $data->getSaltBeginningBalance() ,2);
-
-            // updating salt entries
             if($data->getSaltRunningBalance() != $data->getSaltBeginningBalance())
             {
                 $this->addEntries($salt, $added_qty, $transaction);
             }
 
+            $shift_reports = $mfg->getShiftReports($date);
+            $this->addShiftReportEntries($transaction, $shift_reports);
+
             $inv->persistTransaction($transaction);
         }
-
 
         $em->flush();
         $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);

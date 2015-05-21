@@ -33,6 +33,7 @@ class ShiftReportController extends CrudController
         $this->padFormParams($params);
 
         $date = new DateTime($date);
+
         $params['date'] = $date;
         $params['shift'] = $shift;
 
@@ -95,6 +96,8 @@ class ShiftReportController extends CrudController
         $params['date'] = $date;
         $params['shift'] = $shift;
 
+
+
         $this->addFlash('success', 'Shift Report has been created.'); 
 
         return $this->redirect($this->generateUrl('feac_mfg_shift_rep_edit', 
@@ -110,8 +113,12 @@ class ShiftReportController extends CrudController
         $this->title = 'Create Shift Report';
         $params = $this->getViewParams('', 'feac_mfg_prod_cal');
 
-        $params['shift_report'] = $this->findShiftReport($id);
+        $shift_report = $this->findShiftReport($id);
+        $params['shift_report'] = $shift_report;
         $params['shift'] = $shift;
+
+        $mfg = $this->get('fareast_manufacturing');
+        $params['consumption'] = $mfg->findDailyConsumption($shift_report->getDateProduced()->format('Ymd'));
 
         $this->padFormParams($params);
 
@@ -169,6 +176,9 @@ class ShiftReportController extends CrudController
         $params['shift_report'] = $shift_report;
         $params['shift'] = $shift;
 
+        $mfg = $this->get('fareast_manufacturing');
+        $params['consumption'] = $mfg->findDailyConsumption($shift_report->getDateProduced()->format('Ymd'));
+
         $this->addFlash('success', 'Shift Report has been Updated.');             
         
         $this->padFormParams($params);
@@ -186,6 +196,8 @@ class ShiftReportController extends CrudController
 
         $today = new DateTime();
         $params['today'] = $today->format('Ymd');
+
+
 
         return $params;
     }
