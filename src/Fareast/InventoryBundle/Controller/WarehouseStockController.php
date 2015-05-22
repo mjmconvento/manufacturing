@@ -152,7 +152,7 @@ class WarehouseStockController extends BaseController
         $em = $this->getDoctrine()->getManager();
         if($warehouse != null and $warehouse != 'null')
         {
-            $query = $em->createQuery('SELECT LOWER(w.name),p.sku, p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.name as warehouse,p.sku, p.name as product, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w
@@ -161,7 +161,7 @@ class WarehouseStockController extends BaseController
         }
         else
         {
-            $query = $em->createQuery('SELECT LOWER(w.name), p.sku,  p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.name as warehouse, p.sku,  p.name as product, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w 
@@ -170,7 +170,7 @@ class WarehouseStockController extends BaseController
 
         if($category != null and $category != 'null')
         {
-            $query = $em->createQuery('SELECT LOWER(w.name) ,p.sku, p.name, o.quantity, p.uom 
+            $query = $em->createQuery('SELECT w.name as warehouse ,p.sku, p.name as product, o.quantity, p.uom 
                 FROM CatalystInventoryBundle:Stock o 
                 INNER JOIN o.product p 
                 INNER JOIN o.inv_account w
