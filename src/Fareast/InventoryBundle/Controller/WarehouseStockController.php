@@ -22,8 +22,9 @@ class WarehouseStockController extends BaseController
 
         $params['grid_cols'] = $this->getGridColumns();        
 
-        $inv = $this->get('catalyst_inventory');        
-        $params['dept'] = $inv->getInventoryAccountWarehouseOptions();
+        $inv = $this->get('catalyst_inventory');
+        $department = $inv->getInventoryAccountDepartmentOptions();    
+        $params['dept'] = $department + $inv->getInventoryAccountWarehouseOptions();
         $params['prodgroup_opts'] = $inv->getProductGroupOptions();
         
         // echo "<pre>";

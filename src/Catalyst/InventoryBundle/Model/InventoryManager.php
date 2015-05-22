@@ -107,6 +107,22 @@ class InventoryManager
         return $wh_opts;
     }
 
+    public function getInventoryAccountDepartmentOptions($filter = array())
+    {
+        $depts = $this->em
+            ->getRepository('CatalystUserBundle:Department')
+            ->findBy(
+                $filter,
+                array('name' => 'ASC')
+            );
+
+        $dept_opts = array();
+        foreach($depts as $dept)
+            $dept_opts[$dept->getInventoryAccount()->getID()] = $dept->getName();
+
+        return $dept_opts;
+    }
+
     public function getProductGroupOptions($filter = array())
     {
         $pgs = $this->em
