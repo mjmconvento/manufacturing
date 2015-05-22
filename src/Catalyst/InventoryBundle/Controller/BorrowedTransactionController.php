@@ -199,12 +199,8 @@ class BorrowedTransactionController extends CrudController
         $this->itemReturn($o, $data);
     }
 
-    protected function addBorrowEntry($o, $data)
-    {            
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('catalyst_user');
-        $inv = $this->get('catalyst_inventory');
-
+    protected function isNewValidator($data)
+    {
         // checking if there is a new borrowed entry
         $checker = false;
         if(isset($data['prod_opts']))
@@ -215,9 +211,19 @@ class BorrowedTransactionController extends CrudController
                 {
                     $checker = true;
                 }
-
             }            
         }
+
+        return $checker;
+    }
+
+    protected function addBorrowEntry($o, $data)
+    {            
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('catalyst_user');
+        $inv = $this->get('catalyst_inventory');
+
+        $checker = $this->isNewValidator($data);
 
         if ($checker == true)
         {
@@ -230,8 +236,6 @@ class BorrowedTransactionController extends CrudController
             $em->persist($transaction);
         }
 
-
-        // main warehouse account
         $wh_acc = $this->getMainWarehouseAccount();
 
         //process each row (saved to BIEntry entity)
@@ -246,15 +250,12 @@ class BorrowedTransactionController extends CrudController
                 $entry = $em->getRepository('CatalystInventoryBundle:BIEntry')->find($id);
                 if ($entry == null)
                 {
-                    // instantiate
                     $entry = new BIEntry();
                     $entry->setProduct($prod)
                         ->setQuantity($qty);
 
-                    // add entry
                     $o->addEntry($entry);   
 
-                    // entry for warehouse
                     $wh_entry = new Entry();
                     $wh_entry->setInventoryAccount($wh_acc)
                         ->setProduct($prod)
@@ -263,7 +264,6 @@ class BorrowedTransactionController extends CrudController
 
                     $transaction->addEntry($wh_entry);
 
-                    // entry for adjustment
                     $adj_entry = new Entry();
                     $adj_entry->setInventoryAccount($o->getBorrower()->getDepartment()->getInventoryAccount())
                         ->setProduct($prod)
@@ -283,11 +283,8 @@ class BorrowedTransactionController extends CrudController
 
     protected function itemReturn($o, $data)
     {            
-
-
         $em = $this->getDoctrine()->getManager();
         $inv = $this->get('catalyst_inventory');
-
 
         // main warehouse account
         $wh_acc = $this->getMainWarehouseAccount();
@@ -339,6 +336,8 @@ class BorrowedTransactionController extends CrudController
     }
 
 
+
+
     public function addSubmitAction()
     {
         $this->checkAccess($this->route_prefix . '.add');
@@ -365,7 +364,6 @@ class BorrowedTransactionController extends CrudController
             {
                 $this->addFlash('error', 'Not enough stock in main warehouse.');
                 return $this->redirect($url);
-
             }
             else
             {
@@ -389,6 +387,45 @@ class BorrowedTransactionController extends CrudController
             error_log($e->getMessage());
             return $this->addError($obj);
         }
+    }
+
+    protected function returnedValidator($data)
+    {
+        $checker = false;
+        if(isset($data['prod_opts']))
+        {
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+                if(intVal($data['qty'][$index]) < intval($data['total_returned'][$index]))
+                {
+                    $checker = true;
+                }
+            }
+        }   
+
+        return $checker;
+    }
+
+    protected function completeChecker($data)
+    {
+        $checker = true;
+        if(isset($data['prod_opts']))
+        {
+            foreach ($data['prod_opts'] as $index => $prod_id) 
+            {
+                // echo (intVal($data['qty'][$index])).'--'.(intVal($data['total_returned'][$index])); 
+                //     die();
+
+
+
+                if(intVal($data['qty'][$index]) != intval($data['total_returned'][$index]))
+                {
+                    $checker = false;
+                }
+            }
+        }   
+
+        return $checker;
     }
 
     public function editSubmitAction($id)
@@ -415,8 +452,8 @@ class BorrowedTransactionController extends CrudController
 
             // validate
             $checker = $this->validate($data, 'edit');
-
-
+            $returned_validator = $this->returnedValidator($data);
+            $complete_checker = $this->completeChecker($data); 
 
             if ($checker == true)
             {
@@ -424,10 +461,24 @@ class BorrowedTransactionController extends CrudController
                 return $this->redirect($url);
 
             }
+            elseif($returned_validator == true)
+            {
+                $this->addFlash('error', 'Returned Item Exceeded.');
+                return $this->redirect($url);
+            }
             else
             {
                 // update db
                 $this->update($object, $data);
+
+                if ($complete_checker == true)
+                {
+                    $object->setStatus(BorrowedTransaction::STATUS_COMPLETE);
+                }
+                else
+                {
+                    $object->setStatus(BorrowedTransaction::STATUS_INCOMPLETE);
+                }
 
                 $em->flush();
                 $this->hookPostSave($object);
@@ -436,7 +487,6 @@ class BorrowedTransactionController extends CrudController
                 $this->logUpdate($odata);
 
                 $this->addFlash('success', $this->title . ' ' . $this->getObjectLabel($object) . ' edited successfully.');
-
                 return $this->redirect($this->generateUrl($this->getRouteGen()->getEdit(), array('id' => $id)));
             }
         }
