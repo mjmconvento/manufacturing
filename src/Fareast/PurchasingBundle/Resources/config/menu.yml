@@ -3,10 +3,10 @@ menu_items:
       acl: cat_pur.menu
       label: Purchasing
       icon: fa-shopping-cart
-    - id: feac_pur_po
+    - id: cat_pur_po_index
       label: Purchase Order
       parent: menu_purchasing
-    - id: feac_pur_req
+    - id: cat_pur_pr_index
       label: Purchase Requisition
       parent: menu_purchasing
     - id: cat_pur_supp_index

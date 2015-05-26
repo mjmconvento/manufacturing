@@ -46,7 +46,7 @@ class PurchaseRequest
     
 
     // @TODO: Link with HR department;
-    /** @ORM\Column(type="string", length=30) */
+    /** @ORM\Column(type="string", length=30, nullable=true) */
     protected $department;
     
 

@@ -176,8 +176,7 @@ class PurchasingManager
             }
             return $qty;
         }
-    }
-    
+    }    
     
     //Create or find a product with the variant or return the parent if there is no variant
     public function findProductWithExpiry($parentProd, $expiry){
@@ -196,6 +195,22 @@ class PurchasingManager
         }
         
         return $prodDelivery;
+    }
+
+    public function getRequestOptions($filter = array())
+    {
+        $prs = $this->em
+            ->getRepository('CatalystPurchasingBundle:PurchaseRequest')
+            ->findBy(
+                $filter,
+                array('code' => 'ASC')
+            );
+
+        $pr_opts = array();
+        foreach ($prs as $pr)
+            $pr_opts[$pr->getID()] = $pr->getCode();
+
+        return $pr_opts;
     }
     
 }

@@ -1,7 +1,7 @@
-feac_rcvng_orders:
+feac_receiving_orders:
     path:     /orders
     defaults: { _controller: FareastReceivingBundle:Receiving:index }
 
-feac_rcvng_order_view:
+feac_receiving_order_view:
     path:     /order/view
     defaults: { _controller: FareastReceivingBundle:Receiving:view }
