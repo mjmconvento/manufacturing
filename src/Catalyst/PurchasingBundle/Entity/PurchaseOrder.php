@@ -291,6 +291,11 @@ class PurchaseOrder
         return $this->supplier->getID();
     }
 
+    public function getSupplierName()
+    {
+        return $this->supplier->getName();
+    }
+
     public function toData()
     {
         $data = new \stdClass();

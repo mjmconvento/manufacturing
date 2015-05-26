@@ -1,0 +1,180 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption"> Purchase Request</div>
+            </div>
+
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section"> Information </h4>
+
+                            {{ f.group_text('Code','code',object.getCode,3,4,true)}}
+                            {{ f.group_date('Date Issued','date_create',object.getDateCreate|date('m/d/Y'),3,4)}}
+                            {{ f.group_text('Reference No.','reference_code', object.getReferenceCode,3,4) }}
+                            {{ f.group_date('Date Needed','date_need',object.getDateNeeded|date('m/d/Y'),3,4)}}
+                            {{ f.group_text('Requested By','request_by',app.user.name,3,4,true)}}
+                            {# {{ f.group_select('Department','department',object.getDepartment,3,3,4,true)}} #}
+                            {{ f.group_textarea('Purpose','purpose',object.getPurpose,3,3,4)}}
+                            {{ f.group_textarea('Remarks','notes',object.getNotes,3,3,4)}}
+
+                        <h4 class="form-section"> Entries </h4>
+
+                        <a id="btn_from_add" href="javascript:void(0)" class="btn green add-field">Add Item</a>
+
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>
+                                        <th width="20%">Category</th>                                        
+                                        <th width="25%">Item Name</th>
+                                        <th width="18%">Type</th>
+                                        <th width="10%">Unit of Measurement</th>
+                                        <th width="13%">Quantity</th>
+                                        <th></th>
+                                    </thead>
+                                    <tbody id="from_table">
+                                        {% for entry in object.getEntries %}
+                                            <tr>
+                                                <td><input type="text" name="prodgroup_opts[{{ entry.getProduct.getID }}]" value="{{entry.getProduct.getProductGroup.getName }}" class="form-control prodgroup_opts" readonly></td>
+                                                <td><input type="text" name="en_prod_id[{{ entry.getProduct.getID}}]" value="{{ entry.getProduct.getName }}" class="form-control prod_id" readonly></td>
+                                                <td><input type="text" name="prodtype[{{ entry.getProduct.getID }}]" value="{{ entry.getProduct.getTypeText }}" class="form-control prodtype" readonly></td>
+                                                <td><input type="text" name="uom[{{ entry.getProduct.getID }}]" value="{{ entry.getProduct.getUnitOfMeasure }}" class="form-control uom" readonly></td>
+                                                <td><input type="text" name="en_qty[{{ entry.getProduct.getID }}]" value="{{ entry.getQuantity }}" class="form-control qty"></td>
+                                                <td><a href="#" class="btn red-sunglo btn-xs remove_field"><i class="fa fa-minus-circle"></i> Remove</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('cat_pur_pr_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <select class="form-control select2 prodgroup_opts">
+        {{ f.options(prodgroup_opts, 0)}}
+    </select>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function appendEntry()
+{
+    var field = '<tr class="prod_row">';
+        field += '<td><select name="prodgroup_opts[]" class="form-control select2 prodgroup_opts">';
+        field += $('.prodgroup_opts').html();
+        field += '</select></td>';       
+
+        field += '<td><select name="en_prod_id[]" class="form-control select2 prod_id">';        
+        field += '</select></td>';
+
+        field += '<td><input type="text" name="prodtype[]" class="form-control prodtype" readonly></td>'; 
+        
+        field += '<td><input type="text" name="uom[]" class="form-control uom" readonly></td>';        
+        field += '<td><input type="number" name="en_qty[]" class="form-control qty"></td>';                
+        field += '<td><a href="#" class="btn red-sunglo btn-xs remove_field"><i class="fa fa-minus-circle"></i> Remove</a></td>';
+        field += '</tr>';
+
+        $('#from_table').append(field);
+
+    var pg_select = $('tr.prod_row:last').find('.prodgroup_opts');
+    prodgroup_refresh(pg_select);
+}
+
+function prodgroup_refresh(pg_select) 
+{
+    // var cat = pg_select.closest('tr').find('.prodgroup_opts').val();
+    var cat = pg_select.val();
+    var url = "{{ path('cat_inv_pg_ajax_get_products', { id: ':id'}) }}";
+    url = url.replace(":id", cat);
+
+    var row = pg_select.closest('.prod_row');
+    //closest('tr');
+
+    // $(row).find('.prod_id').empty();
+    var prod_select = $(row).find('.prod_id');
+
+    $.getJSON(url, function(data) {
+        // console.log(data);
+        prod_select.html('Hello');
+        for(var index in data)
+        {
+            var prod = data[index];
+            console.log(prod);
+            prod_select.append('<option value="'+ prod.id + '">'+ prod.name + ' </option>'); 
+        }
+
+        product_refresh(prod_select);
+    });
+}
+
+function product_refresh(prod_select)
+{
+    var prod_id = prod_select.closest('tr').find('.prod_id').val();
+    console.log(prod_id)
+    var url = "{{ path('cat_inv_borrowed_product', { prod_id: ':prod_id'}) }}";
+    url = url.replace(":prod_id", prod_id);
+
+    var row = prod_select.closest('tr');
+
+    $.getJSON(url, function(data){
+        console.log(data)
+
+        row.find('.prodtype').val(data.prod_type);
+        row.find('.uom').val(data.uom);
+    });
+    // console.log(prod_id)
+}
+
+$(document).ready(function() 
+{
+    ComponentsPickers.init();
+
+    var wrapper = $("#from_table");
+
+    var i=0;
+
+    $('.add-field').click(function(){                            
+        appendEntry();            
+    });
+
+
+    // product group dropdown
+    $(document).on('change', '.prodgroup_opts', function(e){
+        prodgroup_refresh($(this));
+    });
+
+
+    // product dropdown
+    $(document).on('change','.prod_id', function(e){
+        product_refresh($(this));
+    });
+    
+    // delete button
+    $(document).on("click",".remove_field", function(e){
+        var tr = $(this).closest('tr');
+        tr.remove();
+        return false;
+    });
+});
+</script>
+{% endblock %}

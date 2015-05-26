@@ -1,0 +1,209 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption"> Purchase Order </div>
+            </div>
+
+            <div class="portlet-body form">
+                <form method="post" class="form-horizontal">
+                    <div class="form-body">
+                        <h4 class="form-section">Information</h4>
+                            {{ f.group_text('Order No.','code',object.getCode,3,4,true)}}
+                            {{ f.group_date('Date Issued','date_issue',object.getDateCreate|date('m/d/Y'),3,4,readonly)}}
+                            {{ f.group_text('Reference Code', 'reference_code', object.getReferenceCode, 3, 4,readonly) }}
+                            {{ f.group_date('Date Needed','date_need',object.getDateNeeded|date('m/d/Y'),3,4,readonly)}}
+
+                        <h4 class="form-section"> Purchase Order Information</h4>
+                            {{ f.group_select('Type','type',object.getCode|default(''),3,3,4)}}
+                            {# {{ f.group_select('Supplier Type','supp_type',object.getCode|default(''),3,3,4)}} #}
+                            {{ f.group_select('Supplier','supplier_id',supp_opts,object.getSupplier is not null ? object.getSupplier.getID,3,4, readonly)}}
+                            {# {{ f.group_textarea('Address','address',object.getCode|default(''),3,3,4,true) }} #}
+                            {# {{ f.group_text('Attention','ord_num',object.getCode|default(''),3,4,true)}} #}
+                            {{ f.group_textarea('Delivery Instruction','address',object.getCode|default(''),3,3,4,true) }}
+                            {{ f.group_text('Remarks','ord_num',object.getCode|default(''),3,4,true)}}
+                            {{ f.group_text('Status', 'status_id', object.getStatusFormatted, 3, 4,true) }}
+                            {# {{ f.group_select('Terms','type',object.getCode|default(''),3,3,4)}} #}
+                            {# {{ f.group_select('Currency','type',object.getCode|default(''),3,3,4)}} #}
+
+                            {% if (object.getID != null) %}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label"></label>
+                                <div class="col-md-5">
+                                    {% if (object.canApprove) %}
+                                    <a href="{{ path('cat_pur_po_status_approve', {'id': object.getID}) }}" class="btn green">Approve</a>
+                                    {% endif %}
+
+                                    {% if (object.canSend) %}
+                                    <a href="{{ path('cat_pur_po_status_send', {'id': object.getID}) }}" class="btn green">Send</a>
+                                    {% endif %}
+
+                                    {% if (object.canCancel) %}
+                                    <a href="{{ path('cat_pur_po_status_cancel', {'id': object.getID}) }}" class="btn red">Cancel</a>
+                                    {% endif %}
+
+                                    {% if (object.canFulfill) %}
+                                    <a href="{{ path('cat_pur_po_status_fulfill', {'id': object.getID}) }}" class="btn green">Fulfill</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                        <h4 class="form-section">Entries</h4>
+                            <div class="form-body">
+                                <div class="table-toolbar" style="height:40px">
+                                    <label class="col-md-3 control-label">Search PR</label>
+                                    <div class="col-md-4">
+                                        <select id="request_opts" class="form-control select_2" name="request_opts">
+                                        {{ f.options(request_opts,0)}}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <a href="javascript: void(0);" id="search_button" class="btn blue">Search</a>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                <thead>
+                                    <tr>                                                                                
+                                        <th width="20%">Item Name</th>                                        
+                                        <th>Unit of Measurement</th>
+                                        <th>Price</th>
+                                        <th>Discount</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>                                          
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="from_table">
+                                {% for entry in object.getEntries %}
+                                    <tr>
+                                        <td><input type="hidden" name="en_prod_id[]" class="form-control prod_id" value="{{ entry.getProduct.getID }}" readonly>{{ entry.getProduct.getName }}</td>                                
+                                        <td><input type="text" name="uom[]" class="form-control uom" readonly value="{{ entry.getProduct.getUnitOfMeasure }}" readonly></td>
+                                        <td><input type="number" name="en_price[]" class="form-control en_price" value="{{entry.getProduct.getPricePurchase}}" readonly></td>
+                                        <td><input type="number" name="en_dicount[]" class="form-control discount"></td>
+                                        <td><input type="text" name="en_qty[]" value="{{ entry.getQuantity }}" class="form-control en_qty"></td>
+                                        <td class="en_total"></td>       
+                                        <td><a href="#" class="btn red-sunglo btn-xs remove_field"><i class="fa fa-minus-circle"></i> Remove</a></td>
+                                    </tr>
+                                {% endfor %}                                          
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                        <td>Total</td>
+                                        <td class="total_total"></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                    </div>
+
+                    <div class="form-actions fluid">
+                        <div class="col-md-9">
+                            <button type="submit" class="btn blue">Submit</button>
+                            <a href="{{path('cat_inv_borrowed_index')}}" class="btn default">Cancel</a>
+                        </div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function appendEntry(data)
+{
+    for(var i=0; i<data.length; i++){
+    var field = '<tr">';
+    field += '<input type="hidden" value="'+ data[i].request +'">';       
+    field += '<td><input type="hidden" name="en_prod_id[]" class="form-control select2 prod_id" value="'+ data[i].product +'" readonly>'+ data[i].name +'</td>';    
+                        
+    field += '<td><input type="text" name="uom[]" class="form-control uom" readonly value="'+ data[i].uom +'"></td>';        
+    field += '<td><input type="number" name="en_price[]" class="form-control en_price" value="'+ data[i].price_purchase +'" readonly></td>';
+    field += '<td><input type="number" name="en_dicount[]" class="form-control discount"></td>';
+    field += '<td><input type="number" name="en_qty[]" class="form-control en_qty" value="'+ data[i].quantity +'"></td>';
+    field += '<td class="en_total"></td>';              
+    field += '<td><a href="#" class="btn red-sunglo btn-xs remove_field"><i class="fa fa-minus-circle"></i> Remove</a></td>';
+    field += '</tr>';
+
+    $('#from_table').append(field);
+    }    
+}
+function update_totals()
+{
+    var total_qty = 0.00;
+    var total_price = 0.00;
+    var total_total = 0.00;
+
+    $('#from_table tr').each(function(){
+        var qty = $(this).find('.en_qty').val();
+        var price = $(this).find('.en_price').val();
+        var discount = $(this).find('.discount').val();
+
+        var total = qty * price;
+
+        var discount_val = total * discount;
+
+        var total_discounted = total - discount_val;
+
+        total_qty += parseFloat(qty);
+        total_price += parseFloat(price);
+        total_total += parseFloat(total_discounted);
+        
+        $(this).find('.en_total').html(total_discounted.toFixed(2)); 
+        $('.total_total').html(total_total.toFixed(2));     
+    });
+
+}
+    $(document).ready(function() {
+        ComponentsPickers.init();
+        update_totals();     
+
+        var add_button = $(".add-field");
+
+        $(add_button).on('click',function(){        
+            appendEntry();
+        });
+
+         $('#search_button').click(function(){
+            var pr = $('#request_opts').val();            
+
+            console.log(pr)
+
+            var url = "{{ path('cat_pur_po_get_purchase_request', { id: ':id' }) }}";
+            url = url.replace(":id", pr);
+
+            //get Purchase Request            
+            $.getJSON(url, function(data){
+                console.log(data)
+
+                //append entries on table body
+                appendEntry(data);
+                update_totals();
+            });
+                  
+         });
+         
+        // change values
+        $('#from_table').on('change', '.en_qty, .en_price, .discount', function() {
+            update_totals();
+        });
+
+        //remove row
+        $(document).on("click",".remove_field", function(e){
+            e.preventDefault();            
+            var tr = $(this).closest('tr');
+            update_totals();
+            tr.remove();
+            return false;
+        }); 
+    });
+</script>
+{% endblock %}

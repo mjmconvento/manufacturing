@@ -1,9 +1,8 @@
 menu_items:
-    - id: feac_receiving
-      # acl: cat_dashboard.menu
-      label: Receiving
-      icon: fa-truck
-    - id: feac_rcvng_orders
-      # acl: cat_pur_supp.menu
+    # - id: feac_receiving
+    #   # acl: cat_dashboard.menu
+    #   label: Receiving
+    #   icon: fa-truck
+    - id: feac_receiving_orders      
       label: Receiving Orders
-      parent: feac_receiving
+      parent: menu_purchasing

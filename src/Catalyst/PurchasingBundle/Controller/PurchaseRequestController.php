@@ -127,7 +127,7 @@ class PurchaseRequestController extends CrudController
         $o->setPurpose($data['purpose']);
         $o->setNotes($data['notes']);
         $o->setReferenceCode($data['reference_code']);
-        $o->setDepartment($data['department']);
+        // $o->setDepartment($data['department']);
         $this->updateTrackCreate($o,$data,$is_new);
         // clear entries
         $ents = $o->getEntries();
