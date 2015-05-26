@@ -52,6 +52,12 @@ class DailyConsumption
      */
     protected $mol_running_balance;
 
+
+    /**
+     * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
+     */
+    protected $mol_working_balance;
+
     /**
      * @ORM\Column(type="decimal" , precision=10, scale=2 , nullable=true, options={"default":"0.00"})
      */
@@ -304,6 +310,7 @@ class DailyConsumption
         $this->mol_pumped_mdt = 0;
         $this->mol_running_balance = 0;
         $this->mol_pondo = 0;
+        $this->mol_working_balance = 0;
         $this->mol_production_gal = 0;
         $this->mol_production_ton = 0;
         $this->mol_tsai = 0;
@@ -360,6 +367,12 @@ class DailyConsumption
     public function setMolPumpedMDT($mol_pumped_mdt)
     {
         $this->mol_pumped_mdt = $mol_pumped_mdt;
+        return $this;
+    }
+
+    public function setMolWorkingBalance($mol_working_balance)
+    {
+        $this->mol_working_balance = $mol_working_balance;
         return $this;
     }
 
@@ -690,6 +703,11 @@ class DailyConsumption
     public function getMolPumpedMDT()
     {
         return $this->mol_pumped_mdt;
+    }
+
+    public function getMolWorkingBalance()
+    {
+        return $this->mol_working_balance;
     }
 
     public function getMolRunningBalance()

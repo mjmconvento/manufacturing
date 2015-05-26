@@ -106,6 +106,7 @@ class ProductionController extends CrudController
             ->setMolPurchases($data['purchase'])
             ->setMolPumpedMDT($data['pumped'])
             ->setMolRunningBalance($data['run-mol'])
+            ->setMolWorkingBalance($data['working-mol'])
             ->setMolPondo($data['pondo'])
             ->setMolProductionGal($data['mol-gal'])
             ->setMolProductionTon($data['mol-ton'])
