@@ -96,8 +96,6 @@ class ShiftReportController extends CrudController
         $params['date'] = $date;
         $params['shift'] = $shift;
 
-
-
         $this->addFlash('success', 'Shift Report has been created.'); 
 
         return $this->redirect($this->generateUrl('feac_mfg_shift_rep_edit', 
@@ -196,8 +194,6 @@ class ShiftReportController extends CrudController
 
         $today = new DateTime();
         $params['today'] = $today->format('Ymd');
-
-
 
         return $params;
     }

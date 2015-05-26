@@ -125,3 +125,14 @@ feac_inv_warehouse_print:
     pattern: /warehouse/stock/print/{warehouse}/{category}
     methods: [GET]
     defaults: { _controller: FareastInventoryBundle:WarehouseStock:print, warehouse: null, category: null  }
+
+feac_inv_transfer_production_index:
+    path:     /transfer/production
+    methods:  [GET]
+    defaults: { _controller: FareastInventoryBundle:TransferProduction:index }
+
+feac_inv_transfer_production_add_submit:
+    path:     /transfer/production
+    methods:  [POST]
+    defaults: { _controller: FareastInventoryBundle:TransferProduction:addSubmit }
+

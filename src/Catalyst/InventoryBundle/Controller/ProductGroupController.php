@@ -4,6 +4,7 @@ namespace Catalyst\InventoryBundle\Controller;
 
 use Catalyst\TemplateBundle\Model\CrudController;
 use Catalyst\InventoryBundle\Entity\ProductGroup;
+use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\ValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -64,4 +65,29 @@ class ProductGroupController extends CrudController
 
         return new JsonResponse($data);
     }
+
+    public function ajaxGetRawMaterialsAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pg = $em->getRepository('CatalystInventoryBundle:ProductGroup')->find($id);
+        $prods = $em->getRepository('CatalystInventoryBundle:Product')->findBy(array(
+                'prodgroup' => $pg,
+                'type_id' => Product::TYPE_RAW_MATERIAL
+            ));
+
+        $data = array();
+        foreach($prods as $p)
+        {
+            $data[] = [
+                'id' => $p->getID(),
+                'name' => $p->getName(),
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+
 }
+
+

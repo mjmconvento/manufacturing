@@ -22,6 +22,9 @@ menu_items:
     - id: cat_inv_adjust_index
       label: Stock Adjustment
       parent: menu_inventory
+    - id: feac_inv_transfer_production_index
+      label: Transfer for Production
+      parent: menu_inventory
     - id: feac_inv_warehouse_index
       label: Warehouse Stock
       parent: menu_inventory

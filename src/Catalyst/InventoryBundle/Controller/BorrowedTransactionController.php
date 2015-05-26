@@ -182,7 +182,6 @@ class BorrowedTransactionController extends CrudController
     protected function update($o, $data, $is_new = false)
     {
         //TODO: check if borrowed equals to returned
-
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('catalyst_user');
         $inv = $this->get('catalyst_inventory');
@@ -415,11 +414,6 @@ class BorrowedTransactionController extends CrudController
         {
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
-                // echo (intVal($data['qty'][$index])).'--'.(intVal($data['total_returned'][$index])); 
-                //     die();
-
-
-
                 if(intVal($data['qty'][$index]) != intval($data['total_returned'][$index]))
                 {
                     $checker = false;
