@@ -80,10 +80,10 @@ class PurchaseRequestController extends BaseController
 
     protected function update($o, $data, $is_new = false)
     {
-        echo "<pre>";
-        print_r($data);
-        echo "</pre>";
-        die();
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // die();
 
         $em = $this->getDoctrine()->getManager();
         $o->setDateNeeded(new DateTime($data['date_need']));
