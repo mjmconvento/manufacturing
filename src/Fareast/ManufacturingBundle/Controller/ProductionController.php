@@ -358,7 +358,7 @@ class ProductionController extends CrudController
             $salt = $inv->findProductByName(DailyConsumption::PROD_SALT);
 
             
-            // MOLASSES
+            // MOLLASSES
             $added_qty = bcsub($data->getMolRunningBalance(), $data->getMolBeginningBalance() ,2);
             if($data->getMolRunningBalance() != $data->getMolBeginningBalance())
             {

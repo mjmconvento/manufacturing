@@ -8,6 +8,7 @@ use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
 use Catalyst\InventoryBundle\Entity\Stock;
 use Catalyst\InventoryBundle\Entity\Account;
+use Catalyst\ValidationException;
 use Catalyst\ConfigurationBundle\Model\ConfigurationManager;
 use Doctrine\ORM\EntityManager;
 
@@ -58,7 +59,16 @@ class InventoryManager
 
     public function findProductByName($name)
     {
-        return $this->em->getRepository('CatalystInventoryBundle:Product')->findOneByName($name);
+        $product = $this->em->getRepository('CatalystInventoryBundle:Product')->findOneByName($name);
+        
+        if ($product != null)
+        {
+            return $product;
+        }
+        else
+        {
+            throw new ValidationException('Product '.$name.' does not exist.');
+        }
     }
 
     public function findInventoryAccount($id)
