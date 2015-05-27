@@ -21,7 +21,7 @@ class PurchaseRequestController extends BaseController
     protected function padFormParams(&$params, $prod = null)
     {
         $inv = $this->get('catalyst_inventory');
-        $params['prodgroup_opts'] = $inv->getProductGroupOptions(); 
+        $params['prod_opts'] = $inv->getProductOptions(); 
 
         return $params;
     }
