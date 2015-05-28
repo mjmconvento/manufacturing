@@ -2,15 +2,16 @@
 
 namespace Fareast\ManufacturingBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Response;
 use Catalyst\TemplateBundle\Model\CrudController;
-use Fareast\ManufacturingBundle\Entity\DailyConsumption;
-use Fareast\ManufacturingBundle\Entity\ShiftReport;
 use Catalyst\InventoryBundle\Entity\Entry;
 use Catalyst\InventoryBundle\Entity\Transaction;
-use Symfony\Component\HttpFoundation\Response;
 use Catalyst\CoreBundle\Template\Controller\TrackCreate;
 use Catalyst\CoreBundle\Template\Controller\TrackUpdate;
 use Catalyst\CoreBundle\Template\Controller\HasGeneratedID;
+use Fareast\ManufacturingBundle\Entity\DailyConsumption;
+use Fareast\ManufacturingBundle\Entity\ShiftReport;
+use Catalyst\ValidationException;
 use DateTime;
 
 class ProductionController extends CrudController
@@ -50,6 +51,7 @@ class ProductionController extends CrudController
         $params['shift_reports'] = $mfg->getShiftReports($today->format('Ymd'));
         $params['consumption'] = $data;
 
+
         return $this->render('FareastManufacturingBundle:Production:index.html.twig', $params);
     }
 
@@ -87,7 +89,17 @@ class ProductionController extends CrudController
 
         $this->padFormParams($params);
 
-        return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);
+        // validation for missing products
+        if (is_null($params['mollases_count']) || is_null($params['bunker_count']) || is_null($params['sulfuric_count']) 
+            || is_null($params['caustic_count']) || is_null($params['urea_count']) || is_null($params['salt_count']))
+        {
+            return $this->redirect($this->generateUrl('feac_mfg_prod_cal'));
+        }
+        else
+        {
+            return $this->render('FareastManufacturingBundle:Production:daily-consumption.html.twig', $params);            
+        }
+
     }
 
     public function dailyConsumptionSubmitAction($date)
@@ -189,7 +201,7 @@ class ProductionController extends CrudController
         $config = $this->get('catalyst_configuration');
         $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($config->get('catalyst_warehouse_production_tank'));
         $prod_acc = $wh->getInventoryAccount();
-    
+
         $params['mollases_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_MOLLASES);
         $params['bunker_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_BUNKER);
         $params['sulfuric_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_SULFURIC_ACID);
@@ -204,8 +216,24 @@ class ProductionController extends CrudController
     {
         $inv = $this->get('catalyst_inventory');
         $prod = $inv->findProductByName($product_name);
-        $product_count = $inv->getStockCount($wh_inv_acc, $prod);
-        return $product_count;
+
+        try
+        {
+            if ($prod != null)
+            {
+                $product_count = $inv->getStockCount($wh_inv_acc, $prod);
+                return $product_count;                
+            }
+            else 
+            {
+                throw new ValidationException($product_name. " does not exist in the database.");
+            }
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+
+        }
     }
 
     protected function addEntries($product, $qty, $transaction)
@@ -255,7 +283,6 @@ class ProductionController extends CrudController
 
         $wh = $inv->findWarehouse($config->get('catalyst_warehouse_main'));
         $wh_acc = $wh->getInventoryAccount();
-
 
         $heads_alcohol_total = 0;
         $fine_alcohol_total = 0;

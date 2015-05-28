@@ -67,7 +67,7 @@ class InventoryManager
         }
         else
         {
-            throw new ValidationException('Product '.$name.' does not exist.');
+            return null;
         }
     }
 

@@ -9,6 +9,7 @@ use Fareast\ManufacturingBundle\Entity\DailyConsumption;
 use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\InventoryBundle\Entity\ProductGroup;
 use Catalyst\InventoryBundle\Entity\Brand;
+use Fareast\ManufacturingBundle\Entity\ShiftReport;
 
 class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -51,6 +52,32 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
 
         $salt = $this->createProduct(DailyConsumption::PROD_SALT, 'salt' , 'bags', $product_group_1, $product_brand_1, $user);
         $em->persist($salt);
+
+        $heads_alcohol = $this->createProduct(ShiftReport::PROD_HEADS_ALCOHOL, 'heads-alcohol' , 'liters', $product_group_1, $product_brand_1, $user);
+        $em->persist($heads_alcohol);
+
+
+        $heads_alcohol = new Product();
+        $heads_alcohol->setName(ShiftReport::PROD_HEADS_ALCOHOL)
+            ->setSKU('heads-alcohol')
+            ->setTypeID(Product::TYPE_FINISHED_GOOD)
+            ->setUnitOfMeasure('liters')
+            ->setProductGroup($product_group_1)
+            ->setBrand($product_brand_1)
+            ->setUserCreate($user)
+            ->setUserUpdate($user);
+        $em->persist($heads_alcohol);
+
+        $fine_alcohol = new Product();
+        $fine_alcohol->setName(ShiftReport::PROD_FINE_ALCOHOL)
+            ->setSKU('fine-alcohol')
+            ->setTypeID(Product::TYPE_FINISHED_GOOD)
+            ->setUnitOfMeasure('liters')
+            ->setProductGroup($product_group_1)
+            ->setBrand($product_brand_1)
+            ->setUserCreate($user)
+            ->setUserUpdate($user);
+        $em->persist($fine_alcohol);
 
         $em->flush();
     }
