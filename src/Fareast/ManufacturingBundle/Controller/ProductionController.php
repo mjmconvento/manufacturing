@@ -310,6 +310,8 @@ class ProductionController extends CrudController
 
     public function printPDFAction($date)
     {
+        // This action will add the stocks to warehouse stock and add entries
+         
         $pdf = $this->get('catalyst_pdf');
         $pdf->newPdf('page_legal');
 
@@ -357,7 +359,6 @@ class ProductionController extends CrudController
             $urea = $inv->findProductByName(DailyConsumption::PROD_UREA);
             $salt = $inv->findProductByName(DailyConsumption::PROD_SALT);
 
-            
             // MOLLASSES
             $added_qty = bcsub($data->getMolRunningBalance(), $data->getMolBeginningBalance() ,2);
             if($data->getMolRunningBalance() != $data->getMolBeginningBalance())
@@ -366,7 +367,6 @@ class ProductionController extends CrudController
             }
 
             // BUNKER
-            // updating bunker warehouse stock
             $added_qty = bcsub($data->getBunkerRunningBalance(), $data->getBunkerBeginningBalance() ,2);
             if($data->getBunkerRunningBalance() != $data->getBunkerBeginningBalance())
             {
@@ -418,7 +418,6 @@ class ProductionController extends CrudController
     public function dailyConsumptionAjaxAction($date)
     {
         $em = $this->getDoctrine()->getManager();
-
 
         $mfg = $this->get('fareast_manufacturing');
         $data = $mfg->findDailyConsumption($date);

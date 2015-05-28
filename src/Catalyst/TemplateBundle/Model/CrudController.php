@@ -301,26 +301,26 @@ abstract class CrudController extends BaseController
 
         $this->hookPreAction();
         $obj = $this->add();
-        // try
-        // {
+        try
+        {
             $this->persist($obj);
 
             $this->addFlash('success', $this->title . ' added successfully.');
 
             return $this->redirect($this->generateUrl($this->getRouteGen()->getList()));
-        // }
-        // catch (ValidationException $e)
-        // {
-        //     $this->addFlash('error', $e->getMessage());
-        //     return $this->addError($obj);
-        // }
-        // catch (DBALException $e)
-        // {
-        //     print_r($e->getMessage());
-        //     $this->addFlash('error', 'Database error encountered. Possible duplicate.');
-        //     error_log($e->getMessage());
-        //     return $this->addError($obj);
-        // }
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
     }
 
     public function editFormAction($id)
