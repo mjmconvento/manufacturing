@@ -1,0 +1,83 @@
+{% extends "CatalystTemplateBundle::base.html.twig" %}
+{% import "CatalystTemplateBundle::form.html.twig" as f %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="portlet box blue-hoki">
+			<div class="portlet-title">
+				<div class="caption"> Purchase Request</div>
+			</div>
+
+			<div class="portlet-body form">
+				<form method="post" class="form-horizontal">
+					<div class="form-body">
+						<h4 class="form-section">Information</h4>
+
+						<div class="table-toolbar" style="height:40px">
+                            <label class="col-md-3 control-label">Search PR</label>
+                                <div class="col-md-4">
+                                    <select id="request_opts" class="form-control select_2" name="request_opts">
+                                    {{ f.options(request_opts,0)}}
+                                    </select>
+                                </div>
+                        </div>
+
+                        	{{ f.group_text('Date Requested','date_issue',object.getDateCreate|date('m/d/Y'),3,4,true ) }}
+                        	{{ f.group_text('Requested By','request_by',object.getUserCreate|default(),3,4,true) }}
+
+                        	<h4 class="form-section">Receiving</h4>
+
+                        	<a id="btn_from_add" href="{{ path('feac_receiving_pr_received') }}" class="btn green add-field">Add</a>
+
+                        <div class="row table-responsive" style="padding-top:10px">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered table-hover" aria-describedby="list_table_info">
+                                    <thead>                                                                        
+                                        <th>DR Code</th>
+                                        <th>Date Received</th>                                        
+                                        <th></th>
+                                    </thead>
+                                    <tbody id="from_table">                                                                                                              
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+					</div>					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+$(document).ready(function() 
+{
+	function add_filter_to_path(pr_id)
+	{
+		var path = "{{ path('feac_receiving_pr_received', { 'pr_id' : 'ID' }) }}";
+			path = path.replace('ID', pr_id);		
+		$('#btn_from_add').attr('href',path);
+	}	
+	$('#request_opts').change(function() {
+		var request_id = $('#request_opts').val();
+
+		var url = "{{ path('feac_receiving_ajax_get_purchase_request', { id: ':id'}) }}";
+			url = url.replace(":id", request_id);
+
+			$.getJSON(url, function(data) {
+				console.log(data)
+				$('#cform-date_issue').val(data.date_issue);
+				$('#cform-request_by').val(data.user_create);
+			});			
+	});
+
+	var pr_id = $('#request_opts').val();
+
+	
+});
+</script>
+{% endblock %}

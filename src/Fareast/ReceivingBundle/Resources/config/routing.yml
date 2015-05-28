@@ -1,7 +1,44 @@
-feac_receiving_orders:
-    path:     /orders
-    defaults: { _controller: FareastReceivingBundle:Receiving:index }
+feac_receiving_index:
+    path:     /received_orders
+    methods:  [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:index }
 
-feac_receiving_order_view:
-    path:     /order/view
-    defaults: { _controller: FareastReceivingBundle:Receiving:view }
+feac_receiving_add_form:
+    pattern: /received_order
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:addForm }
+
+feac_receiving_add_submit:
+    pattern: /received_order
+    methods: [POST]
+    defaults: { _controller: FareastReceivingBundle:ReceiveOrder:addSubmit }
+
+feac_receiving_edit_form:
+    pattern: /received_order/{id}
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:editForm }
+
+feac_receiving_edit_submit:
+    pattern: /received_order/{id}
+    methods: [POST]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:editSubmit }
+
+feac_receiving_delete:
+    pattern: /received_order/{id}/delete
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:delete }
+
+feac_receiving_grid:
+    pattern: /received_orders/grid
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:grid }
+
+feac_receiving_ajax_get_purchase_request:
+    pattern: /received_order/purchase_request/{id}
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:getPurchaseRequest }
+
+feac_receiving_pr_received:
+    pattern: /received_order/purchase_request/received/{pr_id}
+    methods: [GET]
+    defaults: { _controller: FareastReceivingBundle:ReceivedOrder:received, pr_id: null }
