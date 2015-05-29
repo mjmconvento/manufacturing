@@ -74,8 +74,28 @@ class ReceivedOrderController extends CrudController
         return new JsonResponse($data);
     }
 
-    public function receivedAction($pr_id)
+    public function receivedFormAction($pr_id)
     {
-        return $this->render('FareastReceivingBundle:ReceivedOrder:receive.html.twig');
+        $em = $this->getDoctrine()->getManager();
+
+        $params = $this->getViewParams('', 'feac_receiving_index');
+        $request = $em->getRepository('CatalystPurchasingBundle:PurchaseRequest')->findAll();
+        $data = array();
+        foreach($request as $r)
+        {
+            if($r->getID() == $pr_id)
+            {
+                $data = [
+                    'code' => $r->getCode(),
+                    'date_issue' => $r->getDateCreate()->format('m/d/Y'),
+                    'user_create' => $r->getUserCreate()->getName(),
+                    'entries' => $r->getEntries(),
+                ];
+            }
+        }
+
+        $params['data'] = $data;
+
+        return $this->render('FareastReceivingBundle:ReceivedOrder:received.html.twig', $params);
     }
 }

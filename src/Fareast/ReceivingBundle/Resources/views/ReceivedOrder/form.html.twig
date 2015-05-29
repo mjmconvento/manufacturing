@@ -23,12 +23,12 @@
                                 </div>
                         </div>
 
-                        	{{ f.group_text('Date Requested','date_issue',object.getDateCreate|date('m/d/Y'),3,4,true ) }}
+                        	{{ f.group_text('Date Requested','date_issue',object.getCode|default(),3,4,true ) }}
                         	{{ f.group_text('Requested By','request_by',object.getUserCreate|default(),3,4,true) }}
 
                         	<h4 class="form-section">Receiving</h4>
 
-                        	<a id="btn_from_add" href="{{ path('feac_receiving_pr_received') }}" class="btn green add-field">Add</a>
+                        	<a id="btn_from_add" href="{{ path('feac_receiving_pr_received_form') }}" class="btn green add-field">Add Delivery</a>
 
                         <div class="row table-responsive" style="padding-top:10px">
                             <div class="col-md-12">
@@ -38,7 +38,7 @@
                                         <th>Date Received</th>                                        
                                         <th></th>
                                     </thead>
-                                    <tbody id="from_table">                                                                                                              
+                                    <tbody id="from_table">                                                                                                                   
                                     </tbody>
                                 </table>
                             </div>
@@ -58,13 +58,15 @@ $(document).ready(function()
 {
 	function add_filter_to_path(pr_id)
 	{
-		var path = "{{ path('feac_receiving_pr_received', { 'pr_id' : 'ID' }) }}";
+		var path = "{{ path('feac_receiving_pr_received_form', { 'pr_id' : 'ID' }) }}";
 			path = path.replace('ID', pr_id);		
 		$('#btn_from_add').attr('href',path);
-	}	
+	}
+
 	$('#request_opts').change(function() {
 		var request_id = $('#request_opts').val();
 
+		//get requested date and user of purchase request
 		var url = "{{ path('feac_receiving_ajax_get_purchase_request', { id: ':id'}) }}";
 			url = url.replace(":id", request_id);
 
@@ -72,10 +74,11 @@ $(document).ready(function()
 				console.log(data)
 				$('#cform-date_issue').val(data.date_issue);
 				$('#cform-request_by').val(data.user_create);
-			});			
-	});
+			});
 
-	var pr_id = $('#request_opts').val();
+		var pr_id = $('#request_opts').val();	
+		add_filter_to_path(pr_id);
+	});	
 
 	
 });

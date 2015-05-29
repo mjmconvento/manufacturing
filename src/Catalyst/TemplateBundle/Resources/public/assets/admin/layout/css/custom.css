@@ -165,3 +165,8 @@ body {
 /*.shift-report, .thumbnail {
     min-height: 364px;
 }*/
+
+thead {
+    background-color: #67809f;
+    color: white;
+}
