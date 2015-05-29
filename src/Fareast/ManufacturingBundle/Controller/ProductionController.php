@@ -352,6 +352,17 @@ class ProductionController extends CrudController
         $params['date'] = $date_picked;
         $params['shift_reports'] = $mfg->getShiftReports($date);
 
+        $inv = $this->get('catalyst_inventory');
+
+        $mollases = $inv->findProductByName(DailyConsumption::PROD_MOLLASES);
+        $bunker = $inv->findProductByName(DailyConsumption::PROD_BUNKER);
+        $sulfur = $inv->findProductByName(DailyConsumption::PROD_SULFURIC_ACID);
+        $caustic = $inv->findProductByName(DailyConsumption::PROD_CAUSTIC_SODA);
+        $urea = $inv->findProductByName(DailyConsumption::PROD_UREA);
+        $salt = $inv->findProductByName(DailyConsumption::PROD_SALT);
+        $fine_alcohol = $inv->findProductByName(ShiftReport::PROD_FINE_ALCOHOL);
+        $heads_alcohol = $inv->findProductByName(ShiftReport::PROD_HEADS_ALCOHOL);
+
         if ($data != NULL)
         {
             $old_generated_status = $data->getIsGenerated();
@@ -359,7 +370,7 @@ class ProductionController extends CrudController
             $em->persist($data);
         }
 
-
+        // Adding entries. If product has same value, it will not add entry
         if ($data != NULL and $old_generated_status == NULL)
         {
             $transaction = new Transaction;
@@ -368,7 +379,6 @@ class ProductionController extends CrudController
                 ->setDescription('Daily Consumption');
             $em->persist($transaction);
 
-            $inv = $this->get('catalyst_inventory');
             $config = $this->get('catalyst_configuration');
 
             // Getting warehouse inventory account
@@ -379,12 +389,6 @@ class ProductionController extends CrudController
             $wh = $inv->findWarehouse($config->get('catalyst_warehouse_production_tank'));
             $prod_acc = $wh->getInventoryAccount();
 
-            $mollases = $inv->findProductByName(DailyConsumption::PROD_MOLLASES);
-            $bunker = $inv->findProductByName(DailyConsumption::PROD_BUNKER);
-            $sulfur = $inv->findProductByName(DailyConsumption::PROD_SULFURIC_ACID);
-            $caustic = $inv->findProductByName(DailyConsumption::PROD_CAUSTIC_SODA);
-            $urea = $inv->findProductByName(DailyConsumption::PROD_UREA);
-            $salt = $inv->findProductByName(DailyConsumption::PROD_SALT);
 
             // MOLLASSES
             $added_qty = bcsub($data->getMolRunningBalance(), $data->getMolBeginningBalance() ,2);
@@ -434,9 +438,65 @@ class ProductionController extends CrudController
             $inv->persistTransaction($transaction);
         }
 
-        $em->flush();
-        $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);
-        return $pdf->printPdf($html->getContent());
+
+        // Validation for missing products 
+        try
+        {
+            if ($mollases == null || $bunker == null || $sulfur == null || $caustic == null ||
+                $urea == null || $salt == null || $fine_alcohol == null || $heads_alcohol == null)
+            {
+                throw new ValidationException();
+            }
+
+            $em->flush();
+            $html = $this->render('FareastManufacturingBundle:Production:pdf/pdf.html.twig', $params);
+            return $pdf->printPdf($html->getContent());
+        }
+        catch (ValidationException $e)
+        {
+            if ($mollases == null)
+            {
+                $this->addFlash('error', "Mollases product does not exist.");
+            }
+
+            if ($bunker == null)
+            {
+                $this->addFlash('error', "Bunker product does not exist.");
+            }
+
+            if ($sulfur == null)
+            {
+                $this->addFlash('error', "Sulfur product does not exist.");
+            }
+
+            if ($caustic == null)
+            {
+                $this->addFlash('error', "Caustic product does not exist.");
+            }
+
+            if ($urea == null)
+            {
+                $this->addFlash('error', "Urea does not exist.");
+            }
+
+            if ($salt == null)
+            {
+                $this->addFlash('error', "Salt product does not exist.");
+            }
+
+            if ($fine_alcohol == null)
+            {
+                $this->addFlash('error', "Fine Alcohol product does not exist.");
+            }
+
+            if ($heads_alcohol == null)
+            {
+                $this->addFlash('error', "Heads Alcohol product does not exist.");
+            }
+
+            return $this->redirect($this->generateUrl('feac_mfg_prod_cal'));
+        }
+
     }
 
   

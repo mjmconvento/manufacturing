@@ -18,7 +18,10 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $em)
     {
+        // find user Administrator
         $user = $em->getRepository('CatalystUserBundle:User')->findOneByName('Administrator');
+        
+        // Add product Group
         $product_group_1 = new ProductGroup();
         $product_group_1->setName('Product Group 1');
         $em->persist($product_group_1);
@@ -27,6 +30,7 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
         $product_group_2->setName('Product Group 2');
         $em->persist($product_group_2);
 
+        // Add brand
         $product_brand_1 = new Brand();
         $product_brand_1->setName('Product Brand 1');
         $em->persist($product_brand_1);
@@ -35,6 +39,8 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
         $product_brand_2->setName('Product Brand 2');
         $em->persist($product_brand_2);
 
+
+        // Add products for daily consumptions
         $mollases = $this->createProduct(DailyConsumption::PROD_MOLLASES, 'mollases' , 'gallons', $product_group_1, $product_brand_1, $user);
         $em->persist($mollases);
 
@@ -53,10 +59,8 @@ class LoadProduct extends AbstractFixture implements OrderedFixtureInterface
         $salt = $this->createProduct(DailyConsumption::PROD_SALT, 'salt' , 'bags', $product_group_1, $product_brand_1, $user);
         $em->persist($salt);
 
-        $heads_alcohol = $this->createProduct(ShiftReport::PROD_HEADS_ALCOHOL, 'heads-alcohol' , 'liters', $product_group_1, $product_brand_1, $user);
-        $em->persist($heads_alcohol);
 
-
+        // Add products for shift reports
         $heads_alcohol = new Product();
         $heads_alcohol->setName(ShiftReport::PROD_HEADS_ALCOHOL)
             ->setSKU('heads-alcohol')

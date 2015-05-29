@@ -454,13 +454,12 @@ class BorrowedTransactionController extends CrudController
             if ($checker == true)
             {
                 $this->addFlash('error', 'Not enough stock in main warehouse.');
-                return $this->redirect($url);
-
+                throw new ValidationException();
             }
             elseif($returned_validator == true)
             {
                 $this->addFlash('error', 'Returned Item Exceeded.');
-                return $this->redirect($url);
+                throw new ValidationException();
             }
             else
             {
@@ -488,8 +487,7 @@ class BorrowedTransactionController extends CrudController
         }
         catch (ValidationException $e)
         {
-            $this->addFlash('error', $e->getMessage());
-            return $this->editError($object, $id);
+            return $this->redirect($url);
         }
         catch (DBALException $e)
         {

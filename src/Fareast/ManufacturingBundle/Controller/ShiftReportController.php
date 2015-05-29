@@ -6,6 +6,7 @@ use Catalyst\TemplateBundle\Model\CrudController;
 use Fareast\ManufacturingBundle\Entity\ShiftReport;
 use DateTime;
 use Symfony\Component\HttpFoundation\Response;
+use Catalyst\ValidationException;
 
 class ShiftReportController extends CrudController
 {
@@ -37,7 +38,35 @@ class ShiftReportController extends CrudController
         $params['date'] = $date;
         $params['shift'] = $shift;
 
-        return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
+        $inv = $this->get('catalyst_inventory');
+        $fine_alcohol = $inv->findProductByName(ShiftReport::PROD_FINE_ALCOHOL);
+        $heads_alcohol = $inv->findProductByName(ShiftReport::PROD_HEADS_ALCOHOL);
+        
+        // Validation for missing products (fine alcohol, heads alcohol)
+        try
+        {
+            if ($fine_alcohol == null || $heads_alcohol == null)
+            {
+                throw new ValidationException();
+            }
+
+            return $this->render('FareastManufacturingBundle:Production:shift-report.html.twig', $params);
+        }
+        catch (ValidationException $e)
+        {
+            if ($fine_alcohol == null)
+            {
+                $this->addFlash('error', "Fine Alcohol product does not exist.");
+            }
+
+            if ($heads_alcohol == null)
+            {
+                $this->addFlash('error', "Heads Alcohol product does not exist.");
+            }
+
+            return $this->redirect($this->generateUrl('feac_mfg_prod_cal'));
+        }
+
     }
 
     public function shiftReportSubmitAction($date, $shift)
