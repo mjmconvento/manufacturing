@@ -15,6 +15,7 @@
 						<h4 class="form-section">Information</h4>
 						{{ f.group_text('PR Code', 'request_id', data.code,3,4,true) }}
 						{{ f.group_text('Date Requested', 'date_issue', data.date_issue,3,4,true) }}
+						{# {{ f.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3,readonly)}} #}
 						{{ f.group_text('Requested By', 'user_create', data.user_create,3,4,true) }}
 						{{ f.group_text('IDR Code', 'dr_code', object.getCode|default(),3,4,true) }}
 						{{ f.group_text('Received By','received_by',object.getCode|default(),3,4,true)}}
@@ -69,7 +70,10 @@
 
 {% block js %}
 <script>
-$(document).ready(function(){
+$(document).ready(function()
+{
+
+	//append table row for every item
 	$('.add-field').click(function(){
 		var parent = $(this).parents('tr');
 		var body = $(this).parents('tbody');
@@ -77,12 +81,21 @@ $(document).ready(function(){
 
 		var form = '<tr>';
 			form += '<td align="right">DR Code:</td>';
-			form += '<td><input type="text" class="form-control dr_code"></td>';
+			form += '<td><input type="text" class="form-control dr_code" readonly></td>';
 			form += '<td align="right">Quantity:</td>';
-			form += '<td><input type="number" class="form-control qty"></td>';
+			form += '<td><input type="number" class="form-control qty" min=0 name="delivered_qty['+ parent_id +'][]"></td>';
+			form += '<td><a href="javascript:void(0)" class="remove_field btn default btn-xs red-sunglo"><i class="fa fa-minus-circle"></i> Remove</a></td>';
 
 			parent.after(form);			
 	});
+
+	// remove row   
+    $(document).on("click",".remove_field", function(e){
+        e.preventDefault();            
+        var tr = $(this).closest('tr');
+        tr.remove();
+        return false
+    });
 });
 </script>
 {% endblock %}

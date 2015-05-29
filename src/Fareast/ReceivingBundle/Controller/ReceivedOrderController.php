@@ -89,7 +89,7 @@ class ReceivedOrderController extends CrudController
                     'code' => $r->getCode(),
                     'date_issue' => $r->getDateCreate()->format('m/d/Y'),
                     'user_create' => $r->getUserCreate()->getName(),
-                    'entries' => $r->getEntries(),
+                    'entries' => $r->getEntries(),                    
                 ];
             }
         }
@@ -97,5 +97,73 @@ class ReceivedOrderController extends CrudController
         $params['data'] = $data;
 
         return $this->render('FareastReceivingBundle:ReceivedOrder:received.html.twig', $params);
+    }
+
+    protected function update($o, $data, $is_new = false)
+    {
+        // echo "<pre>";
+        // print_r($data);
+        // echo "</pre>";
+        // die();
+
+        $pur = $this->get('catalyst_purchasing');
+        $po_id = $data['request_id'];
+        
+        $po = $pur->getPurchaseRequest($po_id);
+        $o->setPurchaseRequest($po);
+        $o->setCode($data['dr_code']);
+        $o->setDateDeliver(new DateTime($data['date_deliver']));
+
+        if($is_new)
+        {
+            $this->updateTrackCreate($o, $data, $is_new);
+            // clear all entries
+            $pur->clearDeliveryEntries($o);
+
+            foreach($data('delivery_qty') as $prod_id => $items)
+            {
+                $parentProd = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
+                foreach($items as $index => $item)
+                {
+                    $qty = $item;
+
+                    $prdelivery = new RODeliveryEntry();
+                    $prdelivery->setQuantity($qty)
+                                ->setProduct($parentProd);
+
+                    $o->addEntry($prdelivery);                    
+                }
+            }
+        }
+
+        $em->persist($o);
+        $em->flush();
+
+    }
+
+    public function addSubmitAction()
+    {
+        $this->checkAccess($this->route_prefix . '.add');
+        $id = $this->getRequest()->get('pr_id');
+        $this->hookPreAction();
+        try
+        {
+            $obj = $this->add();
+
+            $this->addFlash('success', $this->title . ' added successfully.');
+            return $this->redirect($this->generateUrl('feac_receiving_index', array('id' => $id)));
+        }
+        catch (ValidationException $e)
+        {
+            $this->addFlash('error', $e->getMessage());
+            return $this->addError($obj);
+        }
+        catch (DBALException $e)
+        {
+            print_r($e->getMessage());
+            $this->addFlash('error', 'Database error encountered. Possible duplicate.');
+            error_log($e->getMessage());
+            return $this->addError($obj);
+        }
     }
 }

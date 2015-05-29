@@ -66,7 +66,7 @@ $(document).ready(function()
 	$('#request_opts').change(function() {
 		var request_id = $('#request_opts').val();
 
-		//get requested date and user of purchase request
+		//get date issue and user create of purchase request
 		var url = "{{ path('feac_receiving_ajax_get_purchase_request', { id: ':id'}) }}";
 			url = url.replace(":id", request_id);
 
