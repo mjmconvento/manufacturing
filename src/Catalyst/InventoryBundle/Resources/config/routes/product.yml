@@ -87,3 +87,11 @@ cat_inv_prod_export:
     pattern: /list/csv
     methods: [GET]
     defaults: { _controller: CatalystInventoryBundle:Product:exportCSV }
+
+
+cat_inv_prod_ajax_get_raw_materials:
+    pattern: /ajax/{id}/raw/products
+    methods: [GET]
+    defaults: { _controller: CatalystInventoryBundle:Product:ajaxGetRawMaterials }
+
+    

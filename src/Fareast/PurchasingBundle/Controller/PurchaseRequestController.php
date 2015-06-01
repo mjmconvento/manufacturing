@@ -5,9 +5,9 @@ namespace Fareast\PurchasingBundle\Controller;
 use Catalyst\PurchasingBundle\Controller\PurchaseRequestController as BaseController;
 use Catalyst\InventoryBundle\Entity\Product;
 use Catalyst\PurchasingBundle\Entity\PREntry;
-
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Catalyst\ValidationException;
 use DateTime;
 
 class PurchaseRequestController extends BaseController
@@ -99,10 +99,11 @@ class PurchaseRequestController extends BaseController
         $o->clearEntries();
 
         // entries
-        if (isset($data['en_prod_id']))
+        if (isset($data['prod_opts']))
         {
-            foreach ($data['en_prod_id'] as $index => $prod_id)
+            foreach ($data['prod_opts'] as $index => $prod_id)
             {
+
                 // fields
                 $qty = $data['en_qty'][$index];
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);

@@ -600,7 +600,8 @@ class BorrowedTransactionController extends CrudController
     protected function hookPostSave($obj, $is_new = false)
     {
         $em = $this->getDoctrine()->getManager();
-        if($is_new){
+        if($is_new)
+        {
             $obj->setUserCreate($this->getUser());
             $obj->generateCode();
             $em->persist($obj);

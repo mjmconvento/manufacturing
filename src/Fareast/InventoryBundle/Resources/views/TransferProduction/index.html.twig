@@ -95,7 +95,7 @@ function appendEntry()
 function prodgroup_refresh(pg_select) {
     // var cat = pg_select.closest('tr').find('.prodgroup_opts').val();
     var cat = pg_select.val();
-    var url = "{{ path('cat_inv_pg_ajax_get_raw_materials', { id: ':id'}) }}";
+    var url = "{{ path('cat_inv_prod_ajax_get_raw_materials', { id: ':id'}) }}";
     url = url.replace(":id", cat);
 
     var row = pg_select.closest('.prod_row');

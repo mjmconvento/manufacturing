@@ -122,7 +122,7 @@ function appendEntry(data)
 {
     for(var i=0; i<data.length; i++){
     var field = '<tr">';
-    field += '<input type="hidden" value="'+ data[i].request +'">';       
+    field += '<input type="text" value="'+ data[i].request +'">';       
     field += '<td><input type="hidden" name="en_prod_id[]" class="form-control select2 prod_id" value="'+ data[i].product +'" readonly>'+ data[i].name +'</td>';    
                         
     field += '<td><input type="text" name="uom[]" class="form-control uom" readonly value="'+ data[i].uom +'"></td>';        
