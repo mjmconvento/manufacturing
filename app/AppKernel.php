@@ -64,6 +64,7 @@ class AppKernel extends Kernel
             new Fareast\ReportBundle\FareastReportBundle(),
             new Fareast\PdfBundle\FareastPdfBundle(),
             new Fareast\DashboardBundle\FareastDashboardBundle(),
+            new Fareast\FixtureBundle\FareastFixtureBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

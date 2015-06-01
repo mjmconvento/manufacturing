@@ -1,3 +1,7 @@
+fareast_fixture:
+    resource: "@FareastFixtureBundle/Resources/config/routing.yml"
+    prefix:   /
+
 catalyst_pdf:
     resource: "@CatalystPdfBundle/Resources/config/routing.yml"
     prefix:   /

@@ -1,0 +1,4 @@
+services:
+#    fareast_fixture.example:
+#        class: Fareast\FixtureBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
