@@ -66,6 +66,7 @@ class ProductionController extends CrudController
 
         $date_time_now = new DateTime();
 
+        // check if consumption is existing or not
         if ($data == null)
         {
             $consumption = new DailyConsumption();
@@ -202,6 +203,7 @@ class ProductionController extends CrudController
         $wh = $em->getRepository('CatalystInventoryBundle:Warehouse')->find($config->get('catalyst_warehouse_production_tank'));
         $prod_acc = $wh->getInventoryAccount();
 
+        // get product stock counts
         $params['mollases_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_MOLLASES);
         $params['bunker_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_BUNKER);
         $params['sulfuric_count'] = $this->getProductStockCount($prod_acc, DailyConsumption::PROD_SULFURIC_ACID);
@@ -354,6 +356,7 @@ class ProductionController extends CrudController
 
         $inv = $this->get('catalyst_inventory');
 
+        // find constant products
         $mollases = $inv->findProductByName(DailyConsumption::PROD_MOLLASES);
         $bunker = $inv->findProductByName(DailyConsumption::PROD_BUNKER);
         $sulfur = $inv->findProductByName(DailyConsumption::PROD_SULFURIC_ACID);
@@ -363,6 +366,7 @@ class ProductionController extends CrudController
         $fine_alcohol = $inv->findProductByName(ShiftReport::PROD_FINE_ALCOHOL);
         $heads_alcohol = $inv->findProductByName(ShiftReport::PROD_HEADS_ALCOHOL);
 
+        // setting variables if data is not null
         if ($data != NULL)
         {
             $old_generated_status = $data->getIsGenerated();

@@ -276,6 +276,7 @@ class BorrowedTransactionController extends CrudController
             }        
         }
 
+        // if new, then persist transaction
         if ($checker == true)
         {
             $inv->persistTransaction($transaction);    
@@ -392,6 +393,7 @@ class BorrowedTransactionController extends CrudController
 
     protected function returnedValidator($data)
     {
+        // check if returned quantity is more than total returned
         $checker = false;
         if(isset($data['prod_opts']))
         {
@@ -409,6 +411,7 @@ class BorrowedTransactionController extends CrudController
 
     protected function completeChecker($data)
     {
+        // check if all items has been returned
         $checker = true;
         if(isset($data['prod_opts']))
         {

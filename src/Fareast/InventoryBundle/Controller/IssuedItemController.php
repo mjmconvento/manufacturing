@@ -130,7 +130,6 @@ class IssuedItemController extends CrudController
 
         if(isset($data['prod_opts']))
         {
-            // TODO: return stock if deleted
             foreach ($data['prod_opts'] as $index => $prod_id) 
             {
                 $prod = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
