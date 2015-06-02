@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\HasCode;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
+use Catalyst\PurchasingBundle\Entity\PurchaseRequest;
 use DateTime;
 
 /**

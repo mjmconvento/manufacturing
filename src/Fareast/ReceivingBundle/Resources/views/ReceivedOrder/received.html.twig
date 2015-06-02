@@ -15,10 +15,10 @@
 						<h4 class="form-section">Information</h4>
 						{{ f.group_text('PR Code', 'request_id', data.code,3,4,true) }}
 						{{ f.group_text('Date Requested', 'date_issue', data.date_issue,3,4,true) }}
-						{# {{ f.group_date('Date Delivered','date_deliver',object.getDateDeliver|date('m/d/Y'),3,3,readonly)}} #}
+						{{ f.group_date('Date Delivered','date_deliver',object.getDateDeliver|default(),3,3)}}
 						{{ f.group_text('Requested By', 'user_create', data.user_create,3,4,true) }}
 						{{ f.group_text('IDR Code', 'dr_code', object.getCode|default(),3,4,true) }}
-						{{ f.group_text('Received By','received_by',object.getCode|default(),3,4,true)}}
+						{# {{ f.group_text('Received By','received_by',object.getCode|default(),3,4,true)}} #}
 
 						<h4 class="form-section">Requested Items</h4>
 

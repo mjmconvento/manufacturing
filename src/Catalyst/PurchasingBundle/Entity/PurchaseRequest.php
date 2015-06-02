@@ -8,6 +8,7 @@ use DateTime;
 use Catalyst\CoreBundle\Template\Entity\HasGeneratedID;
 use Catalyst\CoreBundle\Template\Entity\TrackCreate;
 use Catalyst\CoreBundle\Template\Entity\HasNotes;
+use Fareast\ReceivingBundle\Entity\ReceivedOrder;
 
 /**
  * @ORM\Entity
@@ -36,6 +37,11 @@ class PurchaseRequest
      * @ORM\OneToMany(targetEntity="PREntry", mappedBy="purchase_request", cascade={"persist"})
      */
     protected $entries;
+
+    /**
+     * @ORM\OneToMany(targetEntity="\Fareast\ReceivingBundle\Entity\ReceivedOrder", mappedBy="purchase_request", cascade={"persist"})
+     */
+    protected $deliveries;
     
     
     /** @ORM\Column(type="string") */

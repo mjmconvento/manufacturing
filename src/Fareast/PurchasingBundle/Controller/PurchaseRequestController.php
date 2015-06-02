@@ -20,8 +20,29 @@ class PurchaseRequestController extends BaseController
 
     protected function padFormParams(&$params, $prod = null)
     {
-        $inv = $this->get('catalyst_inventory');
-        $params['prod_opts'] = $inv->getProductOptions(); 
+        $em = $this->getDoctrine()->getManager();
+
+        //filter product to fixed asset and raw material type
+        $product = $em->getRepository('CatalystInventoryBundle:Product')
+                ->findBy(
+                    array('type_id' => Product::TYPE_FIXED_ASSET));
+        $prod = $em->getRepository('CatalystInventoryBundle:Product')
+                ->findBy(
+                    array('type_id' => Product::TYPE_RAW_MATERIAL));
+
+        $data = array();
+        foreach($product as $p)
+        {
+            $data[$p->getID()] = $p->getName();
+        }
+
+        foreach($prod as $prd)
+        {
+            $data[$prd->getID()] = $prd->getName();
+        }
+
+
+        $params['prod_opts'] = $data;
 
         return $params;
     }
