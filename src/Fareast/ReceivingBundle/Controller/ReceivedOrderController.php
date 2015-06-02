@@ -40,13 +40,26 @@ class ReceivedOrderController extends CrudController
         $grid = $this->get('catalyst_grid');
         return array(
             $grid->newColumn('Code', 'getCode', 'code'),
-            $grid->newColumn('Date Requested', 'getDateDeliver', 'date_deliver'),                    
-            $grid->newColumn('Requested By', 'getUserCreate', 'user_create'),            
+            $grid->newColumn('Date Requested', 'getDateDeliver', 'date_deliver','o',array($this, 'formatDate')),                    
+            $grid->newColumn('Requested By', 'getName', 'request_by', 'u'),            
             $grid->newColumn('Status','getStatus','status_id')  
         );
     }
 
-    public function padFormParams(&$params, $po=null)
+    public function formatDate($date)
+    {
+        return $date->format('m/d/Y');
+    }
+
+    protected function getGridJoins()
+    {
+        $grid = $this->get('catalyst_grid');
+        return array(
+            $grid->newJoin('u', 'user_create', 'getUserCreate', 'left'),
+        );
+    }
+
+    public function padFormParams(&$params, $object=null)
     {
         $pur = $this->get('catalyst_purchasing');
         $request_opts = array(0 => '[Select PR]');
@@ -59,7 +72,21 @@ class ReceivedOrderController extends CrudController
 
         $request = $em->getRepository('CatalystPurchasingBundle:PurchaseRequest')->findAll();
 
-        $data = array();
+        $received = $em->getRepository('FareastReceivingBundle:ReceivedOrder')->findAll();
+
+        $data = array();        
+        foreach($received as $rcv)
+        {
+            if($rcv->getPurchaseRequest()->getID() == $id)
+            {
+                $data = [
+                    'code' => $rcv->getCode(),
+                    'date_create' => $rcv->getDateCreate()->format('m/d/Y'),
+                    'id' => $rcv->getID(),
+                ];
+            }
+        }
+
         foreach($request as $r)
         {
             if($r->getID() == $id)
@@ -76,9 +103,16 @@ class ReceivedOrderController extends CrudController
 
     public function receivedFormAction($pr_id)
     {
+        $this->checkAccess($this->route_prefix . '.add');
+
         $em = $this->getDoctrine()->getManager();
 
-        $params = $this->getViewParams('', 'feac_receiving_index');
+        $this->hookPreAction();
+        $obj = $this->newBaseClass();
+
+        $params['object'] = $obj;
+
+        $params = $this->getViewParams('Add', 'feac_receiving_pr_received_form');
         $request = $em->getRepository('CatalystPurchasingBundle:PurchaseRequest')->findAll();
         $data = array();
         foreach($request as $r)
@@ -96,31 +130,36 @@ class ReceivedOrderController extends CrudController
 
         $params['data'] = $data;
 
+        $this->padFormParams($params, $obj);
+
         return $this->render('FareastReceivingBundle:ReceivedOrder:received.html.twig', $params);
     }
 
-    protected function update($o, $data, $is_new = false)
+    protected function update($ro, $data, $is_new = false)
     {
         // echo "<pre>";
         // print_r($data);
         // echo "</pre>";
         // die();
-
+        $em = $this->getDoctrine()->getManager();
         $pur = $this->get('catalyst_purchasing');
-        $po_id = $data['request_id'];
-        
-        $po = $pur->getPurchaseRequest($po_id);
-        $o->setPurchaseRequest($po);
-        $o->setCode($data['dr_code']);
-        $o->setDateDeliver(new DateTime($data['date_deliver']));
+        // $pr_id = $data['request_id'];
+
+        $pr_id = $this->getRequest()->get('pr_id');        
+        $ro = new ReceivedOrder();
+        $pr = $pur->getPurchaseRequest($pr_id);
+        $ro->setPurchaseRequest($pr);
+        $ro->setCode($data['dr_code']);
+        $ro->setDateDeliver(new DateTime($data['date_deliver']));
 
         if($is_new)
         {
-            $this->updateTrackCreate($o, $data, $is_new);
+            $this->updateTrackCreate($ro, $data, $is_new);
             // clear all entries
-            $pur->clearDeliveryEntries($o);
+            $pur->clearDeliveryEntries($ro);
+            $ro->generateCode();
 
-            foreach($data('delivery_qty') as $prod_id => $items)
+            foreach($data['delivered_qty'] as $prod_id => $items)
             {
                 $parentProd = $em->getRepository('CatalystInventoryBundle:Product')->find($prod_id);
                 foreach($items as $index => $item)
@@ -131,12 +170,12 @@ class ReceivedOrderController extends CrudController
                     $prdelivery->setQuantity($qty)
                                 ->setProduct($parentProd);
 
-                    $o->addEntry($prdelivery);                    
+                    $ro->addEntry($prdelivery);                    
                 }
             }
         }
 
-        $em->persist($o);
+        $em->persist($ro);
         $em->flush();
 
     }
@@ -151,7 +190,7 @@ class ReceivedOrderController extends CrudController
             $obj = $this->add();
 
             $this->addFlash('success', $this->title . ' added successfully.');
-            return $this->redirect($this->generateUrl('feac_receiving_index', array('id' => $id)));
+            return $this->redirect($this->generateUrl('feac_receiving_add_form', array('id' => $id)));
         }
         catch (ValidationException $e)
         {
