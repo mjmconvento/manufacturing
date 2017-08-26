@@ -101,7 +101,7 @@ class WarehouseStockController extends BaseController
         // }
 
         $gl->setQBFilterGroup($fg);
-        $gres = $gl->load4();
+        $gres = $gl->load();
         $resp = new Response($gres->getJSON());
         $resp->headers->set('Content-Type', 'application/json');
 

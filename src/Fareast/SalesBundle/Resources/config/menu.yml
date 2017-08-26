@@ -1,19 +1,19 @@
 menu_items:
-    - id: menu_sales
-      acl: cat_sales.menu
-      label: Sales
-      icon: fa-tag
-    - id: cat_sales_cust_index
-      acl: cat_sales_cust.menu
-      label: Customer
-      parent: feac_settings
-    - id: feac_sales_del_index
-      label: Delivery
-      parent: menu_sales
-    - id: feac_sales_invoice_index
-      label: Sales Invoice
-      parent: menu_sales
-    - id: cat_sales_so_index
-      label: Sales Order
-      parent: menu_sales
+    # - id: menu_sales
+    #   acl: cat_sales.menu
+    #   label: Sales
+    #   icon: fa-tag
+    # - id: cat_sales_cust_index
+    #   acl: cat_sales_cust.menu
+    #   label: Customer
+    #   parent: feac_settings
+    # - id: feac_sales_del_index
+    #   label: Delivery
+    #   parent: menu_sales
+    # - id: feac_sales_invoice_index
+    #   label: Sales Invoice
+    #   parent: menu_sales
+    # - id: cat_sales_so_index
+    #   label: Sales Order
+    #   parent: menu_sales
 

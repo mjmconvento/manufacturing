@@ -1,14 +1,14 @@
 menu_items:
-    - id: menu_purchasing
-      acl: cat_pur.menu
-      label: Purchasing
-      icon: fa-shopping-cart
-    - id: cat_pur_po_index
-      label: Purchase Order
-      parent: menu_purchasing
-    - id: cat_pur_pr_index
-      label: Purchase Requisition
-      parent: menu_purchasing
-    - id: cat_pur_supp_index
-      label: Supplier
-      parent: feac_settings
+    # - id: menu_purchasing
+    #   acl: cat_pur.menu
+    #   label: Purchasing
+    #   icon: fa-shopping-cart
+    # - id: cat_pur_po_index
+    #   label: Purchase Order
+    #   parent: menu_purchasing
+    # - id: cat_pur_pr_index
+    #   label: Purchase Requisition
+    #   parent: menu_purchasing
+    # - id: cat_pur_supp_index
+    #   label: Supplier
+    #   parent: feac_settings
